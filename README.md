@@ -8,6 +8,21 @@ This repository is not tied to a single topic, textbook, or research direction. 
 
 - `SOP/` — reusable research and experimental procedures.
 - `Benchmark/` — reusable benchmark designs, evaluation protocols, metrics, and test frameworks.
+- `Validation/` — the audit trail behind each package: what was read from the source, how it was
+  reconstructed into SOPs and benchmarks, and whether the result passed its acceptance gates.
+- `plans/` — the step plans a package was executed from, kept so the work can be repeated or extended.
+
+Materials are grouped into source-attributed packages. A package collects the SOPs and benchmarks
+derived from one studied source under a single directory name, so the procedure text, its validation
+record, and its provenance stay together. Currently:
+
+- **Trustworthy ML (2023)** — 8 SOPs and 8 benchmarks for evaluation discipline on real
+  deployments: [SOP group](SOP/Trustworthy-ML-2023/README.md),
+  [Benchmark group](Benchmark/Trustworthy-ML-2023/README.md),
+  [validation record](Validation/Trustworthy-ML-2023/acceptance_report.md),
+  [plan](plans/Trustworthy-ML-2023/README.md).
+
+Packages cite the source by section and page; the source documents themselves are not included here.
 
 ## Development Principle
 

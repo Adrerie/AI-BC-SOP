@@ -14,3 +14,10 @@ An SOP should answer questions such as:
 - What outputs should be retained or reported?
 
 The directory is not restricted to a single research area. New SOPs should be added whenever continued reading reveals a procedure that is general enough to be reused across experiments or projects.
+
+## Packages
+
+SOPs are grouped by the source they were reconstructed from, one directory per package:
+
+- [`Trustworthy-ML-2023/`](Trustworthy-ML-2023/README.md) — 8 SOPs covering the evaluation workflow
+  from declaring a deployment setting to reporting evidence and its validity boundaries.

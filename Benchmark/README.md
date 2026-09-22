@@ -14,3 +14,11 @@ A benchmark should answer questions such as:
 - What limitations or validity boundaries must be stated?
 
 The directory is not restricted to a single research area. New benchmarks should be added as continued reading introduces new evaluation problems, metrics, or methodological standards.
+
+## Packages
+
+Benchmarks are grouped by the source they were reconstructed from, one directory per package:
+
+- [`Trustworthy-ML-2023/`](Trustworthy-ML-2023/README.md) — 8 benchmarks for shift generalization,
+  cue dependence, confidence truthfulness, error detection, adversarial robustness, explanation
+  quality, selective prediction, and evaluation integrity.
