@@ -48,8 +48,10 @@ not be pooled.
   distribution); a single OOD pair hides whether the detector responds to novelty or to style.
 - Vary ambiguity independently of novelty, so that a distance-based score cannot pass H-ood while
   actually measuring H-multiplicity.
-- Adversarial stress: the inputs produced by [`BM-05`](BM-05-adversarial-robustness.md) as an
-  extreme OOD family — report whether the detector fires on them.
+- **Adversarial stress:** additionally test whether the confidence mechanism reacts to
+  adversarially constructed failures from
+  [`BM-05`](BM-05-adversarial-robustness.md). Treat this as a separate stress axis, not as an OOD
+  family and not as evidence of OOD-detection capability.
 - Open-set stress: unforeseen classes that *should* produce low confidence; here a top-1 accuracy
   score is the wrong readout and the confidence statistic is the right one.
 - Coverage sweep: detection quality as a function of accepted coverage, which is what
