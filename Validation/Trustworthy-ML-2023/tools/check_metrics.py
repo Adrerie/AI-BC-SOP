@@ -1,7 +1,9 @@
 """Metric-register consistency.
 
 `SOP-08` §4 is the single definition site: every metric name used anywhere in the package must be
-registered there, and no document may quietly redefine one. This catches the failure mode where a
+registered there, and no document may quietly redefine one. Inline-code spans are tokenized
+internally, so an expression such as `metric_a > metric_b` cannot hide either identifier from the
+register check. This catches the failure mode where a
 revision introduces a locally-defined score that a reader will meet elsewhere with a different
 meaning -- the same class of error that made the first implementation state one random baseline for
 two AUPR variants that have different positive classes.
@@ -16,7 +18,8 @@ from collections import defaultdict
 import _common as C
 
 REGISTER_FILE = "SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md"
-TOKEN = re.compile(r"`([a-z][a-z0-9_]{3,})`")
+INLINE_CODE = re.compile(r"`([^`\n]+)`")
+IDENT = re.compile(r"\b[a-z][a-z0-9_]{3,}\b")
 CELLS = re.compile(r"(?<!\\)\|")          # an escaped \| inside a formula is not a column break
 
 
@@ -48,10 +51,12 @@ def check_unregistered():
     for rel, kind in C.artifacts():
         if kind == "val":
             continue                       # the validation record may quote field names
-        for tok in TOKEN.findall(C.read(rel)):
-            if "_" not in tok or tok in reg or tok in C.METRIC_ALLOW:
-                continue
-            used[tok].add(rel)
+        text = C.read(rel)
+        for span in INLINE_CODE.findall(text):
+            for tok in IDENT.findall(span):
+                if "_" not in tok or tok in reg or tok in C.METRIC_ALLOW:
+                    continue
+                used[tok].add(rel)
     return used
 
 
