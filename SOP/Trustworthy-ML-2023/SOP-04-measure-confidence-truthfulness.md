@@ -57,14 +57,20 @@ lost honestly.
    - worst-bin behavior matters (high-risk) → add the worst-case calibration view.
 3. Compute the metric battery on the frozen predictions:
    - **Proper scores**: NLL/CE, Brier (binary), multi-class Brier; perplexity only for language
-     modeling, where it is the exponentiated NLL.
+     modeling, where it is the exponentiated NLL — `exp(nll)` when the loss used natural logarithms,
+     `2^(nll_bits)` when it was measured in bits. The two bases must match; the value is invariant to
+     a *common* base choice but not to mixing them.
    - **Calibration**: bin the confidences, compute per-bin accuracy and mean confidence, report ECE
      (bin-weighted mean absolute gap), MCE (worst-bin gap), and the reliability diagram.
-   - **Ranking**: AUROC and both AUPR variants (Success and Error) of `c` against `L`.
+   - **Ranking**: AUROC and both AUPR variants of `c` against `L`, each naming its positive class —
+     Success (`L = 1` positive) and Error (`L = 0` positive) — and each read against its own no-skill
+     value.
 4. Run the **trivial-score controls** as first-class rows in the same table:
-   (i) constant confidence equal to the overall accuracy; (ii) uniformly random scores; (iii) the
-   uncalibrated softmax baseline of the same model. A claim is measured against these, not against
-   zero.
+   (i) a constant confidence — the *deployable* form, whose value is frozen on the calibration split
+   before final testing, plus the *oracle* form set equal to the measured correctness rate of the set
+   being scored, which is a metric diagnostic and must be labelled as one rather than shipped as a
+   baseline; (ii) uniformly random scores; (iii) the uncalibrated softmax baseline of the same model.
+   A claim is measured against these, not against zero.
 5. Decompose before comparing: report task accuracy next to every confidence metric, and never read
    an improvement in NLL/Brier as an improvement in uncertainty alone — proper scores mix accuracy
    and calibration.
@@ -93,16 +99,24 @@ lost honestly.
 
 ## 6. Mandatory checks
 
-- [ ] **Gaming check**: does the reported number beat the constant-confidence control? A model can
-      reach ECE = 0 by predicting a constant equal to its global accuracy — with no labeled
-      validation data at all. If the trivial control matches the claim, the claim is empty.
+- [ ] **Gaming check**: does the reported number beat the *deployable* constant-confidence control?
+      A model reaches ECE = 0 by predicting a constant equal to the measured correctness rate of the
+      set it is scored on; the source points out this needs no labeled validation set, only the prior
+      probability of correctness — which is itself computed from the labels of that set, so the
+      construction is an oracle diagnostic that exposes a weakness of ECE, not a baseline a deployed
+      model can hold. A frozen constant from the calibration split is the legitimate reference row,
+      and its final-set ECE is the gap between the frozen value and final accuracy. If the trivial
+      control matches the claim, the claim is empty.
 - [ ] **Quantity-to-instrument check**: an epistemic claim must not rest on proper scores alone —
       the Bayes predictor maximises them with zero epistemic uncertainty.
 - [ ] **Split-rights check**: no calibration parameter was fitted on a final-test subset.
 - [ ] **Bin disclosure**: bin count, and whether bins are equal-width or equal-mass, stated wherever
       ECE/MCE appears.
-- [ ] **Imbalance check**: with a positive rate far from one half, AUROC is the headline and AUPR is
-      read against `P(L = 1)`, because a random detector's AUPR equals that rate.
+- [ ] **Imbalance check**: each AUPR variant is read against the prevalence of *its own* positive
+      class — `P(L = 1)` for Success, `P(L = 0)` for Error — because that prevalence is the random
+      detector's value for that task. AUROC sits at 0.5 whatever the balance is, so it stays the
+      headline when a positive rate is far from one half; state which class is positive wherever an
+      AUPR appears.
 - [ ] **Coverage check for threshold claims**: a ranking claim states the coverage at which the
       decision is taken.
 - [ ] **Capacity check**: accuracy and calibration changes are reported separately after any
@@ -124,6 +138,9 @@ lost honestly.
 ## 8. Common methodological failures
 
 - Reporting ECE as if it measured truthfulness of `c(x)` per sample.
+- Reaching ECE = 0 with an oracle constant and presenting it as a calibration achievement.
+- Comparing an error-positive detector against the success-positive prevalence, or quoting one
+  baseline for both AUPR variants.
 - Silently choosing a bin count that flatters the result.
 - Reading lower NLL across model scales as better uncertainty rather than better fit.
 - Using OOD detection accuracy as a definition of epistemic uncertainty.
@@ -136,7 +153,8 @@ lost honestly.
 ## 9. Required outputs
 
 - Metric battery table: per subset — accuracy, NLL, Brier, ECE (bins disclosed), MCE, AUROC,
-  AUPR-Success, AUPR-Error, plus the trivial-control rows.
+  AUPR-Success and AUPR-Error (each with its positive class and its own no-skill value named), plus
+  the trivial-control rows, the oracle constant flagged as a diagnostic rather than a baseline.
 - Reliability diagram with the confidence histogram.
 - Bin-sensitivity and subgroup slices (Extended).
 - Calibration-parameter record: value, split it was fitted on, search range.
@@ -166,13 +184,18 @@ the decomposition requires assumptions and remains open. Score formats: §4.4 (p
 scoring: §4.5.1, Definition 4.8 (p. 243); log-probability and Brier claims and proofs §4.5.2-§4.5.3
 (pp. 245-246); BCE/max-prob §4.5.5, Definition 4.9 (pp. 246-247); CE as a lower bound §4.5.6
 (p. 248); multi-class Brier §4.5.8 (pp. 250-251); "not all strictly proper rules are equally good
-objectives" §4.5.7 (pp. 249-250); evaluation on the test set and the four interpretation caveats
-§4.5.9 (pp. 253-254). Calibration: §4.6.1, Definitions 4.11-4.15 with the 5-step ECE recipe and MCE
-(pp. 254-257); gaming ECE with a constant prediction §4.6.2 (pp. 256-257); bin-count dependence and
-the fine-bins suggestion §4.6.2 (pp. 256-257); reliability diagrams and their limits §4.6.3 (p. 259);
+objectives" §4.5.7 (pp. 249-250); perplexity as the exponentiated NLL, using base 2 in both the
+logarithm and the exponential, plus the footnote that the value is independent of the *common* base
+§4.5.9 (p. 252); evaluation on the test set and the four interpretation caveats §4.5.9 (pp. 253-254).
+Calibration: §4.6.1, Definitions 4.11-4.15 with the 5-step ECE recipe and MCE (pp. 254-257); gaming
+ECE with a constant equal to the global accuracy, and the remark that only the prior probability of
+correctness is needed, §4.6.2 (pp. 256-257); bin-count dependence and the fine-bins suggestion
+§4.6.2 (pp. 256-257); reliability diagrams and their limits §4.6.3 (p. 259);
 the tool summary §4.7 (p. 259). DNN calibration evidence and the NLL/accuracy disconnect:
 §4.8.1-§4.8.2 (pp. 259-262); temperature scaling protocol §4.8.3 (pp. 262-263). Ranking condition
-and detection metrics with the AUROC-over-AUPR recommendation: §4.9.1-§4.9.2 (pp. 263-266).
+and detection metrics with the AUROC-over-AUPR recommendation: §4.9.1-§4.9.2 (pp. 263-266), where
+the random-detector value `P(L = 1)` is given for the success-positive task (p. 265) and AUPR-Error
+is defined by making errors the positive class (p. 265).
 Non-predictive readouts as OOD and multiplicity detectors: §4.10-§4.10.3 (pp. 266-268). Epistemic
 mechanisms and their stated confounds: §4.11.2 (p. 271), §4.11.5 (p. 275), §4.11.9 (p. 290),
 §4.11.10 (pp. 290-291), §4.12.1-§4.12.3 (pp. 291-297). Aleatoric loss and its preconditions:

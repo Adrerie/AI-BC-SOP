@@ -37,8 +37,10 @@ not be pooled.
 - Detection thresholds are chosen on validation material only, per
   [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md);
   reporting a detector without saying where its threshold came from is out of scope here.
-- Class balance and `P(L = 1)` stated per subset, since they set the reference point for precision
-  based scores.
+- The positive class named for every detection task, with its prevalence stated per subset —
+  `P(OOD)` for a novelty task, `P(L = 0)` for an error-detection task, `P(multiple-answer)` for an
+  ambiguity task — since the designated positive is what sets the reference point for every
+  precision-based score.
 
 ## 4. Shift or stress construction
 
@@ -58,7 +60,7 @@ not be pooled.
 | Baseline | Role |
 |---|---|
 | Random score | `auroc` = 0.5 reference, base-rate-independent |
-| Base-rate predictor (constant score) | `aupr` = `P(L = 1)` reference |
+| Base-rate predictor (constant score) | the `aupr` reference, which is the prevalence of the task's declared positive: `P(L = 1)` success-positive, `P(L = 0)` error-positive, `P(OOD)` novelty-positive |
 | Max-probability of the unmodified model | the default every mechanism is compared to |
 | Entropy / margin over the class distribution | the same logits, a different readout |
 | Feature-space distance score (class-conditional Gaussian, or kernel centroid) | a genuinely different mechanism |
@@ -70,7 +72,8 @@ not be pooled.
 
 - `auroc` per detection target — the headline, because its random reference stays at 0.5 regardless
   of the base rate.
-- `aupr_success` and `aupr_error` reported together, read against `P(L = 1)`.
+- `aupr_success` and `aupr_error` reported together, each read against the prevalence of *its own*
+  positive class (`P(L = 1)` and `P(L = 0)`); a task that declares novelty positive takes `P(OOD)`.
 - `tnr_at_high_tpr` (true-negative rate at a fixed high true-positive rate, for example 95 %) —
   the operating-point form used when a false alarm budget rather than an average matters.
 
@@ -88,7 +91,8 @@ not be pooled.
 
 Report each detection target on each OOD/ambiguity family separately; an average over heterogeneous
 OOD pairs is the single most common way this benchmark is over-claimed. Give the number of OOD pairs
-and the base rate behind every area. Provide seed or bootstrap variability, and state which
+and the prevalence of the designated positive behind every area. Provide seed or bootstrap
+variability, and state which
 comparisons are within noise. Never pool H-error with H-ood or H-multiplicity into one "uncertainty
 quality" number.
 
@@ -100,7 +104,7 @@ quality" number.
 | Distance score fires on ambiguous-but-familiar inputs | mechanism conflation, not epistemic detection |
 | Detector is strong on far-OOD, chance on near-OOD | sensitivity to style/density, not to support |
 | Ensemble disagreement grows with M only on OOD | expected; check the accuracy confound before claiming better uncertainty |
-| Good `aupr` on an imbalanced subset only | compare with the base rate; may be no skill |
+| Good `aupr` on an imbalanced subset only | compare with the prevalence of that variant's designated positive; may be no skill |
 | Detector does not fire on adversarial examples | confidence and adversarial failure are separate axes |
 
 ## 10. Computational reporting
@@ -141,7 +145,9 @@ Confidence as a detector of three different targets and the non-alignment argume
 (pp. 266-268); OOD-detector construction: §4.10.1 (p. 267); multiplicity detector: §4.10.2 (p. 267);
 menu of evaluation methods so far: §4.10.3 (pp. 267-268). Epistemic-uncertainty proxy reasoning and the
 model-independence of "OOD-ness": §4.2.3 (pp. 236-239) and §4.3.1 (p. 239). AUROC/AUPR definitions,
-base-rate behavior and the AUROC recommendation: §4.9.2 (pp. 264-266). Threshold filtering as the
+base-rate behavior and the AUROC recommendation: §4.9.2 (pp. 265-266), where the random-detector
+value is given for the success-positive task and AUPR-Error is defined by swapping which class is
+positive. Threshold filtering as the
 application that only needs ranking: §4.9.1 (pp. 263-264). Distance-score comparison against
 max-probability with detection metrics on multiple OOD pairs, and the cautions against generalising
 one pair and against reading ambiguity as novelty: §4.12.1-§4.12.2 (pp. 291-297); the summary that

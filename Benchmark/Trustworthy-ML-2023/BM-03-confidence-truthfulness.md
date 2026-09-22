@@ -47,7 +47,9 @@ to [`BM-04`](BM-04-error-and-anomaly-detection.md), not here.
   [`BM-02`](BM-02-spurious-cue-dependence.md): calibration is a property of a distribution, not of a
   model.
 - Imbalance stress: at least one subset with positive rate far from one half, to expose AUPR
-  inflation (a random detector's `aupr` equals `P(L = 1)` there).
+  inflation. Each variant's no-skill value is the prevalence of *its own* positive class — `P(L = 1)`
+  for `aupr_success`, `P(L = 0)` for `aupr_error` — so a subset that is imbalanced for one variant is
+  imbalanced in the opposite direction for the other.
 - Ambiguity stress: samples with several acceptable labels, where a truthful predictive score must
   stay high while a claimed epistemic score must not.
 - Overfitting stress: compare checkpoints by training epoch where available, since probabilistic
@@ -58,18 +60,24 @@ to [`BM-04`](BM-04-error-and-anomaly-detection.md), not here.
 
 | Baseline | Why required |
 |---|---|
-| **Constant confidence** equal to global accuracy | reaches `ece` = 0 with no per-sample information; the gaming reference |
+| **Constant confidence, frozen on the calibration split** | the deployable reference row: with all mass in one bin its final-set `ece` is the gap between the frozen value and final accuracy, so a method that cannot beat it has no calibration evidence |
 | Uniform random scores | the reference for ranking metrics |
 | Uncalibrated softmax/max-prob of the same model | isolates the contribution of any calibration step |
 | Temperature-scaled version, fitted on the calibration split | the cheap fix that must be reported, not assumed |
 | Trivial per-class priors | prevents reading prior knowledge as calibration |
 | Alternative score mechanism on the same model (entropy, margin, distance-based, ensemble disagreement) | separates "better estimator" from "better model" |
 
+A constant set equal to the measured accuracy of the scored set is **not** a baseline here: it needs
+that set's labels, so it can only appear as the diagnostic in §7, where its purpose is to show what
+`ece` = 0 fails to establish.
+
 ## 6. Primary metrics
 
 - `nll` and `brier` (multi-class variant where applicable) — proper scores.
 - `ece` with the binning disclosed; `mce` for worst-bin risk.
-- `auroc` as the ranking headline, with `aupr_success` / `aupr_error` reported alongside.
+- `auroc` as the ranking headline, with `aupr_success` / `aupr_error` reported alongside. Each area
+  names its positive class and is read against that class's prevalence; the two variants do not share
+  a no-skill value.
 
 ## 7. Secondary / diagnostic metrics
 
@@ -77,6 +85,10 @@ to [`BM-04`](BM-04-error-and-anomaly-detection.md), not here.
   and can mislead about which bins matter.
 - Per-class and per-group `ece`/`mce` (worst-class variant for high-risk claims).
 - Bin-sensitivity spread of `ece`.
+- Oracle-constant probe: recompute `ece` after replacing the scores with the constant equal to the
+  measured accuracy of the scored set. The result states how much of a low `ece` the metric would
+  report with no per-sample information at all; it is a property of the metric, and is reported in the
+  diagnostics, not in the baseline table.
 - Residual-variance check for heteroscedastic regression scores: predicted spread bins versus
   empirical squared-error bins.
 - Decomposition note: task accuracy next to every confidence metric, since proper scores mix accuracy
@@ -94,10 +106,11 @@ compare against a control row rather than interpreting the absolute value.
 
 | Observation | Reading |
 |---|---|
-| `ece` ≈ 0 but constant-confidence control also ≈ 0 | calibration claim is empty; check ranking and proper scores |
+| `ece` ≈ 0 but the frozen constant baseline is also ≈ 0 | accuracy is flat across the subset, which is not calibration evidence; check ranking and proper scores |
+| `ece` = 0 only under an oracle constant set to measured accuracy | expected degeneracy of the metric, recorded as a diagnostic; it says nothing about the model |
 | Better `nll` while accuracy also improves | not evidence about uncertainty alone |
 | `auroc` high, `ece` high | good ranking, bad probability: acceptable for a threshold filter, unacceptable as a reported probability |
-| `aupr` high on an imbalanced subset | may be the base rate; read against `P(L = 1)` and prefer `auroc` |
+| `aupr` high on an imbalanced subset | may be the prevalence of the positive class that variant designated; read it against `P(L = 1)` or `P(L = 0)` as appropriate and prefer `auroc` |
 | Worst-bin (`mce`) large while `ece` small | a rare but badly mis-stated confidence region; high-risk use fails |
 | Calibration degrades under shift while accuracy holds | confidence is distribution-bound; re-fit and disclose, do not silently transfer |
 | Distance-based score "detects" ambiguity as unfamiliarity | mechanism conflation; route to `BM-04` interpretation |
@@ -113,6 +126,11 @@ trade-off, not as a free improvement.
 
 - Calibration is not truthfulness: per-sample `c(x) = P(L = 1 | x)` can fail arbitrarily while group
   calibration holds.
+- The `ece` degeneracy demonstrated by a constant score is an *oracle* result: the constant that
+  forces `ece` to zero is the measured correctness rate of the set being scored, so it requires that
+  set's labels. It licenses a conclusion about the metric and never about a deployed model, whose
+  only legitimate constant is one frozen on a calibration split — and whose final `ece` is then the
+  gap between that frozen value and final accuracy.
 - Proper scores bound behavior in expectation over the data distribution; they say nothing about
   epistemic uncertainty, whose Bayes-predictor value is zero.
 - A strictly proper score for the predictive (max-prob) target is guaranteed to also be strictly
@@ -150,15 +168,21 @@ binary-case limit (§4.13.3, §4.13.5, pp. 303-308); and the estimator confounds
 Anchors specific to this benchmark's measurements:
 
 - Calibration is necessary, not sufficient, for truthful per-sample confidence — and the constant
-  score that games it: §4.6.2 (pp. 256-257).
+  score that games it: §4.6.2 (pp. 256-257), including the source's remark that gaming needs no
+  labeled validation set, only the prior probability of correctness.
 - Bin-count disagreement across published evaluations, and the recommendation for finer bins at high
   confidence: §4.6.2 (pp. 256-257).
 - Reliability diagrams cannot recover ECE without bin weights, and require the confidence histogram:
   §4.6.3 (pp. 257-259).
 - Proper scores have an unknown floor and mix accuracy: §4.5.9 (pp. 253-254).
+- Perplexity as the exponentiated NLL with base 2 in both logarithm and exponential, and the
+  base-invariance footnote: §4.5.9 (p. 252).
 - Probabilistic overfitting while classification error improves: §4.8.1 (pp. 259-261).
 - Calibration varies by architecture family and persists after recalibration: §4.8.2 (pp. 261-262).
 - Score comparability across candidates rather than per sample: §4.1.3 (pp. 227-228).
 
 The three-hypothesis split, the control-row table, and the bin-sensitivity requirement are
-repository conventions.
+repository conventions. Two items are **synthesized** rather than quoted: separating the oracle
+constant from a frozen deployable constant, and carrying the source's success-positive random value
+over to the error-positive variant as `P(L = 0)` — both are recorded with their reasoning in
+[`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md) §12.

@@ -44,12 +44,12 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `acc_worstgroup` | minimum accuracy over declared groups/cells | groups defined and non-empty | noisy when a cell is tiny |
 | `nll` | −(1/N) Σ log f_y(x) on the evaluation set | probabilistic outputs | mixes accuracy and calibration; floor unknown |
 | `brier` | (1/N) Σ [ (1 − f_y)² + Σ_{k≠y} f_k² ] | probabilistic outputs | as `nll`, softer tails |
-| `perplexity` | exponentiated `nll` (base 2) | language modeling | same confound as `nll` |
-| `ece` | Σ_m (\|B_m\|/N) · \|acc(B_m) − conf(B_m)\|, bins disclosed | scalar confidence in [0,1] | gameable by constant confidence; bin-sensitive |
+| `perplexity` | exponentiated `nll`, with the exponential base matching the logarithm base used for `nll`: `exp(nll)` for natural-log NLL, `2^(nll_bits)` for NLL measured in bits | language modeling | same confound as `nll`; invariant to the choice of a *common* base, but not to mixing bases |
+| `ece` | Σ_m (\|B_m\|/N) · \|acc(B_m) − conf(B_m)\|, bins disclosed | scalar confidence in [0,1] | driven to 0 by a constant equal to the measured correctness rate of the scored set, which is an oracle quantity; bin-sensitive |
 | `mce` | max_m \|acc(B_m) − conf(B_m)\| | high-risk claims | pessimistic on small bins |
 | `reliability` | per-bin acc and (conf − acc), plotted with the confidence histogram | diagnosis of over/under-confidence | does not reveal `ece` without bin weights |
-| `auroc` | probability that a correct case outranks an incorrect one by `c` | ranking claims | insensitive to the absolute scale |
-| `aupr_success`, `aupr_error` | area under precision-recall for correct-as-positive / error-as-positive | ranking under imbalance | random baseline = P(L = 1), so near-useless at extreme rates |
+| `auroc` | probability that a randomly drawn **positive** example scores higher than a randomly drawn **negative** example, under a declared positive class and score orientation | ranking claims for any declared binary task | insensitive to the absolute scale; the number is meaningless until the positive class is named |
+| `aupr_success`, `aupr_error` | area under precision-recall, with the success class (`L = 1`) and the error class (`L = 0`) as the designated positive, respectively | ranking under imbalance, positive class named per task | random baseline = prevalence **of the designated positive**: `P(L = 1)` for `aupr_success`, `P(L = 0)` for `aupr_error` |
 | `risk_at_coverage` | error rate among the top-k fraction by confidence | abstention | undefined without the coverage stated |
 | `acc_under_eps` | accuracy under a named attack, **norm + ε + attack configuration attached** | adversarial claims | fake-safe when the defense masks gradients |
 | `certified_acc` | fraction of inputs with a proof of invariance inside the ball | architectures the bound admits | bound may be arbitrarily loose |
@@ -61,6 +61,20 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `audit_pass_rate` | applicable integrity requirements passed ÷ applicable requirements | protocol audits | inflates if inapplicable requirements are dropped silently |
 | `conclusion_flip_count` | number of headline conclusions that change sign or significance under a protocol perturbation | protocol audits | depends on which perturbations were run |
 | `disclosure_completeness` | fraction of this SOP's §6 checklist items present in the report | any report | measures documentation, not correctness |
+
+*Baselines and positive classes.* Every `auroc` / `aupr_*` number belongs to a named binary task:
+state which class is positive and which way the score points. The no-skill value of a
+precision-recall summary is the prevalence **of that positive class**, so a success-positive and an
+error-positive detector on the same data have different random baselines (`P(L = 1)` and `P(L = 0)`),
+and an OOD-positive or multiplicity-positive task takes `P(OOD)` and `P(multiple-answer)`.
+
+A constant-confidence reference row also comes in two kinds, and they are not interchangeable. An
+**oracle diagnostic** sets the constant equal to the measured correctness rate of the very set being
+scored; because that rate is computed from held-out labels, it drives `ece` to 0 by construction and
+can therefore only be used to show a weakness of the metric. A **deployable constant baseline** takes
+its value from a calibration or validation split and freezes it before final testing; it is a fair
+reference row, but with all mass in one bin its final-set `ece` is `|acc(test) − c_frozen|`, which is
+zero only when the frozen value happens to equal final accuracy.
 
 *Cost terms.* **Tuning budget** = search space and number of evaluations granted to every compared
 method. **Training overhead** = multiplier on passes/epochs/capacity. **Inference overhead** = added
@@ -79,7 +93,9 @@ supervision consumed.
    corner cases (empty bins, zero-positive thresholds, tie handling). If a corner case is
    conventionally handled differently in your subfield, state the convention chosen.
 3. Attach a trivial or reference row to every table: constant baseline, random ordering, unmodified
-   model, tuned-simple baseline. A number without a reference row is not evidence.
+   model, tuned-simple baseline. Use the frozen deployable constant here, not the oracle constant of
+   §4 — an oracle row is a metric diagnostic and must be labelled as one if it appears at all. A
+   number without a reference row is not evidence.
 4. State the boundaries explicitly as a short list of "does not show" claims, drawn from the checks
    that failed or were skipped.
 5. Report average *and* failure-oriented views side by side whenever they differ in direction.
@@ -99,6 +115,10 @@ supervision consumed.
 ## 6. Mandatory checks
 
 - [ ] Every metric name in the report appears in the register above with the definition used.
+- [ ] Every ranking number names its positive class and score orientation, and quotes the no-skill
+      value as that class's prevalence.
+- [ ] Every constant-confidence reference row says whether it is a frozen deployable baseline or an
+      oracle diagnostic.
 - [ ] Every table has a reference row and a variability statement.
 - [ ] Every confidence claim carries binning, split provenance, and the trivial-control comparison.
 - [ ] Every robustness claim carries norm, ε, attack configuration, and masking-check outcome.
@@ -122,6 +142,10 @@ supervision consumed.
 - Silent convention choices in degenerate cases (empty-bin precision).
 - Quoting a leaderboard number as independent confirmation.
 - Presenting an oracle-selection or train-on-target row inside the main table without marking it.
+- Judging an error-positive detector against the success-positive prevalence, or reporting two AUPR
+  variants that share one stated random baseline when their positives differ.
+- Shipping a model because it reached `ece = 0` with a constant confidence, when that constant was
+  only knowable from the labels of the set it was scored on.
 - Reporting the average while the deployment decision is made on the worst cell.
 - Omitting the cost of the trustworthy component, which is how complicated methods get adopted and
   then fail at scale.
@@ -168,11 +192,23 @@ ingredients): §5.1.1 (p. 333). Cost of wrong evaluation and the scandal list: �
 Tuned-baseline and weight-decay examples: §5.2.2 (pp. 339-341). Random search with shared budget:
 §5.2.3 (pp. 341-342). Toy-versus-large-scale trade-off: §5.2 (pp. 338-340). Benchmark fairness requires
 equal ingredients: §5.3.1 (pp. 342-343). Metric definitions: ECE/MCE/reliability §4.6.1-§4.6.3,
-Definitions 4.11-4.15 (pp. 254-259); NLL/Brier/perplexity §4.5.2-§4.5.9 (pp. 245-254);
-AUROC/AUPR §4.9.2 (pp. 264-266); risk at coverage and threshold filtering §4.9.1 (pp. 263-264);
+Definitions 4.11-4.15 (pp. 254-259); the constant-confidence degeneracy, including that gaming needs
+only the prior probability of correctness rather than labeled validation data, §4.6.2 (p. 256);
+NLL/Brier §4.5.2-§4.5.7 (pp. 245-250); perplexity as the exponentiated NLL with a matched base, and
+the footnote that perplexity is independent of the *common* base, §4.5.9 (p. 252); AUROC/AUPR with
+the random-detector value quoted for the success-positive task and AUPR-Error defined by swapping the
+positive class §4.9.2 (pp. 265-266); risk at coverage and threshold filtering §4.9.1 (pp. 263-264);
 `acc_under_eps` and its reporting table §2.15.3-§2.15.4 and Table 2.8 (pp. 90-92, 103); certified
 accuracy §2.15.15 (pp. 111-113); remove-and-classify §3.7.7, Definition 3.14 (pp. 186-187); sanity
 rank correlation §3.7.5 (pp. 182-185); HITL §3.8.2, Definition 3.15 (pp. 189-193); self-influence
 §3.12.2, Definition 3.16 (pp. 216-217). Worst-group reporting: §2.12.1 (pp. 59-61). Architecture
 family and recalibration status: §4.8.1-§4.8.3 (pp. 259-263). The register format, the "does not
 show" list and the sensitivity panel are repository conventions.
+
+Three statements in §4 go beyond the source wording and are labelled **synthesized**: carrying the
+random-detector value over to the error-positive task as `P(L = 0)` (the source gives the value for
+its success-positive task and defines AUPR-Error by relabelling the positive class, but states the
+swap only for the curve, not the baseline); separating an oracle constant from a frozen deployable
+constant, including the one-bin identity `ece = |acc(test) − c_frozen|`; and the requirement that
+every ranking task name its positive class. The base-matching rule for perplexity is the source's
+own footnote turned into a register constraint.

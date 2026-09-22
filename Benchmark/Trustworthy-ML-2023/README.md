@@ -31,9 +31,12 @@ These apply to every component and are the reason the suite exists as a group:
 2. IID validation, shifted validation, and final-test conditions are named separately; a shifted
    validation set changes the setting and therefore the comparison class.
 3. Every metric states where it is invalid: proper scores mix accuracy and calibration and have an
-   unknown floor; `ece` is gameable by a constant score and depends on the bin count; `aupr` is
-   base-rate bound; `remove_classify_auc` measures the occlusion operator too; a distance score
-   confuses novelty with ambiguity.
+   unknown floor; `ece` is driven to zero by a constant set equal to the measured correctness rate of
+   the scored set — an oracle, not a baseline a deployed model can hold — and depends on the bin
+   count; `aupr` is bound to the prevalence of whichever class the task declares positive, so the
+   success- and error-positive variants have different random values; `auroc` means nothing until its
+   positive class and score orientation are named; `remove_classify_auc` measures the occlusion
+   operator too; a distance score confuses novelty with ambiguity.
 4. Model capability and confidence quality are scored separately — an accurate model can be blind and
    an uncertain model can rank well.
 5. A robustness or fairness *intervention* is never evaluated by the benchmark it was tuned to

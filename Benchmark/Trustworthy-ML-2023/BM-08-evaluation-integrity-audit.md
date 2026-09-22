@@ -47,8 +47,10 @@ Stress the *protocol*, not the model, and report which perturbations flip the co
    the method being promoted.
 3. **Rights removal**: re-run selection steps with target-domain information withheld, reproducing
    the setting the claim names.
-4. **Control insertion**: add the trivial controls (constant confidence, random ordering, random
-   occlusion, single-step attack) to every table.
+4. **Control insertion**: add the trivial controls (constant confidence frozen on the calibration
+   split, random ordering, random occlusion, single-step attack) to every table. Where a control uses
+   labels of the scored set — an oracle constant, an oracle detector — it is a metric diagnostic and
+   must be marked as such, never promoted into the baseline column.
 5. **Disclosure sweep**: hide one field at a time (bin count, ε and norm, occlusion operator, ρ
    direction, coverage) and check whether the claim remains interpretable.
 6. **Second-version replication** of the evaluation set where the field permits it.
@@ -61,7 +63,7 @@ Stress the *protocol*, not the model, and report which perturbations flip the co
 |---|---|
 | The original reported numbers | what the audit is comparing against |
 | Fairly tuned simplest admissible method | the "no real progress" reference the source documents repeatedly |
-| Trivial controls per metric family | the gaming floor |
+| Trivial controls per metric family | the gaming floor; an oracle control diagnoses a metric, it is not a baseline |
 | A known-good re-evaluation from the literature, if one exists for this task area | external calibration of the audit itself |
 | An unmodified-protocol rerun | isolates audit effects from run-to-run noise |
 
@@ -145,8 +147,11 @@ unavoidable-but-minimisable: §2.3.3 (p. 28). Ablation-study caveat for OOD clai
 §2.12.2 (p. 64). Random search with a fixed shared budget: §5.2.3 (pp. 341-342). Fairly tuned simple
 methods and the untuned-baseline/weight-decay example: §5.2.2 (pp. 339-341). Toy-versus-real regime
 costs: §5.2 (pp. 338-340). Equal-ingredients-as-fairness and the information cap of a fixed
-benchmark: §5.3.1 (p. 344), §5.3.5 (pp. 349-350). Metric gaming: constant-confidence ECE §4.6.2
-(pp. 256-257); base-rate AUPR §4.9.2 (pp. 264-266). Apparent robustness from broken gradients:
+benchmark: §5.3.1 (p. 344), §5.3.5 (pp. 349-350). Metric gaming: the constant-confidence ECE
+degeneracy — which the source notes needs only the prior probability of correctness, i.e. an oracle
+quantity rather than a deployable baseline — §4.6.2 (pp. 256-257); the random-detector AUPR value for
+the success-positive task, and AUPR-Error defined by swapping the positive class, §4.9.2
+(pp. 265-266). Apparent robustness from broken gradients:
 §2.15.12 (pp. 102-107). Explanation metrics distorted by the occlusion operator: §3.7.8
 (pp. 187-188). Requirement lists, pass-rate scoring and the perturbation protocol are repository
 conventions built on these sections.

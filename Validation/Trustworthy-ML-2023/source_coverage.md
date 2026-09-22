@@ -629,14 +629,22 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   (which is why "larger LLMs have lower perplexity" cannot be read as better uncertainty); and
   because the Bayes predictor is a maximiser of both predictive and aleatoric scores, proper scoring
   says nothing about epistemic uncertainty.
+- Perplexity is defined as the exponentiated NLL "using base 2 in both the exponential and the
+  logarithm", with fn. 18 observing that the value is independent of the *common* base chosen
+  (4.5.9, p. 252). The constraint that follows — and that the register now carries — is base
+  agreement: `exp(nll)` for a natural-log NLL, `2^(nll_bits)` for one measured in bits, never one
+  base for the loss and another for its exponentiation.
 - Calibration is the interpretable but gameable alternative (4.6): perfect calibration
   P(Ŷ = Y | C = c) = c (Def 4.11), model calibration as an integral of the deviation (Def 4.12),
   ECE as its binned approximation (Def 4.13) with a 5-step practical recipe (typically M = 10 bins,
   bin-weighted mean of |acc(B_m) − conf(B_m)|), MCE as the worst-bin variant for high-risk use
   (Def 4.14), and the reliability diagram (Def 4.15) which reveals the sign of miscalibration and
   the MCE but not the ECE because bin weights are invisible. Two named integrity failures: **gaming
-  ECE** by emitting the constant c = P(Ŷ = Y), which needs no labeled validation data at all and
-  yields ECE = 0 while per-sample c(x) is arbitrarily wrong; and **bin-count dependence**
+  ECE** by emitting the constant c = P(Ŷ = Y), which the source says needs no labeled validation data
+  at all and yields ECE = 0 while per-sample c(x) is arbitrarily wrong — note that the constant is the
+  correctness rate of the data being scored, so the trick exchanges a validation set for that set's
+  labels, which is why the package treats it as an oracle diagnostic rather than a baseline; and
+  **bin-count dependence**
   ("Using twenty bins gives us a different score than using ten"), with the book observing that
   papers are inconsistent (15 bins in the table it reproduces) and recommending finer bins near
   90-100 %.
@@ -649,12 +657,15 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 - The ranking condition (4.9.1, pp. 263-264) is the weaker requirement — preserve the order of
   P(L = 1 | x) — which is "sufficient for many applications, such as when we filter out too-uncertain
   examples via a threshold", and is equivalent to calibration up to an unknown monotone g. It turns
-  evaluation into a binary detection problem of L from feature c (4.9.2, pp. 264-266): TP/FP/FN/TN sets,
-  precision/recall curves, AUPR-Success and AUPR-Error, ROC and AUROC, with the imbalance rule
-  recorded verbatim in both directions — random-detector AUPR = P(L = 1), so AUPR "lacks the
-  resolution" under severe imbalance, hence "AUROC the recommended metric over AUPR, especially on
-  unbalanced datasets"; and the AP corner case (undefined precision at empty thresholds) resurfaces
-  in 5.1.3 as a reason to share one metric implementation.
+  evaluation into a binary detection problem of L from feature c (4.9.2, pp. 265-266): TP/FP/FN/TN sets,
+  precision/recall curves, AUPR-Success and AUPR-Error, ROC and AUROC. The imbalance rule is recorded
+  as the source states it — random-detector AUPR = P(L = 1) **for that success-positive task**, so
+  AUPR "lacks the resolution" under severe imbalance, hence "AUROC the recommended metric over AUPR,
+  especially on unbalanced datasets". The source separately defines AUPR-Error by taking errors
+  (L = 0) as the positive class; it states the swap for the curve but never restates the baseline, so
+  carrying the no-skill value over as P(L = 0) is recorded as synthesized, not as a source claim.
+  The AP corner case (undefined precision at empty thresholds) resurfaces in 5.1.3 as a reason to
+  share one metric implementation.
 - Non-predictive uncertainty gets its own benchmarks (4.10, pp. 266-268): the *same* confidence score
   may be scored as an OOD detector (Y = "outside the training distribution", epistemic proxy) or as a
   multiplicity detector (Y = "several true answers", aleatoric proxy), each with AUPR/AUROC, and the
@@ -763,13 +774,13 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 | Truthfulness of a probability report | Strictly proper scoring rule | `arg max_Q E_P S(Q,Y) = P` uniquely | Def 4.8, 4.5.1 p. 243 |
 | Predictive uncertainty (binary) | Log probability / BCE | `S = y log q + (1−y) log(1−q)`; `L = −log f(x)` if y=1 else `−log(1−f(x))` | 4.5.2 p. 245; Def 4.9 p. 246 |
 | Predictive uncertainty (binary) | Brier score | `S(q,y) = −(q−y)²` | 4.5.3 p. 246 |
-| Predictive uncertainty (multi-class) | NLL / CE (lower bound of the max-prob score), perplexity as its exponentiation | `L_NLL = −(1/N)Σ log f_{y_i}(x_i)`; `L_Ppl = 2^{−(1/N)Σ log₂ f_{y_i}(x_i)}` | 4.5.6 p. 248; 4.5.9 p. 253 |
+| Predictive uncertainty (multi-class) | NLL / CE (lower bound of the max-prob score), perplexity as its exponentiation | `L_NLL = −(1/N)Σ log f_{y_i}(x_i)`; `L_Ppl = 2^{−(1/N)Σ log₂ f_{y_i}(x_i)}` — base 2 in **both** the logarithm and the exponential, hence equal to `exp(L_NLL)` | 4.5.6 p. 248; 4.5.9 p. 252 |
 | Predictive uncertainty (multi-class) | Multi-class Brier | `S = −(1−f_y)² − Σ_{k≠y} f_k²` | 4.5.8 p. 251 |
 | Group-wise correctness | Worst-group accuracy vs average accuracy | max-group risk objective `min_θ max_g E_{P_g}[ℓ]` | 2.12.1 p. 59-61 |
 | Calibration | ECE | `Σ_m (\|B_m\|/n)\|acc(B_m) − conf(B_m)\|`, M bins, 5-step recipe | Def 4.13, 4.6.1 p. 255 |
 | Calibration, worst bin | MCE | `max_m \|acc(B_m) − conf(B_m)\|` | Def 4.14 p. 256 |
 | Calibration, signed picture | Reliability diagram (+ confidence histogram mandatory) | binned `acc(B_m)` vs `conf(B_m)−acc(B_m)` barplot | Def 4.15, 4.6.3 p. 257 |
-| Ranking of correctness by confidence | AUROC (preferred), AUPR-Success / AUPR-Error | `TP/FP/FN/TN(t)` sets; `AUROC = P(c > c&#39; \| L=1, L&#39;=0)`; random AUPR = `P(L=1)`, random AUROC = 0.5 | 4.9.2 pp. 264-266 |
+| Ranking of correctness by confidence | AUROC (preferred), AUPR-Success / AUPR-Error | `TP/FP/FN/TN(t)` sets; `AUROC = P(c > c&#39; \| L=1, L&#39;=0)` for the success-positive task; random AUPR = `P(L=1)` for success-positive and `P(L=0)` for error-positive (the swap is synthesized), random AUROC = 0.5 | 4.9.2 pp. 265-266 |
 | Epistemic quality (proxy) | OOD-detection AUROC/AUPR of `1−c(x)` | binary task `Y = 1[x outside training distribution]` | 4.10.1 p. 267 |
 | Aleatoric quality (proxy) | Multiplicity / corruption detection AUROC/AUPR | binary task `Y = 1[several true labels for x]` | 4.10.2 p. 267 |
 | Aleatoric recovery (regression) | Heteroscedastic Gaussian NLL | `(1/2σ̂²)‖y−µ̂‖² + (d/2) log σ̂² + C` | 4.13.5 p. 307 |

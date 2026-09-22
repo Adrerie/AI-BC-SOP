@@ -149,9 +149,12 @@ the source supports it as a *view* on existing metrics (2.12.1, 4.6.2).
 | Use the held-out test set sparingly; once per paper is the book's own rule of thumb | source-derived | 2.5.3 (p. 39) |
 | Publish a ranking instead of scores to slow test-set spoiling | source-derived (as a suggestion) | 2.5.1 fn. 7 (p. 36) |
 | Reporting a proper-scoring number alone cannot separate calibration from accuracy | source-derived | 4.5.9 remarks 3-4 (p. 254) |
-| A constant-confidence model can reach ECE = 0 without being truthful | source-derived | 4.6.2 (pp. 256-257) |
+| A constant confidence equal to the measured correctness rate reaches ECE = 0 without truthfulness; it is an oracle diagnostic because that constant is computed from the scored set's labels | source-derived (degeneracy) + synthesized (oracle labelling) | 4.6.2 (pp. 256-257) |
+| A constant frozen on the calibration split is a legitimate baseline, but its final ECE is the gap to final accuracy | synthesized | 4.6.2 (pp. 256-257) |
 | Fix the number of ECE bins and report it; consider finer bins at high confidence | source-derived (bin sensitivity) + repository convention (make disclosure mandatory) | 4.6.2 (pp. 256-257) |
-| Prefer AUROC over AUPR when the positive rate is far from 0.5; report both curves anyway | source-derived (AUROC recommendation) + synthesized (report-both) | 4.9.2 (pp. 264-266) |
+| Perplexity is the exponentiated NLL and must share that NLL's logarithm base; the value is invariant to a *common* base | source-derived, incl. fn. 18 | 4.5.9 (p. 252) |
+| Prefer AUROC over AUPR when the relevant positive rate is far from 0.5; report both curves anyway | source-derived (AUROC recommendation) + synthesized (report-both) | 4.9.2 (pp. 265-266) |
+| The no-skill value of a PR area is the prevalence of the designated positive, so `aupr_success` and `aupr_error` have different baselines; every ranking number names its positive class | synthesized from the source's success-positive value and its class-swap definition of AUPR-Error | 4.9.2 (pp. 265-266) |
 | Epistemic uncertainty and OOD-detection performance are related but not interchangeable | source-derived | 4.3.1 (p. 239), 4.12.3 (p. 297) |
 | Distance-based confidence conflates OOD-ness with aleatoric ambiguity; do not read it as pure epistemic | source-derived | 4.12.1-4.12.2 (p. 292-296) |
 | Attack strength must be reported as a configuration; a single-attack evaluation underestimates the attack | source-derived (FGSM < PGD reasoning, ε policy) | 2.15.2-2.15.4 (p. 89-92) |
