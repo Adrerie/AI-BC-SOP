@@ -24,7 +24,7 @@ Two claim types are kept separate.
 
 Any missing element of T makes either claim uninterpretable. Where both rows share the same model,
 test set, threat model and valid implementations, they bracket the target in one direction:
-`certified_acc ≤ true_robust_acc ≤ empirical_attack_acc`. A certificate row is therefore a lower bound
+**certified robust accuracy ≤ exact finite-sample robust accuracy ≤ empirical attacked accuracy under attack suite A**. A certificate row is therefore a lower bound
 on the true robust accuracy, never an upper-bound row of the kind `SOP-02` defines, and an attacked
 accuracy is an observation, not a bound. The comparison is void when the two rows use different norm
 bounds, samples or definitions. Empirical advantage must additionally survive adaptive-attack and
