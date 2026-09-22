@@ -7,7 +7,7 @@ C9 proxy gap, C10 gaming, C12 guarantee type
 
 Decide which property a reported confidence number is supposed to have, measure that property with
 the only instruments that are sensitive to it, and prove that the number is not obtained by an
-artefact of the metric. Confidence is where trustworthy-ML claims are most often won cheaply and
+artifact of the metric. Confidence is where trustworthy-ML claims are most often won cheaply and
 lost honestly.
 
 ## 2. When to use
@@ -21,7 +21,7 @@ lost honestly.
 
 ## 3. Inputs / prerequisites
 
-- Frozen predictions on a labelled evaluation set designated by
+- Frozen predictions on a labeled evaluation set designated by
   [`SOP-02`](SOP-02-build-evaluation-splits-under-leakage-discipline.md), plus the per-sample score
   `c(x)` and the correctness indicator `L = 1[ŷ = y]`.
 - A separate calibration set if any post-hoc recalibration is contemplated — never the final test set.
@@ -54,10 +54,10 @@ lost honestly.
 2. Pick the contract that the downstream use requires:
    - a numeric probability is consumed → proper scoring **and** calibration;
    - only a threshold filter is applied → ranking suffices, and say so;
-   - worst-bin behaviour matters (high-risk) → add the worst-case calibration view.
+   - worst-bin behavior matters (high-risk) → add the worst-case calibration view.
 3. Compute the metric battery on the frozen predictions:
    - **Proper scores**: NLL/CE, Brier (binary), multi-class Brier; perplexity only for language
-     modelling, where it is the exponentiated NLL.
+     modeling, where it is the exponentiated NLL.
    - **Calibration**: bin the confidences, compute per-bin accuracy and mean confidence, report ECE
      (bin-weighted mean absolute gap), MCE (worst-bin gap), and the reliability diagram.
    - **Ranking**: AUROC and both AUPR variants (Success and Error) of `c` against `L`.
@@ -94,7 +94,7 @@ lost honestly.
 ## 6. Mandatory checks
 
 - [ ] **Gaming check**: does the reported number beat the constant-confidence control? A model can
-      reach ECE = 0 by predicting a constant equal to its global accuracy — with no labelled
+      reach ECE = 0 by predicting a constant equal to its global accuracy — with no labeled
       validation data at all. If the trivial control matches the claim, the claim is empty.
 - [ ] **Quantity-to-instrument check**: an epistemic claim must not rest on proper scores alone —
       the Bayes predictor maximises them with zero epistemic uncertainty.

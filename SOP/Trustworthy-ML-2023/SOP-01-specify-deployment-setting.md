@@ -47,7 +47,7 @@ itself — but record that decision.
   ID (same distribution, different samples), cross-domain (same task, different domain),
   cross-bias (different cue correlations), adversarial (worst-case samples). The list is not
   exhaustive; if your case is outside it, name the difference explicitly.
-- **Cue** — a factor of variation in the data (colour, shape, background, sensor artefact). Cues
+- **Cue** — a factor of variation in the data (color, shape, background, sensor artifact). Cues
   belong to the data, not to the model.
 - **Causal (robust) cue / spurious (non-causal) cue** — a cue whose relation to the label is
   expected to hold in the deployment environment versus one that merely co-occurs during
@@ -71,7 +71,7 @@ itself — but record that decision.
    reason. Anything not listed is undecided — list the undecided ones explicitly rather than
    leaving them implicit.
 5. Inventory supervision: task labels, group/attribute/domain labels, unbiased-sample fraction ρ,
-   target-domain samples (labelled / unlabelled / none), pretraining corpora, human review capacity.
+   target-domain samples (labeled / unlabelled / none), pretraining corpora, human review capacity.
 6. Record the resource envelope (compute, memory, wall-clock, annotation) and whether each compared
    method will receive the same envelope.
 7. Freeze this into a **setting block** (see §9) and check it against §6 before training.
@@ -81,7 +81,7 @@ risk-bearing decision:
 
 8. Write the *real-world scenario* sentence: a concrete, believable instantiation of the setting,
    and name what in it is hypothetical.
-9. Enumerate the time behaviour: is deployment static, drifting, or does the label space change?
+9. Enumerate the time behavior: is deployment static, drifting, or does the label space change?
    Is retraining/model selection part of the system, and at what cadence and cost?
 10. Write the comparison class: list the specific prior works whose claims you consider
     comparable, and for each, the setting line you checked it against. Anything with more
@@ -113,7 +113,7 @@ Run all of these; each is a stop-and-fix, not a warning.
 - **Stop and re-scope** if the claimed generalization type is cross-bias and neither attribute
   labels nor a nonzero ρ is available: with only a diagonal training set the deployment cue is
   unidentifiable, so the claim is not testable, only arguable.
-- **Stop and re-declare the setting** the moment target-domain data (labelled *or* unlabelled) are
+- **Stop and re-declare the setting** the moment target-domain data (labeled *or* unlabelled) are
   used for tuning or training — that is a different problem with a different comparison class, and
   prior results in the old setting no longer apply.
 - **Proceed with a weaker claim** if the deployment environment cannot be described: fall back to
@@ -137,7 +137,7 @@ Run all of these; each is a stop-and-fix, not a warning.
 - `setting-block.md` (or a YAML front-matter file) with the fields:
   `task`, `deployment_axes[]`, `generalization_type`, `cue_whitelist{factor→status}`,
   `supervision{labels, ρ, target_samples, pretraining[]}`, `resource_envelope`,
-  `time_behaviour`, `comparison_class[]` with the per-entry checked setting differences.
+  `time_behavior`, `comparison_class[]` with the per-entry checked setting differences.
 - A one-paragraph real-world scenario statement (Extended).
 - The undecided-cue list, accepted or resolved.
 

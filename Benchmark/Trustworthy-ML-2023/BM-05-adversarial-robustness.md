@@ -4,7 +4,7 @@
 
 ## 1. Target capability / failure mode
 
-**Capability.** Behaviour of the model under the worst case inside an explicitly bounded strategy
+**Capability.** Behavior of the model under the worst case inside an explicitly bounded strategy
 space — the adversarial branch of the generalization-type axis, where evaluation returns a bound
 rather than a sample average.
 
@@ -16,7 +16,7 @@ gradients rather than from invariance.
 
 *Inside threat model T (goal G, strategy space S with norm and radius, knowledge K), model M's
 accuracy is at least a.* Any missing element of T makes the hypothesis unformulated. Secondary
-hypotheses: that M's advantage is not an artefact of the attack used (masking check), and that the
+hypotheses: that M's advantage is not an artifact of the attack used (masking check), and that the
 claim transfers to attack configurations and ε values beyond the one reported.
 
 ## 3. Required data and split assumptions
@@ -37,7 +37,7 @@ claim transfers to attack configurations and ε values beyond the one reported.
 - **Semantic/geometry stress**: flow-style or transform-based perturbations bounded by a
   total-variation budget, where the intended worst case is a plausible change rather than pixel noise.
 - **Pipeline stress**: the attack is applied to the *whole* inference pipeline, so preprocessing,
-  resizing, quantisation and randomised components are inside the attacked function.
+  resizing, quantisation and randomized components are inside the attacked function.
 - **Black-box stress**: substitute-model transfer, and query-bounded score-based estimation, with the
   access level recorded.
 - **Train/test condition matrix**: models trained under each condition evaluated under each other, to
@@ -73,9 +73,9 @@ claim transfers to attack configurations and ε values beyond the one reported.
 - Query count and wall-clock per successful perturbation for black-box rows.
 - Certified accuracy and, where computable, the looseness gap between the certified and empirical
   values.
-- Confidence behaviour on perturbed inputs, linked to
+- Confidence behavior on perturbed inputs, linked to
   [`BM-04`](BM-04-error-and-anomaly-detection.md): does the score notice?
-- Gradient-quality diagnostics for the defended model (gradient norm behaviour, variance across
+- Gradient-quality diagnostics for the defended model (gradient norm behavior, variance across
   restarts) as the masking indicator.
 
 ## 8. Aggregation and uncertainty reporting

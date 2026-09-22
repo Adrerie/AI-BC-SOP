@@ -37,12 +37,12 @@ before deployment does.
 - **Underspecification** — the setting admits several cues that each reach training-set perfection,
   so the data cannot say which one the model took; choosing the wrong one is a **misspecification**.
 - **Shortcut (simplicity) bias** — the systematic preference for the "simpler" cue; reported order
-  for vision-like factors is colour ≻ scale ≻ shape ≻ orientation, independent of architecture and
+  for vision-like factors is color ≻ scale ≻ shape ≻ orientation, independent of architecture and
   training algorithm.
 - **Diagonal / off-diagonal cell** — a combination of (task cue, bias cue) where the two agree /
   disagree.
 - **Cue-by-cue accuracy** — accuracy of the same fixed predictions computed under each alternative
-  labelling of the evaluation set by cue.
+  labeling of the evaluation set by cue.
 - **Counterfactual evaluation** — measure the model on edited inputs where exactly one cue was
   altered, and read the *change* in performance as the evidence of dependence.
 
@@ -54,7 +54,7 @@ before deployment does.
    Any cell with near-zero support is a cue the model cannot be verified on later — record it as a
    blind spot before interpreting results.
 2. **Cue-by-cue accuracy.** On the off-diagonal evaluation subset, re-label the set once per
-   candidate cue, and compute accuracy of the frozen predictions under each labelling.
+   candidate cue, and compute accuracy of the frozen predictions under each labeling.
    Expected signature of a cue-dependent model: high accuracy under the label it actually exploits,
    near chance under the others.
 3. **Counterfactual — alter the task cue.** For every evaluation sample, remove or replace the
@@ -93,12 +93,12 @@ before deployment does.
 - [ ] **Single-cue editing**: each counterfactual changes exactly one factor; verify by checking
       that the remaining factors are unchanged (mask area, style statistics, token diff).
 - [ ] **Occlusion honesty**: whatever fills the removed region must not add information — the same
-      control that governs remove-and-classify in `SOP-07`. A fixed colour is a claim, not a null.
+      control that governs remove-and-classify in `SOP-07`. A fixed color is a claim, not a null.
 - [ ] **Significance stated as a range**: report the drop with a variability estimate (seeds or
       bootstrap); the source gives no universal threshold for "materially", so declare yours before
       reading the result.
 - [ ] **No expected-shape criterion**: the verdict may not be "the map looks right". Judge against
-      the model's behaviour, not against your prior about the object's location.
+      the model's behavior, not against your prior about the object's location.
 - [ ] **Blind-spot list is reproduced in the report** (§5 step 1).
 
 ## 7. Decision or stop conditions
@@ -107,7 +107,7 @@ before deployment does.
   dependency as *unknown*, and treat any cross-bias generalization claim as unsupported.
 - **Stop and re-run `SOP-01`** if the counterfactual verdict contradicts the whitelist — the
   setting, not the model, is what failed to describe the situation.
-- **Do not proceed to mitigation** while an occlusion artefact could explain the result
+- **Do not proceed to mitigation** while an occlusion artifact could explain the result
   (`SOP-07` §8 on missingness bias); fix the instrument first.
 - **Escalate** to subgroup reporting whenever the average and the worst cell disagree in direction.
 
@@ -127,7 +127,7 @@ before deployment does.
 ## 9. Required outputs
 
 - Contingency table with cell support counts.
-- Cue-by-cue accuracy table (one column per candidate labelling, one row per subset).
+- Cue-by-cue accuracy table (one column per candidate labeling, one row per subset).
 - Counterfactual result tables for both alteration directions, per cell, with variability estimates.
 - Updated cue whitelist with `verified-*` / `undetermined` statuses and the blind-spot list.
 

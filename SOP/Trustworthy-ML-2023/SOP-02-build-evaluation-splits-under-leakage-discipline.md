@@ -34,19 +34,19 @@ restating it.
 
 ## 4. Definitions needed for execution
 
-- **Role of a split by what is optimised on it** — parameters (training), hyper-parameters and
+- **Role of a split by what is optimized on it** — parameters (training), hyper-parameters and
   design choices (validation), methodology and claim (test). Update cadence differs by orders of
   magnitude: milliseconds-to-seconds, minutes-to-days, months-to-years.
 - **Information leakage** — any information intended exclusively for deployment becoming available
-  during development. Four concrete forms: tuning on labelled target samples; tuning by *visually
-  inspecting* target samples; training on target samples labelled **or unlabelled**; tuning to
-  maximise publicly reported scores.
+  during development. Four concrete forms: tuning on labeled target samples; tuning by *visually
+  inspecting* target samples; training on target samples labeled **or unlabelled**; tuning to
+  maximize publicly reported scores.
 - **Test-set spoiling** — the loss of a test set's meaning as a generalization estimate caused by
   any decision being taken from its results, including reading other people's numbers on it.
   Spoiling is a spectrum: you can spoil less, never not at all, if you also want a benchmark.
 - **Shifted validation** — a validation subset drawn from a *different* domain than training, used
   only when the setting grants target-domain information. It measures something weaker than
-  generalization and must be labelled as such.
+  generalization and must be labeled as such.
 - **Upper-bound row** — a result obtained with more supervision than the setting grants (for
   example training on the target domain, or selecting the model on the full test set). Legitimate
   only when marked as an upper bound.
@@ -164,7 +164,7 @@ your validation set.
 
 ## 12. Source traceability
 
-Split roles and what each optimises: §2.3.2, Definitions 2.20-2.22 (book pp. 26-27). Validation
+Split roles and what each optimizes: §2.3.2, Definitions 2.20-2.22 (book pp. 26-27). Validation
 must share training domains for true OOD claims, with the pointer to leakage: §2.3.2 (p. 26) and
 §2.5.2. Testing as part of development and the impossibility of an unsullied test set: §2.3.3
 (p. 28). Information leakage definition and its four concrete forms: §2.5.1, Definition 2.24

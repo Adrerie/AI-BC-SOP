@@ -28,7 +28,7 @@ to [`BM-04`](BM-04-error-and-anomaly-detection.md), not here.
 
 ## 3. Required data and split assumptions
 
-- A labelled evaluation set frozen per
+- A labeled evaluation set frozen per
   [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md),
   plus a **separate calibration split** if any post-hoc map is fitted; fitting a temperature on the
   reported test set invalidates the benchmark.
@@ -113,7 +113,7 @@ trade-off, not as a free improvement.
 
 - Calibration is not truthfulness: per-sample `c(x) = P(L = 1 | x)` can fail arbitrarily while group
   calibration holds.
-- Proper scores bound behaviour in expectation over the data distribution; they say nothing about
+- Proper scores bound behavior in expectation over the data distribution; they say nothing about
   epistemic uncertainty, whose Bayes-predictor value is zero.
 - A strictly proper score for the predictive (max-prob) target is guaranteed to also be strictly
   proper for recovering the true conditional distribution in the **binary** case; beyond binary the

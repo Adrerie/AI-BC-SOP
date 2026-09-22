@@ -41,7 +41,7 @@ fooled into reporting one that does not exist.
   deployment distribution.
 - **ε** — the radius bound of the strategy space, always norm-qualified (`ℓ∞`, `ℓ2`, or a total
   variation budget for flow-style transforms).
-- **Gradient masking (obfuscated gradients)** — a defence that breaks the gradient path, so a
+- **Gradient masking (obfuscated gradients)** — a defense that breaks the gradient path, so a
   gradient-based attack reports safety that is not there. Three mechanisms: shattering, stochasticity,
   exploding/vanishing gradients.
 - **Certified evaluation** — proving no successful perturbation exists within the ball, as opposed to
@@ -70,7 +70,7 @@ fooled into reporting one that does not exist.
 4. If any part of the system is non-gradient-friendly (cropping, resizing, quantisation,
    randomisation), attack the **joint pipeline** rather than the differentiable core: compose the
    transforms, use a straight-through estimator for quantising steps, and average gradients over
-   sampled transforms when a single sampled gradient is too noisy to optimise.
+   sampled transforms when a single sampled gradient is too noisy to optimize.
 5. For black-box settings, state the access level and count the queries: an estimation-of-gradient
    attack pays a per-coordinate cost and may additionally require logits rather than labels.
 6. Report robustness as a curve or matrix, not a scalar: accuracy versus ε, and the
@@ -89,7 +89,7 @@ fooled into reporting one that does not exist.
     transforms with the same reporting discipline (severity sweep, not a single point).
 11. Add a plausibility filter to the strategy space where the deployment only ever sees realistic
     inputs, and report both the pessimistic and the realistic variant.
-12. Add a defence-progress report: for each defence, the attack that broke it, or an explicit
+12. Add a defense-progress report: for each defense, the attack that broke it, or an explicit
     "not broken by X, Y, Z at configuration C".
 
 ## 6. Mandatory checks
@@ -98,7 +98,7 @@ fooled into reporting one that does not exist.
 - [ ] **Strategy-space/goal alignment**: the declared space contains the perturbations the goal
       calls worst; if the goal is semantic and the space is a pixel ball, say so in the result line.
 - [ ] **Masking check**: robust accuracy that rises when the attack is *weakened* or when gradients
-      are made unavailable is an artefact. Re-run the joint-pipeline attack (step 4) and compare.
+      are made unavailable is an artifact. Re-run the joint-pipeline attack (step 4) and compare.
 - [ ] **Strongest-attack check**: the reported attack configuration is at least as strong as the one
       used to establish the baseline being beaten; iteration count is not silently reduced.
 - [ ] **ε parity** across all methods, including prior work you quote.
@@ -174,7 +174,7 @@ zeroth-order access requirements with query cost: §2.15.8-§2.15.10, Definition
 §2.15.11 (pp. 101-102). Gradient masking, its three mechanisms, the "7 of 9 defenses" evidence, the
 joint-pipeline / straight-through / expectation-over-transforms progression, and the bit-depth and
 estimator definitions: §2.15.12, Definitions 2.44-2.46 (pp. 102-107). Effectiveness and limits of
-adversarial training: §2.15.13 (pp. 107-108). Transform-based defence applied at both train and
+adversarial training: §2.15.13 (pp. 107-108). Transform-based defense applied at both train and
 inference: §2.15.14 (pp. 108-110). Certification, the bound chain, looseness of post-hoc bounds and
 the joint training objective, and the two-layer/binary scope: §2.15.15, Definition 2.47
 (pp. 111-113). Reporting table conventions with norm-qualified distance columns and footnoted

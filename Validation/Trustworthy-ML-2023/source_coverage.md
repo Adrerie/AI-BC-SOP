@@ -172,7 +172,7 @@ Source IDs are the book's own heading numbers (kept only for traceability), so s
 | 2.15.14 | Barrage of Random Transforms (BaRT) | subsection | 108 | defense-method-detail | delegated | supporting |
 | 2.15.15 | Certified defenses | subsection | 110 | certified-robustness, evaluation-protocol, validity-boundary | delegated | incorporate |
 | 2.15.16 | History and Possible Future of Adversarial Robustness in ML | subsection | 113 | history-narrative | delegated | out-of-scope |
-| 2.15.17 | Towards Less Pessimistic defenses | subsection | 114 | research-agenda | delegated | out-of-scope |
+| 2.15.17 | Toward Less Pessimistic defenses | subsection | 114 | research-agenda | delegated | out-of-scope |
 | 3 | Explainability | chapter | 115 | explainability, attribution | delegated | incorporate |
 | 3.1 | Introduction | section | 116 | explainability, problem-definition | delegated | supporting |
 | 3.1.1 | Ways to Control Undefined Behavior | subsection | 117 | undefined-behavior, control-strategies | delegated | incorporate |
@@ -228,7 +228,7 @@ Source IDs are the book's own heading numbers (kept only for traceability), so s
 | 3.8 | Soundness is Not The End of the Story | section | 188 | explanation-evaluation, end-goal, hitl-evaluation | direct | incorporate |
 | 3.8.1 | Various End Goals for Explainability | subsection | 189 | end-goal-definition, relevance-criterion | direct | incorporate |
 | 3.8.2 | Human-in-the-Loop (HITL) Evaluation | subsection | 189 | hitl-evaluation, protocol | direct | incorporate |
-| 3.9 | Towards Interactive Explanations | section | 193 | explainability, interactive-explanation | delegated | supporting |
+| 3.9 | Toward Interactive Explanations | section | 193 | explainability, interactive-explanation | delegated | supporting |
 | 3.9.1 | A Survey on Explanations | subsection | 193 | survey-interactive | delegated | supporting |
 | 3.9.2 | Generating Counterfactual Explanations with Natural Language | subsection | 194 | method-detail-interactive | delegated | supporting |
 | 3.9.3 | e-ViL | subsection | 194 | dataset-reference | delegated | supporting |
@@ -369,7 +369,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   methods may only be compared when they are given the same setting; a method that consumes fewer
   dev resources cannot be compared fairly to one that consumes more (2.3.1, p. 25, "How to compare
   methods with different resources?").
-- The three splits are distinguished by *what is optimised*, not by size (2.3.2, p. 26-27):
+- The three splits are distinguished by *what is optimized*, not by size (2.3.2, p. 26-27):
   training set → parameters, update cadence O(ms-s); validation set → hyperparameters and design
   choices, O(min-d); test set → "the methodology and overall approach through the shift of the
   field", O(months-y). For true OOD generalisation the validation set **must** come from the
@@ -378,15 +378,15 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   reading other people's test numbers — destroys the test set's meaning as a generalisation
   estimate; benchmarks are still necessary, so the achievable standard is "spoil the test set
   less", never "do not spoil it".
-- Dev is modelled as a *closed system of information* (2.5, p. 35): dataset, annotation, inductive
+- Dev is modeled as a *closed system of information* (2.5, p. 35): dataset, annotation, inductive
   bias, knowledge. No new information may appear inside it, and "there is no change in the maximal
   generalization performance we can get out of this system". Note that information can also be
   *killed* (averaging, replacing measurements by summary statistics).
 - Information leakage (Def 2.24, p. 36) is defined as deployment-stage information reaching dev,
-  and is enumerated in four concrete patterns: (1) hyper-parameters chosen from labelled target
+  and is enumerated in four concrete patterns: (1) hyper-parameters chosen from labeled target
   samples; (2) chosen by *visually inspecting* target data ("still information leakage, just in a
-  less automated way"); (3) training on target samples, labelled **or unlabelled** — which turns
-  domain generalization into domain adaptation; (4) tuning to maximise publicly visible scores on
+  less automated way"); (3) training on target samples, labeled **or unlabelled** — which turns
+  domain generalization into domain adaptation; (4) tuning to maximize publicly visible scores on
   a benchmark built from the target domain. Remedy named for (4): publish only a *ranking*, e.g. a
   hidden server (footnote 7, p. 36).
 - Pretraining leakage (2.5.1, p. 37): a pretrained model imports the whole pretraining corpus into
@@ -423,14 +423,14 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 - Def 2.29 *Shortcut (simplicity) bias* (p. 49): a preference for "simpler" cues, ordered
   Color > Scale > Shape > Orientation independent of architecture and training algorithm, explained
   through the Kolmogorov complexity of a cue approximated by the minimal parameter count needed to
-  memorise the cue-labelled training set (formula on p. 50).
+  memorise the cue-labeled training set (formula on p. 50).
 - Cross-bias impossibility (2.8.2, p. 47): on a diagonal dataset the perfectly aligned cues
   contradict each other, so a single model cannot use them all; if the deployment cue is unknown,
   "cross-bias generalization is not solvable" and reported success implies a hidden ingredient,
   i.e. leakage.
 - Feasibility routes (2.8.3, p. 48): route 1 — a fraction ρ ∈ [0,1] of unbiased dev samples **plus
   bias/attribute labels** (Def 2.30); ρ is "part of the setting" and must be reported, task becomes
-  arbitrarily hard as ρ → 0 and impossible at ρ = 0. Route 2 — grant labelled (or unlabelled) target
+  arbitrarily hard as ρ → 0 and impossible at ρ = 0. Route 2 — grant labeled (or unlabelled) target
   samples plus per-sample domain identity, which *changes the setting* to domain adaptation or
   test-time training and therefore breaks comparability with prior DG work.
 - 2.7.1 (p. 44) names the first difficulty as *ill-defined behavior on novel domains*: "It works in
@@ -441,8 +441,8 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 
 - Two executable diagnostics, both requiring a *disentangled* test set with task labels:
   1. **Cue-by-cue accuracy** (2.8.4, p. 49): re-label an off-diagonal test set under each candidate
-     cue and compute accuracy per labelling; the signature of a learned cue is high accuracy under
-     its own labelling and near-chance under all others.
+     cue and compute accuracy per labeling; the signature of a learned cue is high accuracy under
+     its own labeling and near-chance under all others.
   2. **Counterfactual evaluation** (2.10, p. 55-56), two strategies — *alter the task cue* (drop in
      performance is required; no drop ⇒ misspecified) and *alter the bias cue* (a drop is the
      failure signal and additionally identifies the bias). Instantiate with object removal +
@@ -452,7 +452,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   is exactly the shape our SOP needs: Scenario 1 = abundant biased + ≤1 % unbiased training samples
   *with* bias labels → Group DRO / re-weighting / DANN; Scenario 2 = no bias labels → assume bias is
   the first cue a generic or myopic model learns → Learning from Failure, ReBias ("be different"
-  supervision, Def 2.31/2.32); Scenario 3 = labelled test samples at deployment → train a diverse
+  supervision, Def 2.31/2.32); Scenario 3 = labeled test samples at deployment → train a diverse
   ensemble and select or adapt at test time.
 - Group DRO (2.12.1, p. 59-61): min over θ of the *max over groups* of expected loss, with the
   empirical risk over the mixture class Q = {Σ q_g P_g}; Algorithm 1 gives the exponential-weights
@@ -461,14 +461,14 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   loses average accuracy but wins **worst-group accuracy**, where ERM "usually breaks down
   completely" under notable imbalance.
 - DANN (2.12.2, p. 62-65): adversarial bias-head objective E = task loss − λ(bias loss on both
-  labelled and unlabelled points) with the saddle point over (θ_f, θ_y) vs θ_d; two label
+  labeled and unlabelled points) with the saddle point over (θ_f, θ_y) vs θ_d; two label
   encodings are given (bias attribute as domain, or biased-vs-unbiased as domain 1/2). The book's
   own reproduction of the source paper's tables is used to show *no significant difference* against
   NN/SVM on sentiment transfer, and large gains on the standard adaptation pairs.
 - Learning from Failure (2.13.1, p. 67-70): generalized cross-entropy
   L_GCE = (1 − p_y^q)/q to build the biased model, then sample weights
   W(x) = L_CE(f_B) / (L_CE(f_B) + L_CE(f_D)); Algorithm 2 alternates both. Documented failure case:
-  when task and bias roles are swapped (bias = digit, task = colour) LfF fails, and lower unbiased
+  when task and bias roles are swapped (bias = digit, task = color) LfF fails, and lower unbiased
   fractions increase its relative effect.
 - ReBias (2.13.2, p. 70-75): HSIC-based independence between the final and a myopic biased model
   (BagNet-3 with a small receptive field), minimax form min_f max_g L(f) − L(g) + λ·HSIC, with the
@@ -483,7 +483,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   it mixes DG and subpopulation shift (WILDS); a benchmark keyed to one model implementation
   (ImageNet-A ↔ one ResNet-50 build) is implementation-dependent; ImageNet-O's meaningful readout is
   confidence on unforeseen classes, not top-1 accuracy; oracle / train-on-target rows must be
-  labelled as upper bounds; equal hyper-parameter tuning budget across compared methods (p. 64).
+  labeled as upper bounds; equal hyper-parameter tuning budget across compared methods (p. 64).
 
 ### N4 — Adversarial evaluation as a worst-case protocol (2.15; delegated)
 
@@ -511,10 +511,10 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   7 of 9 ICLR'18 defenses did not actually work, and the decisive statement that "the model being
   safe is not equivalent to no gradient-based algorithm being able to find an attack". The
   symptom to look for: naive PGD reports high robust accuracy because the gradient path is broken.
-  The prescribed progression: attack the *joint* defence pipeline through differentiable
+  The prescribed progression: attack the *joint* defense pipeline through differentiable
   transforms, use a straight-through estimator for quantising transforms (Def 2.46), and average
-  gradients over randomised transforms (expectation-over-transformation identity, p. 107) because
-  single randomised gradients are "simply too noisy".
+  gradients over randomized transforms (expectation-over-transformation identity, p. 107) because
+  single randomized gradients are "simply too noisy".
 - Defense cost ledger (2.15.11, p. 101-102): adversarial training needs T + 1 forward/backward
   passes per batch plus more epochs and often more capacity, but **no inference overhead**; it does
   not introduce obfuscated gradients, yet leaves "no guarantees" that the ε-ball is attack-free.
@@ -566,7 +566,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
      (randomly initialised model ⇒ informationless map) is called "probably a way too strong
      necessary condition", the relaxed version being that attribution maps must change visibly when
      the model changes.
-  3. *Sanity checks* (3.7.5, pp. 182-185): cascading randomisation (randomise weights top-down and
+  3. *Sanity checks* (3.7.5, pp. 182-185): cascading randomisation (randomize weights top-down and
      watch the map change) and label randomisation (a model trained on random labels must not yield
      informative maps), scored quantitatively by rank correlation between true- and random-label
      attributions. Book's verdicts: Guided Backprop and Guided Grad-CAM fail as edge detectors;
@@ -577,7 +577,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
      agreement noise p is controlled by the experimenter, so the correct attribution is known by
      construction (at p = 0 the caption must dominate; at p = 1 it must not be used).
   5. *Remove-and-Classify* (Def 3.14, 3.7.7, pp. 186-187): rank features by attribution, remove in
-     that order, measure the accuracy drop relative to random erasing, summarise by AUC (lower
+     that order, measure the accuracy drop relative to random erasing, summarize by AUC (lower
      better); four variants exist (most/least important first, occlude/inpaint-in, single/batched)
      and some papers average them. *Missingness bias* (3.7.8, p. 188) is the validity boundary:
      replacing pixels by the dataset mean (usually grey) can **add** information — the ResNet-50
@@ -588,7 +588,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   (proxy tasks, cheap, but "as explainability is necessarily human-grounded, such evaluations should
   only be considered **in addition to** human-grounded studies"), human-grounded, application-
   grounded. End goals (3.8.1, p. 189) are debugging, understanding (can humans *predict* the
-  model's behaviour?), and trust/approach acceptance; soundness addresses only an intermediate step,
+  model's behavior?), and trust/approach acceptance; soundness addresses only an intermediate step,
   and there is a named absence: "we have yet to see a successful use case of XAI for model
   debugging". HITL evaluation (Def 3.15) is therefore unavoidable.
 - Training-data attribution is evaluated by its **end goal**, not its proxy (3.12, p. 214-217):
@@ -635,16 +635,16 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   bin-weighted mean of |acc(B_m) − conf(B_m)|), MCE as the worst-bin variant for high-risk use
   (Def 4.14), and the reliability diagram (Def 4.15) which reveals the sign of miscalibration and
   the MCE but not the ECE because bin weights are invisible. Two named integrity failures: **gaming
-  ECE** by emitting the constant c = P(Ŷ = Y), which needs no labelled validation data at all and
+  ECE** by emitting the constant c = P(Ŷ = Y), which needs no labeled validation data at all and
   yields ECE = 0 while per-sample c(x) is arbitrarily wrong; and **bin-count dependence**
   ("Using twenty bins gives us a different score than using ten"), with the book observing that
   papers are inconsistent (15 bins in the table it reproduces) and recommending finer bins near
   90-100 %.
 - Empirical calibration evidence (4.8): modern networks can overfit NLL while accuracy keeps
-  improving — "the network learns better classification accuracy at the expense of well-modelled
+  improving — "the network learns better classification accuracy at the expense of well-modeled
   probabilities" (4.8.1, pp. 259-261) — calibration varies by architecture family (4.8.2, pp. 261-262), and
   temperature scaling f(x;T) = softmax(g(x)/T) with T chosen by grid search on a validation set to
-  minimise ECE is the cheap fix (4.8.3, p. 263, 8-10 % → sub-2 % ECE). The protocol detail that
+  minimize ECE is the cheap fix (4.8.3, p. 263, 8-10 % → sub-2 % ECE). The protocol detail that
   matters for benchmark integrity: T is fitted on **validation** data, never on the test set.
 - The ranking condition (4.9.1, pp. 263-264) is the weaker requirement — preserve the order of
   P(L = 1 | x) — which is "sufficient for many applications, such as when we filter out too-uncertain
@@ -679,7 +679,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   than the ensemble method" (4.11.6, p. 281-282); SWAG-Diag is "sadly very similar to SGD" on the
   reliability diagram, so the cheap variant buys scale, not quality (4.11.9, p. 290); Mahalanobis and
   DUQ-style feature distances beat max-prob on OOD detection but "conflate OOD with high aleatoric
-  ambiguity" and must not be generalised from one dataset pair (4.12.1-4.12.2, p. 292-296).
+  ambiguity" and must not be generalized from one dataset pair (4.12.1-4.12.2, p. 292-296).
   4.11.10 (p. 290) states the principledness bar as two assumptions — a sensible prior and a
   posterior inside the chosen family — neither verifiable in deep networks.
 - Aleatoric modeling (4.13) reduces to a two-ingredient recipe (4.13.1, p. 298): output the
@@ -777,9 +777,9 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 | Robustness, sound claim | Certified robust accuracy | bound chain `Ã(A(x)) ≤ Ã(x) + ε‖∇Ã‖₁ ≤ … ≤ Ã_SDP(x)` | 2.15.15 p. 111 |
 | Explanation dependence on the model | Sanity-check rank correlation (label & weight randomisation) | Kendall-type rank correlation of maps, true vs random labels | 3.7.5 pp. 182-185 |
 | Explanation soundness (ordering) | Remove-and-Classify relative accuracy drop, AUC lower-better | iterative occlusion in attribution rank vs random erasing | Def 3.14, 3.7.7 p. 186 |
-| Explanation usefulness to humans | HITL / application-grounded task performance | human accuracy or behaviour change with vs without the explanation | Def 3.15, 3.8.2 p. 189 |
+| Explanation usefulness to humans | HITL / application-grounded task performance | human accuracy or behavior change with vs without the explanation | Def 3.15, 3.8.2 p. 189 |
 | Training-data attribution usefulness | Self-influence mislabel detection | AUROC / AP over self-influence scores | Def 3.16, 3.12.2 p. 216 |
-| Calibration repair | Temperature scaling | `f(x;T) = softmax(g(x)/T)`, T grid-searched on validation to minimise ECE | 4.8.3 pp. 262-263 |
+| Calibration repair | Temperature scaling | `f(x;T) = softmax(g(x)/T)`, T grid-searched on validation to minimize ECE | 4.8.3 pp. 262-263 |
 
 ## Gate A — Source Coverage
 

@@ -91,7 +91,7 @@ for re-computed numbers (implementation difference, seed, or both).
 
 | Observation | Reading |
 |---|---|
-| Ranking changes under shared metric implementation | the field's numbers were partly an implementation artefact |
+| Ranking changes under shared metric implementation | the field's numbers were partly an implementation artifact |
 | Method loses its lead under equal tuning budget | the contribution was budget, not method |
 | A conclusion requires target-domain information | setting mis-declared; reclassify and re-compare |
 | Trivial control matches or beats the claim on a metric | the metric is gameable at that claim; change metric or claim |
@@ -109,7 +109,7 @@ recomputation time. Report it, because "we did not check" is usually a budget st
 - An audit establishes protocol integrity, not model quality: a clean comparison of two poor methods
   is still a poor result.
 - Absence of a violation is bounded by the requirement list; new failure patterns appear as fields
-  optimise against old audits (the source's own scandal list is a snapshot, not a closed set).
+  optimize against old audits (the source's own scandal list is a snapshot, not a closed set).
 - Public results may be unreproducible for reasons invisible to the audit; where the audit cannot
   recompute, it records unverifiable.
 - Second-version replication is available only where a field re-collects data.

@@ -40,11 +40,11 @@ the data do not determine which was learned; **misspecification** = the learned 
 
 | Metric | Definition to use | Where it is valid | Known degeneracy |
 |---|---|---|---|
-| `acc_avg` | fraction correct over the evaluation set | any labelled subset | averages away minority cells |
+| `acc_avg` | fraction correct over the evaluation set | any labeled subset | averages away minority cells |
 | `acc_worstgroup` | minimum accuracy over declared groups/cells | groups defined and non-empty | noisy when a cell is tiny |
 | `nll` | −(1/N) Σ log f_y(x) on the evaluation set | probabilistic outputs | mixes accuracy and calibration; floor unknown |
 | `brier` | (1/N) Σ [ (1 − f_y)² + Σ_{k≠y} f_k² ] | probabilistic outputs | as `nll`, softer tails |
-| `perplexity` | exponentiated `nll` (base 2) | language modelling | same confound as `nll` |
+| `perplexity` | exponentiated `nll` (base 2) | language modeling | same confound as `nll` |
 | `ece` | Σ_m (\|B_m\|/N) · \|acc(B_m) − conf(B_m)\|, bins disclosed | scalar confidence in [0,1] | gameable by constant confidence; bin-sensitive |
 | `mce` | max_m \|acc(B_m) − conf(B_m)\| | high-risk claims | pessimistic on small bins |
 | `reliability` | per-bin acc and (conf − acc), plotted with the confidence histogram | diagnosis of over/under-confidence | does not reveal `ece` without bin weights |
@@ -53,9 +53,9 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `risk_at_coverage` | error rate among the top-k fraction by confidence | abstention | undefined without the coverage stated |
 | `acc_under_eps` | accuracy under a named attack, **norm + ε + attack configuration attached** | adversarial claims | fake-safe when the defense masks gradients |
 | `certified_acc` | fraction of inputs with a proof of invariance inside the ball | architectures the bound admits | bound may be arbitrarily loose |
-| `remove_classify_auc` | area under accuracy-vs-removed-feature-count curve, relative to random occlusion | ordering claims about attributions | measures the occlusion artefact as well as importance |
+| `remove_classify_auc` | area under accuracy-vs-removed-feature-count curve, relative to random occlusion | ordering claims about attributions | measures the occlusion artifact as well as importance |
 | `sanity_rankcorr` | rank correlation between attributions of a true-label and a random-label model | explanation soundness | a necessary, not sufficient, condition |
-| `hitl_delta` | change in human task performance / behaviour with vs without the explanation | trust and understanding goals | costly, design-sensitive |
+| `hitl_delta` | change in human task performance / behavior with vs without the explanation | trust and understanding goals | costly, design-sensitive |
 | `self_influence_auroc` | detection of suspicious training items by their self-influence score | training-data attribution | assumes few, non-systematic mislabels |
 | `tnr_at_high_tpr` | true-negative rate evaluated at a fixed high true-positive rate (state the rate) | false-alarm budgets matter more than averages | meaningless without the fixed TPR stated |
 | `audit_pass_rate` | applicable integrity requirements passed ÷ applicable requirements | protocol audits | inflates if inapplicable requirements are dropped silently |

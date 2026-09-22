@@ -18,7 +18,7 @@ Legend for *Destination*: `SOP` = becomes a procedure, `BM` = becomes a benchmar
 
 | # | Synthesized concept | Research question it answers | Contributing source sections | Depends on | Destination | Body |
 |---|---|---|---|---|---|---|
-| C1 | **Setting declaration** | Which resources, labels, target distribution, and time behaviour am I actually allowed to use, and therefore which literature may I compare myself to? | 2.3.1 (Def 2.14-2.19), 2.4.2-2.4.11, 2.8.3, 5.3.1, 1.4.2 | — | SOP, BM | yes |
+| C1 | **Setting declaration** | Which resources, labels, target distribution, and time behavior am I actually allowed to use, and therefore which literature may I compare myself to? | 2.3.1 (Def 2.14-2.19), 2.4.2-2.4.11, 2.8.3, 5.3.1, 1.4.2 | — | SOP, BM | yes |
 | C2 | **Generalization-type axis** | Which kind of train→test difference am I claiming to survive: domain, cue-correlation, adversarial, or none (ID)? | 2.1.2 (Def 2.8), 2.7.1, 2.8-2.8.2, 2.15, 2.15.1, 1.4.1 | C1 | SOP, BM | yes |
 | C3 | **Cue whitelist (causal vs spurious)** | Which factors of variation is the model *allowed* to use as evidence for the task? | 1.4.1, 2.6-2.7.1 (Def 2.27, 2.28), 2.9 (Def 2.29), 2.8.2, 3.1.1 | C1, C2 | SOP, BM | yes |
 | C4 | **Evaluation-information discipline (leakage)** | Did information from the deployment stage reach development — through tuning, viewing, pretraining, or leaderboards? | 2.3.2-2.3.3, 2.5-2.5.3 (Def 2.24, 2.25), 5.1.3, 2.14.1, 2.15.12 (leaderboard-adjacent), 3.12.2, 4.8.3 | C1 | SOP, BM | yes |
@@ -35,7 +35,7 @@ Legend for *Destination*: `SOP` = becomes a procedure, `BM` = becomes a benchmar
 | C15 | **Subgroup / worst-case view** | Does the average hide the cell we care about? | 2.6 (Def 2.26), 2.8 (p. 46 balanced cells), 2.12.1 (worst-group), 4.6.2 (MCE, per-class worst case), 4.5.9 (imbalanced floor), 2.14/2.13.2 (biased vs unbiased test sets) | C3, C7 | SOP, BM | yes |
 | C16 | **Selective action and abstention** | When should the system decline, ask, or hand over, and at what cost? | 4.1.2-4.1.3 (cost table, open set, active learning, objectness), 4.9.1 (threshold filtering), 2.14 (test-time selection), 3.1.4-3.1.5 | C7, C8 | SOP, BM | yes |
 | C17 | **Explanation-by-attribution as an instrument** | What can an attribution map legitimately tell us about the model, and what is it not allowed to prove? | 3.1-3.6.6 (Def 3.1-3.12), 3.7.1 (trade-off), 3.8.1 (end goals), 3.9, 3.10-3.13 | C3, C6, C9 | SOP, BM | yes |
-| C18 | **Reporting and validity boundary** | What must be stated so a reader can tell what the number does and does not license? | 2.3.1 (setting), 4.6.1 (bins), 2.15.3-2.15.4 (ε, norm, attack config), 3.7.7-3.7.8 (occlusion operator), 4.8.2 (architecture family, recalibration), 5.1.3 (metric implementation), 2.14.1 (upper-bound labelling), 4.11.10, 4.12.3 | all | SOP, BM | yes |
+| C18 | **Reporting and validity boundary** | What must be stated so a reader can tell what the number does and does not license? | 2.3.1 (setting), 4.6.1 (bins), 2.15.3-2.15.4 (ε, norm, attack config), 3.7.7-3.7.8 (occlusion operator), 4.8.2 (architecture family, recalibration), 5.1.3 (metric implementation), 2.14.1 (upper-bound labeling), 4.11.10, 4.12.3 | all | SOP, BM | yes |
 | C19 | **What→How framing (ML 2.0)** | Why is predicting Y from X insufficient, and what supervision would make "How" questions answerable? | 1.4-1.4.2 (Def 1.2-1.5), 5.3-5.3.5, 2.14.1, 4.3.2 | — | background | yes |
 | C20 | **Illustrative catalogues** | Concrete named datasets/methods that serve as defaults, not as taxonomy. | 2.6.1 (PACS, DomainBed, WILDS, ImageNet-C/-A/-O), 3.5.x method catalogue, 4.11-4.13 estimator catalogue, 5.1.2 scandal list, Table 2.2 shortcut examples | C1-C18 | background (defaults referenced from SOPs) | yes |
 
@@ -60,9 +60,9 @@ book's recurring complaints, so the artifacts keep them apart by construction.
 | **Method family** (never a capability name) | re-weighting / group-DRO; domain-adversarial; biased-model ("be different"); diverse-ensemble + test-time selection; ensembling / BBiA / SWA-family; feature-distance; distribution-parameter heads (heteroscedastic NLL, MoG); recalibration (temperature); attribution estimators (gradient / smoothing / integration / partition-value / concept / activation / influence); adversarial training; certified relaxation | 2.12-2.14, 4.11-4.13, 4.8.3, 3.5-3.11, 2.15.11, 2.15.15 |
 | **Data / distribution condition** | ID; domain shift; bias-cue correlation (diagonal vs off-diagonal); corruption severity; multiplicity / ambiguity; subpopulation imbalance; adversarial ε-ball; scale regime (toy vs large-scale) | 2.1.2, 2.4, 2.7.1, 2.8, 4.10, 2.6, 2.15, 5.2 |
 | **Metric** | accuracy; average vs worst-group accuracy; accuracy-under-ε (norm-qualified); NLL / CE / perplexity; Brier (binary, multi-class); ECE / MCE / reliability diagram; AUROC; AUPR-Success / AUPR-Error; risk-coverage of a abstention rule; remove-and-classify AUC; rank correlation under randomisation; certified accuracy | 2.12.1, 2.15.3, 4.5-4.6, 4.9.2, 3.7.5-3.7.7, 2.15.15 |
-| **Deployment constraint** | labelled target samples at dev (none / few / many); unbiased-sample fraction ρ; attribute or group labels; visual access to deployment data; pretraining corpus; human review budget; latency/memory; leaderboard visibility | 2.4, 2.8.3, 2.5.1, 4.1.3, 5.2 |
-| **Failure mode** | information leakage; test-set spoiling; benchmark contamination; confounded ingredients; untuned baseline; metric gaming; metric degeneracy under imbalance; wrong proxy for the property; ill-defined behaviour on no-data regions; underspecification; shortcut bias; gradient masking; missingness bias; confirmation bias; NLL overfitting; architecture-dependent calibration | 2.5, 2.3.3, 5.1.3, 5.2.2, 4.6.2, 4.9.2, 4.10, 2.7.1, 2.8.2, 2.9, 2.15.12, 3.7.8, 3.7.3, 4.8.1, 4.8.2 |
-| **Reporting requirement** | setting block; split provenance; ρ and label inventory; ε + norm + attack configuration and iteration budget; bin count and confidence-histogram; occlusion/inpainting operator; recalibration status and the set it was fitted on; compute/human cost; upper-bound rows labelled; metric implementation identity | C18 sources above |
+| **Deployment constraint** | labeled target samples at dev (none / few / many); unbiased-sample fraction ρ; attribute or group labels; visual access to deployment data; pretraining corpus; human review budget; latency/memory; leaderboard visibility | 2.4, 2.8.3, 2.5.1, 4.1.3, 5.2 |
+| **Failure mode** | information leakage; test-set spoiling; benchmark contamination; confounded ingredients; untuned baseline; metric gaming; metric degeneracy under imbalance; wrong proxy for the property; ill-defined behavior on no-data regions; underspecification; shortcut bias; gradient masking; missingness bias; confirmation bias; NLL overfitting; architecture-dependent calibration | 2.5, 2.3.3, 5.1.3, 5.2.2, 4.6.2, 4.9.2, 4.10, 2.7.1, 2.8.2, 2.9, 2.15.12, 3.7.8, 3.7.3, 4.8.1, 4.8.2 |
+| **Reporting requirement** | setting block; split provenance; ρ and label inventory; ε + norm + attack configuration and iteration budget; bin count and confidence-histogram; occlusion/inpainting operator; recalibration status and the set it was fitted on; compute/human cost; upper-bound rows labeled; metric implementation identity | C18 sources above |
 
 Deliberate separations worth naming:
 
@@ -116,7 +116,7 @@ SOP-04 or SOP-05, both of which are keyed to a decision rather than a topic.
 | `BM-02-spurious-cue-dependence.md` | does the model depend on an evidence cue that breaks when the correlation breaks | diagonal / off-diagonal cue construction | C3, C6, C15 |
 | `BM-03-confidence-truthfulness.md` | is the reported number a probability, a calibrated conditional, or an order | ID vs shifted, imbalance, ambiguity-rich subsets | C7, C8, C9, C10, C12 |
 | `BM-04-error-and-anomaly-detection.md` | can the score tell right from wrong / in from out / single from multiple answers | error, OOD, multiplicity, corruption | C8, C9, C10 |
-| `BM-05-adversarial-robustness.md` | worst-case behaviour inside a declared strategy space | ε-ball, transform, black-box access, certification | C11, C12, C14 |
+| `BM-05-adversarial-robustness.md` | worst-case behavior inside a declared strategy space | ε-ball, transform, black-box access, certification | C11, C12, C14 |
 | `BM-06-explanation-quality.md` | does the explanation reflect the model, and does it help a human | randomisation, simulated ground truth, occlusion, HITL | C17, C9, C10 |
 | `BM-07-selective-prediction-under-cost.md` | does the system decline safely where it should | coverage thresholds, asymmetric cost, human budget | C16, C7, C14 |
 | `BM-08-evaluation-integrity-audit.md` | is the comparison itself trustworthy (a benchmark over benchmarks) | any | C4, C5, C10, C14, C18 |
@@ -130,7 +130,7 @@ stress construction differs enough to warrant an explicit split inside the docum
 Dimensions from the reading list that were **considered and shaped**: computational cost became a
 mandatory field of every benchmark plus BM-08/BM-07 content rather than its own file (avoiding
 duplication with SOP-08); explainability-related evaluation was kept because it is operationally
-justified (3.7 has protocols and metrics, not just aspiration); subgroup / worst-case behaviour
+justified (3.7 has protocols and metrics, not just aspiration); subgroup / worst-case behavior
 became a cross-cutting requirement inside BM-01/BM-02/BM-03 rather than a separate benchmark, since
 the source supports it as a *view* on existing metrics (2.12.1, 4.6.2).
 

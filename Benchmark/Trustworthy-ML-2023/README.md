@@ -69,7 +69,7 @@ are not redefined locally; if a component needs a new one, it is added to that r
 
 Two evaluation areas the source discusses were deliberately left out of the operational suite, each
 recorded with its reason in the coverage audit: (a) benchmarks that require deployment-stage
-supervision the integrity rules here forbid (domain adaptation with labelled targets, test-time
+supervision the integrity rules here forbid (domain adaptation with labeled targets, test-time
 training, continual and few-shot variants), and (b) the representation-learning showcase whose own
 evaluation the source labels qualitative and unguaranteed. The book's forward-looking research agenda
 and its historical narrative are likewise not operationalised.

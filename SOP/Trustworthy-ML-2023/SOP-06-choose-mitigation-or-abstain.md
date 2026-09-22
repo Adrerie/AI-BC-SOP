@@ -33,15 +33,15 @@ silent failure.
 - **Admissible mitigation** — an intervention whose required ingredients your setting grants.
   Admissibility, not popularity, decides the candidate list.
 - **Resource-keyed scenarios** — the three supervision regimes the source distinguishes:
-  (S1) abundant biased samples plus a small amount of *labelled* unbiased samples; (S2) essentially
+  (S1) abundant biased samples plus a small amount of *labeled* unbiased samples; (S2) essentially
   no unbiased supervision and no bias labels, so an assumption about which cue a limited model
-  learns first must carry the weight; (S3) a small *labelled sample from the deployment
+  learns first must carry the weight; (S3) a small *labeled sample from the deployment
   distribution* available at decision time.
 - **Intentionally biased / myopic model** — a deliberately handicapped model (few epochs, small
   receptive field, single modality) used to expose which cue the easy solution is.
 - **"Be different" supervision** — regularising the final model away from the biased one, via sample
   weighting or a representation-independence penalty.
-- **Worst-group objective** — minimise the maximum loss over groups rather than the average loss;
+- **Worst-group objective** — minimize the maximum loss over groups rather than the average loss;
   trades average accuracy for the minimum cell.
 - **Abstention / selective prediction** — declining to answer above a confidence or coverage
   constraint; the operating point, not the score, is the decision.
@@ -57,7 +57,7 @@ silent failure.
      off-diagonal up-weighting;
    - no bias labels, ≤1 % unbiased samples → biased-model contrast ("be different") methods, and
      only if the "easy cue first" assumption is testable in your data;
-   - a few labelled deployment samples at decision time → diverse-ensemble plus test-time selection;
+   - a few labeled deployment samples at decision time → diverse-ensemble plus test-time selection;
    - confidence is the problem, decisions are fine → post-hoc recalibration;
    - adversarial strategy space declared → adversarial training
      ([`SOP-05`](SOP-05-run-worst-case-stress-evaluation.md));

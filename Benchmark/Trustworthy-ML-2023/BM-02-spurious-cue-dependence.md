@@ -10,7 +10,7 @@ training data also offer an easier cue that correlates with the label during dev
 **Failure mode under test.** Misspecification: the model answers a different question than the task
 states. Underlying mechanisms named by the source: spurious correlation (development-only
 co-occurrence), underspecification (several cues each reach training perfection), and shortcut or
-simplicity bias (a systematic preference for the easier cue, reported as colour ≻ scale ≻ shape ≻
+simplicity bias (a systematic preference for the easier cue, reported as color ≻ scale ≻ shape ≻
 orientation in vision-like data regardless of architecture and algorithm).
 
 This benchmark is distinct from `BM-01`: a model can transfer across styles and domains while still
@@ -20,7 +20,7 @@ deciding from a cue that a changed correlation would break.
 
 *Model M's decisions depend on the forbidden cue to a degree that costs accuracy on the
 off-diagonal evaluation cells, and a mitigation reduces that dependence without destroying average
-performance.* Every claim needs a bias-labelled, disentangled evaluation set: on a diagonal training
+performance.* Every claim needs a bias-labeled, disentangled evaluation set: on a diagonal training
 set alone the deployment cue is not identifiable, so the hypothesis is untestable and any reported
 "robustness" implies an undocumented ingredient.
 
@@ -45,7 +45,7 @@ Construct it by editing exactly one factor and verifying the others are unchange
 
 **Extended.**
 - *Cue-by-cue relabelling*: re-label the same off-diagonal set once per candidate cue and score the
-  frozen predictions under each labelling; the learned cue shows high accuracy, the others near chance.
+  frozen predictions under each labeling; the learned cue shows high accuracy, the others near chance.
 - *Task-cue ablation*: mask or remove the task-relevant cue (segmentation + inpainting,
   silhouette-only, texture-only, or text-span deletion). No material drop ⇒ the model was not using it.
 - *Bias-cue ablation*: the symmetric construction, where a material drop identifies the bias.
@@ -65,7 +65,7 @@ Construct it by editing exactly one factor and verifying the others are unchange
 | Worst-group objective (group-DRO style), with groups declared as either full cue cells or diagonal/off-diagonal | supervision-consuming comparator |
 | Domain-adversarial alignment, with its bias label encoded as domain | comparator when attribute labels exist |
 | Contrast method using a biased/myopic model | comparator when bias labels do **not** exist |
-| Oracle upper bound trained on off-diagonal data | labelled upper bound only |
+| Oracle upper bound trained on off-diagonal data | labeled upper bound only |
 | Random-chance-per-cell reference | prevents reading a small-cell number as skill |
 
 ## 6. Primary metrics
@@ -78,7 +78,7 @@ Construct it by editing exactly one factor and verifying the others are unchange
 
 ## 7. Secondary / diagnostic metrics
 
-- Cue-by-cue accuracy table (one column per candidate labelling).
+- Cue-by-cue accuracy table (one column per candidate labeling).
 - Confusion between cues: how often the model's decision is reproducible from the bias cue alone.
 - Calibration per cell (`BM-03`), because a biased model is often confidently biased.
 - Explanation-derived importance (`BM-06`) cross-checked against the counterfactual verdict — a
@@ -103,7 +103,7 @@ definitions.
 | Bias-cue edit causes a large drop | dependence on the forbidden cue confirmed, and the cue identified |
 | Mitigation raises worst cell and lowers average sharply | traded the wrong axis; revisit [`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md) |
 | Method collapses under role swap | its "easy cue first" assumption fails in this data |
-| Attribution disagrees with counterfactuals | instrument failure (see `BM-06`) or occlusion artefact |
+| Attribution disagrees with counterfactuals | instrument failure (see `BM-06`) or occlusion artifact |
 | Only diagonal cells exist | undiagnosable; report the dependence as unknown |
 
 ## 10. Computational reporting
@@ -120,7 +120,7 @@ model is an additional training run).
 - Off-diagonal support is a hard precondition: without it the result is a statement about
   correlation, not about evidence.
 - Editing operators are not neutral; a filling value can itself be informative, so an apparent
-  dependence change may be an artefact of the occlusion.
+  dependence change may be an artifact of the occlusion.
 - Human-judgement-based edits import the editor's expectations; treat them as hypotheses.
 - A clean result does not establish causal use of a cue — it establishes dependence under the tested
   counterfactuals.
@@ -156,5 +156,5 @@ with bias-as-domain encodings: §2.12.2 (pp. 62-65). Biased/myopic model definit
 different" supervision: §2.13, Definitions 2.31-2.33 (pp. 65-66, 74-75). Role-swap failure of the
 contrast method: §2.13.1 (pp. 67-70). Biased-versus-unbiased dual test sets and the ρ sweep:
 §2.13.2 (pp. 70-75). Compositional independence remark: §2.8 (p. 46). Missingness/occlusion
-artefacts: §3.7.8 (pp. 187-188). Tiering and the pre-declared materiality threshold are repository
+artifacts: §3.7.8 (pp. 187-188). Tiering and the pre-declared materiality threshold are repository
 conventions built on the source's note that papers differ in how they judge a "significant" drop.

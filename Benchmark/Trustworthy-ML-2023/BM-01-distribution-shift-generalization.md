@@ -10,7 +10,7 @@ Metric names and their definitions come from the register in
 trained on — the cross-domain branch of the generalization-type axis, plus the subpopulation-shift
 variant where the evaluation set is a minority slice of the training distribution.
 
-**Failure mode under test.** Ill-defined behaviour off the training support: a model that reaches
+**Failure mode under test.** Ill-defined behavior off the training support: a model that reaches
 training accuracy through cues that do not carry across domains, and a reported average that hides
 the domain where it fails.
 
@@ -58,9 +58,9 @@ Never construct a shift by peeking at the held-out domain's labels.
 
 | Baseline | Why required |
 |---|---|
-| Untuned plain training (default settings) | exposes the untuned-baseline artefact |
+| Untuned plain training (default settings) | exposes the untuned-baseline artifact |
 | **Fairly tuned** plain training with the same budget as the method | the reference a claimed gain must beat |
-| Train-on-source-only lower reference and train-on-target upper reference (Extended) | brackets what is achievable, with the upper row labelled as an upper bound |
+| Train-on-source-only lower reference and train-on-target upper reference (Extended) | brackets what is achievable, with the upper row labeled as an upper bound |
 | Prior state-of-the-art method(s) from the same declared setting, same tuning budget | comparability class |
 | Human or expert reference where the task admits it | anchors the metric in interpretable terms |
 | Oracle model-selection row (Extended, when test-time selection is used) | must be marked as an upper bound, never merged into the average |
@@ -146,7 +146,7 @@ Definitions 2.5-2.8 (book pp. 18-19); learning settings §2.4.2-§2.4.7 (pp. 29-
 protocol and the shared-class-set convention, plus the named benchmark family (PACS-style
 leave-one-out, the DomainBed suite, and a mixed DG/subpopulation-shift suite): §2.6-§2.6.1
 (pp. 40-43). Subpopulation-shift definition and worst-case-subpopulation requirement: §2.6,
-Definition 2.26 (p. 40). Ill-defined behaviour off the training support: §2.7.1 (p. 44).
+Definition 2.26 (p. 40). Ill-defined behavior off the training support: §2.7.1 (p. 44).
 Tuning-rights parity, once-per-project test use, and benchmark refresh with significance testing:
 §2.5.3 (pp. 39-40). Upper-bound rows for target-domain training and oracle selection: §2.12.2
 (p. 65), §2.14.1 (p. 82). Worst-group versus average reporting: §2.12.1 (pp. 59-61). Second-version

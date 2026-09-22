@@ -29,7 +29,7 @@ not be pooled.
 
 ## 3. Required data and split assumptions
 
-- A labelled ID evaluation set, and one or more OOD sets whose relation to the training distribution
+- A labeled ID evaluation set, and one or more OOD sets whose relation to the training distribution
   is declared (near / far; same task different domain; unforeseen classes).
 - Multiplicity labels: either several human annotations per input, or a constructed ambiguity where
   the legitimate answer set is known by design.
@@ -63,7 +63,7 @@ not be pooled.
 | Entropy / margin over the class distribution | the same logits, a different readout |
 | Feature-space distance score (class-conditional Gaussian, or kernel centroid) | a genuinely different mechanism |
 | Ensemble disagreement (predictive variance or entropy of the averaged prediction) | a Bayesian-style mechanism |
-| Oracle detector using the ground-truth labels | upper bound, labelled as such |
+| Oracle detector using the ground-truth labels | upper bound, labeled as such |
 | Prior published detector at the same OOD pairs | comparability, only if the training corpus matches |
 
 ## 6. Primary metrics
@@ -115,9 +115,9 @@ review capacity — detection is bought with human attention downstream.
 - Every target here is a *proxy*: OOD detection for epistemic uncertainty, multiplicity detection for
   aleatoric uncertainty. The source is explicit that the proxies are not the quantities.
 - Results depend on the chosen OOD families; a ranking established on one pair does not transfer, so
-  do not generalise a single dataset pair's ordering of mechanisms.
+  do not generalize a single dataset pair's ordering of mechanisms.
 - A calibrated detector on a fixed deployment distribution need not remain one after drift.
-- "No data region" behaviour is not guaranteed by any of these scores; a detector can rank
+- "No data region" behavior is not guaranteed by any of these scores; a detector can rank
   confidently on inputs far off the data manifold.
 - Detection metrics assume the labels used to define the target are trustworthy, which circularly
   requires data-quality checks for the multiplicity target.
@@ -141,12 +141,12 @@ Confidence as a detector of three different targets and the non-alignment argume
 (pp. 266-268); OOD-detector construction: §4.10.1 (p. 267); multiplicity detector: §4.10.2 (p. 267);
 menu of evaluation methods so far: §4.10.3 (pp. 267-268). Epistemic-uncertainty proxy reasoning and the
 model-independence of "OOD-ness": §4.2.3 (pp. 236-239) and §4.3.1 (p. 239). AUROC/AUPR definitions,
-base-rate behaviour and the AUROC recommendation: §4.9.2 (pp. 264-266). Threshold filtering as the
+base-rate behavior and the AUROC recommendation: §4.9.2 (pp. 264-266). Threshold filtering as the
 application that only needs ranking: §4.9.1 (pp. 263-264). Distance-score comparison against
 max-probability with detection metrics on multiple OOD pairs, and the cautions against generalising
 one pair and against reading ambiguity as novelty: §4.12.1-§4.12.2 (pp. 291-297); the summary that
 both estimator families are evaluated through OOD detection *as a proxy task*: §4.12.3 (p. 297).
-Ensemble spread behaviour with M and the accuracy confound: §4.11.5 (p. 275). Open-set recognition
+Ensemble spread behavior with M and the accuracy confound: §4.11.5 (p. 275). Open-set recognition
 with and without an explicit "I don't know" output: §4.1.3 (pp. 225-226). Unforeseen-class
 benchmark whose meaningful readout is confidence rather than top-1 accuracy: §2.6.1 (p. 43).
 Corruption benchmark as a family of severe perturbations: §2.6.1 (p. 42). Self-influence detection

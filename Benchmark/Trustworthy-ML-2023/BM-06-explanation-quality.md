@@ -7,9 +7,9 @@
 **Capability.** An explanation method's output is evidence about *this model* (soundness), and it
 moves a human or a process toward the stated end goal (understanding, debugging, trust).
 
-**Failure mode under test.** Explanations that are stable artefacts of the input rather than of the
+**Failure mode under test.** Explanations that are stable artifacts of the input rather than of the
 model; metrics that measure the occlusion operator instead of importance; and evaluations that grade
-plausibility against human expectations — confirmation bias — instead of the model's behaviour.
+plausibility against human expectations — confirmation bias — instead of the model's behavior.
 
 ## 2. Evaluation hypothesis
 
@@ -25,7 +25,7 @@ axiom establishes neither.
 
 ## 3. Required data and split assumptions
 
-- Model controls: a randomly initialised model, a model trained on randomised labels, and a model
+- Model controls: a randomly initialised model, a model trained on randomized labels, and a model
   whose true dependence is known (planted cue or the verdict of
   [`BM-02`](BM-02-spurious-cue-dependence.md)).
 - A feature granularity definition that partitions the input (perceptual groups or semantic parts),
@@ -37,9 +37,9 @@ axiom establishes neither.
 
 ## 4. Shift or stress construction
 
-- **Model stress (cascading randomisation)**: randomise weights from the output layers backwards;
+- **Model stress (cascading randomisation)**: randomize weights from the output layers backwards;
   a sound method's map must change visibly. Report the change quantitatively.
-- **Label stress (data randomisation)**: train on randomised labels; maps must stop highlighting the
+- **Label stress (data randomisation)**: train on randomized labels; maps must stop highlighting the
   original task's discriminative regions. Score by rank correlation between the two maps.
 - **Planted-dependence stress**: build inputs where the correct attribution is known by
   construction — for example a secondary signal (caption, marker, watermark) whose agreement rate p
@@ -66,17 +66,17 @@ axiom establishes neither.
 
 ## 6. Primary metrics
 
-- `sanity_rankcorr` — rank correlation of attributions between the target model and its randomised
+- `sanity_rankcorr` — rank correlation of attributions between the target model and its randomized
   controls (label and weight), reported per method.
 - `remove_classify_auc` — area under the accuracy-versus-removed-features curve, relative to random
   occlusion, lower being a better ordering; reported with the occlusion operator named.
 
 ## 7. Secondary / diagnostic metrics
 
-- Change magnitude of the map under cascading randomisation (a curve over randomised layers).
+- Change magnitude of the map under cascading randomisation (a curve over randomized layers).
 - Planted-cue recovery: fraction of attribution mass on the planted cue as a function of the noise
   level p.
-- `hitl_delta` — human accuracy or behaviour change with versus without the explanation; and, for the
+- `hitl_delta` — human accuracy or behavior change with versus without the explanation; and, for the
   understanding goal, how well a human predicts the model's decision given the explanation.
 - `self_influence_auroc` — for training-sample attribution, retrieval quality on suspicious or
   mislabelled items, with its assumption count stated.
@@ -98,7 +98,7 @@ alone.
 |---|---|
 | Map barely changes across models, or is essentially an edge/texture detector | not model-dependent: cannot serve as evidence about this model |
 | Random-label model yields informative maps | the method encodes the input, not the learned dependence |
-| Good ordering only when occluding with a constant fill | the filling artefact is being measured |
+| Good ordering only when occluding with a constant fill | the filling artifact is being measured |
 | Best ordering but worst planted-cue recovery | ranks importance without identifying the dependence |
 | Methods disagree on the same model | instrument uncertainty; report it rather than picking a favourite |
 | Humans rate the explanation highly but do not predict or act better | plausible, not useful; the end-goal hypothesis fails |

@@ -50,7 +50,7 @@ cross-link check used at acceptance.
   published, or reused results. Do not fold optional methods into Core.
 - Recurring terms take the SOP-08 register meaning. A metric name may not be redefined locally.
 - Where one SOP depends on another, link it; do not copy the procedure.
-- Numbers quoted as examples come from the source and are labelled with their section and page.
+- Numbers quoted as examples come from the source and are labeled with their section and page.
   The source supplies no default thresholds, bin counts, iteration budgets, or ε values, so none is
   invented here: a procedure names the choice you must make and record.
 - Every SOP ends with traceability so a later revision can re-check the claim against the book.
@@ -60,6 +60,6 @@ cross-link check used at acceptance.
 This group is method-agnostic and application-neutral: it covers distribution shift, adversarial
 stress, uncertainty, and explanation evaluation as evaluation and execution practice. It does not
 cover the book's learning-setting variants that require deployment-stage supervision the procedures
-here forbid (domain adaptation with labelled targets, test-time training, continual and few-shot
+here forbid (domain adaptation with labeled targets, test-time training, continual and few-shot
 variants), nor its representation-learning showcase, nor the authors' forward-looking research
 agenda — each of which is recorded with its disposition in the coverage audit.

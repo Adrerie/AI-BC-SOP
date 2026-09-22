@@ -21,8 +21,8 @@ system can rank perfectly and still mis-state the probability a fixed threshold 
 
 ## 3. Required data and split assumptions
 
-- Labelled evaluation set with the *cost table* attached: cost of each wrong action, of each correct
-  action, and of abstaining. This is a stakeholder input, not a modelling choice; record its source
+- Labeled evaluation set with the *cost table* attached: cost of each wrong action, of each correct
+  action, and of abstaining. This is a stakeholder input, not a modeling choice; record its source
   and its uncertainty.
 - Threshold and any routing rule chosen on validation material only, per
   [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md).
@@ -54,7 +54,7 @@ system can rank perfectly and still mis-state the probability a fixed threshold 
 | Threshold on max-probability | default rule |
 | Threshold on a recalibrated score | isolates calibration's contribution |
 | Threshold on an alternative detector from `BM-04` | mechanism comparison |
-| Oracle abstention (abstain on the cases actually wrong) | upper bound, labelled as such |
+| Oracle abstention (abstain on the cases actually wrong) | upper bound, labeled as such |
 | Human-alone and human-plus-model | the real comparison for escalation policies |
 
 ## 6. Primary metrics
@@ -89,7 +89,7 @@ which every risk number is quoted.
 | Risk falls with abstention but only marginally better than random abstention | the score is not informative for selection, even if calibration looks acceptable |
 | Operating point optimal for the nominal cost table moves sharply under cost stress | the decision rests on an unmeasured stakeholder assumption |
 | Coverage high, worst-subgroup risk unbounded | average is buying aggregate performance with minority failures |
-| Abstention concentrated on ambiguous inputs | correct behaviour if the fallback is a human, wrong if it is a re-ask |
+| Abstention concentrated on ambiguous inputs | correct behavior if the fallback is a human, wrong if it is a re-ask |
 | Curve good on ID, collapses under shift | threshold is distribution-bound; schedule re-fitting as part of deployment |
 | Human escalation raises total cost | the abstention rule works, the routing does not |
 
@@ -102,7 +102,7 @@ free: an unpriced fallback path turns a good curve into a bad system.
 ## 11. Validity limits
 
 - The benchmark is only as good as the cost table; with an unowned or guessed table, the operating
-  point is a modelling artefact.
+  point is a modeling artifact.
 - A ranking-only claim licenses thresholding but not probability reporting; do not present a
   risk-coverage result as evidence of calibration.
 - Coverage is bounded by how much of the stream the system can decline; a process that must answer
@@ -134,7 +134,7 @@ disadvantage of the unsupervised variant: §4.1.3 (pp. 225-226). Active learning
 sample selection, and comparable scores across candidates for proposal pruning: §4.1.3
 (pp. 226-228). Ranking condition being sufficient for threshold filtering: §4.9.1 (pp. 263-264).
 Detection-metric definitions used for the curves: §4.9.2 (pp. 264-266). Calibration under shift and
-recalibration cost: §4.8.1-§4.8.3 (pp. 259-263). Test-time selection from a small labelled
+recalibration cost: §4.8.1-§4.8.3 (pp. 259-263). Test-time selection from a small labeled
 deployment sample, and its oracle-selection caveat: §2.14 (pp. 75-77), §2.14.1 (p. 82).
 Retraining/model-selection cadence as the standard response to drift: §2.2.1 (pp. 20-24),
 Definitions 2.9-2.11. Worst-group reporting obligation: §2.12.1 (pp. 59-61). Cost table ownership,

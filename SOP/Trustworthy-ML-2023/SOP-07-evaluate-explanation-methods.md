@@ -13,7 +13,7 @@ before any conclusion drawn from it.
 ## 2. When to use
 
 - Before citing an attribution map, feature importance, influence score, or concept sensitivity as a
-  reason for a model's behaviour.
+  reason for a model's behavior.
 - When choosing among explanation methods for a debugging or auditing workflow.
 - When an explanation is being offered to a decision-maker as grounds for trust.
 - When a claimed explanation-based end goal (debugging, understanding, trust) must be verified.
@@ -21,7 +21,7 @@ before any conclusion drawn from it.
 ## 3. Inputs / prerequisites
 
 - Models to be explained, including controls: a randomly initialised model, a model trained on
-  randomised labels, and — where available — a model with a *known* dependence from
+  randomized labels, and — where available — a model with a *known* dependence from
   [`SOP-03`](SOP-03-diagnose-learned-evidence.md).
 - A feature granularity decision (raw inputs, perceptual groups, latent units, semantic parts) and
   the tooling to realize it.
@@ -38,7 +38,7 @@ before any conclusion drawn from it.
 - **Attribution** — assigning reasons to factors of one of three kinds: input features, training
   samples, or model parameters.
 - **Soundness (faithfulness)** — the explanation identifies the true causes of the prediction, i.e.
-  of *this model's* behaviour.
+  of *this model's* behavior.
 - **Completeness / monotonicity axioms** — formal properties some attribution scores satisfy; useful
   as design constraints, not as proof that an explanation is sound or useful.
 - **The soundness–explainability trade-off** — a simplification cannot be both fully faithful and
@@ -54,7 +54,7 @@ before any conclusion drawn from it.
 **Core**
 
 1. Fix the end goal first and write it as a falsifiable question: debugging ("will this tell me what
-   to change?"), understanding ("can a human predict the model's behaviour from it?"), or
+   to change?"), understanding ("can a human predict the model's behavior from it?"), or
    trust/approval ("does it change the decision-maker's accuracy or calibration?"). Attribution is
    an intermediate step; a method may be sound and still not serve the goal.
 2. Choose the attribution target (input features / training samples / parameters) and the
@@ -63,7 +63,7 @@ before any conclusion drawn from it.
 3. Verify model dependence before interpreting anything: compute the map for the randomly
    initialised control. The requirement is not that the map be informationless — a random network can
    still carry structure — but that the map change visibly when the model changes.
-4. Run the label-randomisation check: a model trained on randomised labels must not yield maps that
+4. Run the label-randomisation check: a model trained on randomized labels must not yield maps that
    highlight the features discriminative for the original task. Score it quantitatively (rank
    correlation between the true-label and random-label maps), not by eye.
 5. Run an ordering check on a subset where the true dependence is known by construction: simulated
@@ -80,7 +80,7 @@ before any conclusion drawn from it.
 
 **Extended** — add when the explanation is a deliverable, or when human action depends on it:
 
-9. Add a human-grounded study: participants judge explanation quality or predict model behaviour with
+9. Add a human-grounded study: participants judge explanation quality or predict model behavior with
    and without the explanation; report the effect size and the task.
 10. Add an application-grounded study on the real task (debugging throughput, expert decision
     accuracy), accepting that this is the most expensive and the most aligned option.
@@ -120,7 +120,7 @@ before any conclusion drawn from it.
 - **Reclassify the claim** from "explains the model" to "explains the prediction pipeline" if only
   functional-grounded evidence exists.
 - **Do not ship an explanation-based assurance** if the human-grounded study shows no effect on the
-  decision-maker's behaviour.
+  decision-maker's behavior.
 - **Accept and report** the debugging-goal limitation directly: an attribution output is not, by
   itself, a demonstrated route to fixing a systematic model failure.
 
@@ -128,11 +128,11 @@ before any conclusion drawn from it.
 
 - Confirmation bias: grading the explanation against what a human thinks the cause should be.
 - Localization-as-soundness: rewarding maps that cover the object's bounding box even though the
-  model may have decided from background or artefacts.
+  model may have decided from background or artifacts.
 - Cherry-picked qualitative figures standing in for a measurement.
 - Reading a completeness axiom as a soundness proof.
 - Occluding with a constant value that is itself class-informative, so the metric measures the
-  filling artefact rather than importance — and, symmetrically, treating random occlusion as the
+  filling artifact rather than importance — and, symmetrically, treating random occlusion as the
   worst possible baseline when it can add confusing structure.
 - Averaging the four remove-and-classify variants into one number without reporting that the variants
   can disagree.

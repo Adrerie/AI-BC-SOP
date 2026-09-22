@@ -3,7 +3,18 @@
 Plan 5 artifact. Records PASS / FAIL for every gate in
 `plans/Trustworthy-ML-2023/05_VALIDATION_AND_ACCEPTANCE.md`, plus the stage gates A–D.
 
-*(Completion summary required by Plan 6 §4 is prepended at finalization.)*
+## Completion summary
+
+| Item | Value |
+|---|---|
+| Source used | *Trustworthy Machine Learning*, first edition (2023) — Mucsányi, Kirchhof, Nguyen, Rubinstein, Oh; University of Tübingen / Tübingen AI Center. Local PDF, 375 pages, full text layer, no outline (see `source_coverage.md` Step 1) |
+| Work completed | 2026-09-22, on branch `plan/trustworthy-ml-2023`, executed in plan order 00 → 06 |
+| Source headings audited | 247 (every chapter, section and subsection heading recovered from the PDF, plus front matter, appendix and back matter) |
+| SOP artifacts created | 8 (`SOP/Trustworthy-ML-2023/`, 12-section schema each) |
+| Benchmark artifacts created | 8 (`Benchmark/Trustworthy-ML-2023/`, 13-section schema each) |
+| Validation artifacts | 3: `source_coverage.md`, `concept_reconstruction.md`, this report |
+| Acceptance result | **PASS** — stage gates A–D and Acceptance Gates 1–9, one revision cycle recorded in Gate 7 |
+| Known limitations | Seven items, listed in "Remaining issues and known limitations" below; the binding one for reuse is that no numeric default (ε, iteration budget, bin count, acceptance threshold) is supplied, because the source supplies none |
 
 Verification was performed by mechanical checks over the committed files plus targeted re-reading of
 the source PDF; the scripts that produced the numbers are listed in §V and the two
@@ -20,7 +31,8 @@ checks-that-could-fail-silently (links, metric naming) are re-runnable.
 | Cross-link symmetry | Parsed SOP §11 and BM §12 link sets; flagged one-directional links | 0 asymmetric links |
 | Duplication | Shared 9-word verbatim n-grams between artifact pairs, ignoring links and inline code | max pair overlap 9 grams (was 57 before consolidation) |
 | Claim grounding | Normalized full-text index of the source PDF; 56 distinctive needles taken from artifact claims, each resolved to its printed page and containing section | 56/56 found verbatim in the source after one needle was replaced by the book's own wording (see Gate 7) |
-| Page-citation integrity | Re-derived all 237 numbered headings straight from the PDF (standalone number line + title line) and diffed against the heading map: 0 drift, printed page = PDF page − 2 confirmed on sampled folios. Then bound every `p.`/`pp.` anchor in the artifacts to the section/definition/caption named in the same citation clause and checked it falls inside that locator's real page span | 393 anchors bound; 132 drifted anchors repaired; 0 remaining |
+| Page-citation integrity | Re-derived all 237 numbered headings straight from the PDF (standalone number line + title line) and diffed against the heading map: 0 drift, printed page = PDF page − 2 confirmed on sampled folios. Then bound every `p.`/`pp.` anchor in the artifacts to the section/definition/caption named in the same citation clause and checked it falls inside that locator's real page span | 394 anchors bound; 132 drifted anchors repaired; 0 remaining |
+| Editorial pass | Single-H1 and heading-level continuity per file, artifact filename matched against its own title line, schema sections present **and** in numbered order, spelling-convention scan, and a filler/hedge scan (`probably`, `roughly`, `etc.`, `it should be noted`, …) | 18 files, 0 structural findings; 129 spellings normalized to the repository's American convention with quoted book wording excluded from the change; 2 scan hits, both legitimate (a question phrasing and a quoted source sentence) |
 | Non-mirroring | Lexical overlap between each artifact filename and the set of all 247 source headings | max Jaccard 0.01, mean 0.00; no filename equals a chapter or section title |
 
 ---
@@ -38,7 +50,7 @@ after this gate.
 
 **PASS.** See [`concept_reconstruction.md`](concept_reconstruction.md): 20 synthesized concepts with
 contributing sections, dependencies and destination; eight separated classification axes; the
-resulting 8-SOP / 8-Benchmark taxonomy; and a rule-provenance table labelling 29 rules as
+resulting 8-SOP / 8-Benchmark taxonomy; and a rule-provenance table labeling 29 rules as
 source-derived, synthesized, or repository convention.
 
 ## Gate C — SOP quality (Plan 3)
@@ -134,7 +146,7 @@ Minimum per row and per column is 3 links; there is no one-directional pair.
 | 5 | "The model being safe is not equivalent to no gradient-based algorithm being able to find an attack." | source-derived | exact, §2.15.12, p. 103 |
 | 6 | Fairly tuned ERM is "not worse at all" than complicated DG methods. | source-derived | exact, §5.2.2, p. 340 |
 | 7 | Ranking the four remove-and-classify variants can disagree; the metric is not perfect but is the most popular. | source-derived | §3.7.7-§3.7.8, pp. 188 |
-| 8 | Order: declare setting → freeze splits → diagnose → measure → stress → mitigate → report. | **synthesized** | not a book statement; built from §2.3-§2.5, §2.11-§2.14 and §5.1-§5.3, labelled as such in the reconstruction |
+| 8 | Order: declare setting → freeze splits → diagnose → measure → stress → mitigate → report. | **synthesized** | not a book statement; built from §2.3-§2.5, §2.11-§2.14 and §5.1-§5.3, labeled as such in the reconstruction |
 | 9 | Core/Extended tiering, checkbox registers, artifact IDs, and the SOP-08 metric register naming. | **repository convention** | explicitly excluded from book attribution in every §12/§13 |
 | 10 | Default ε values, iteration budgets, bin counts, or numeric "good" thresholds. | **deliberately absent** | the source supplies none; each artifact instead requires the practitioner to state and record the choice |
 
