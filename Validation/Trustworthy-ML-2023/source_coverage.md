@@ -648,7 +648,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 - Perplexity is defined as the exponentiated NLL "using base 2 in both the exponential and the
   logarithm", with fn. 18 observing that the value is independent of the *common* base chosen
   (4.5.9, p. 252). The constraint that follows — and that the register now carries — is base
-  agreement: `exp(nll)` for a natural-log NLL, `2^(nll_bits)` for one measured in bits, never one
+  agreement: `exp(nll)` for a natural-log NLL, `2^(nll)` for one measured in bits, never one
   base for the loss and another for its exponentiation.
 - Calibration is the interpretable but gameable alternative (4.6): perfect calibration
   P(Ŷ = Y | C = c) = c (Def 4.11), model calibration as an integral of the deviation (Def 4.12),

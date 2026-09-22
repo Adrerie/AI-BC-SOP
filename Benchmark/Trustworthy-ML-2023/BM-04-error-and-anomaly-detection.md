@@ -66,7 +66,7 @@ not be pooled.
 | Baseline | Role |
 |---|---|
 | Random score | `auroc` = 0.5 reference, base-rate-independent |
-| Base-rate predictor (constant score) | the `aupr` reference, which is the prevalence of the task's declared positive: `P(L = 1)` success-positive, `P(L = 0)` error-positive, `P(OOD)` novelty-positive |
+| Base-rate predictor (constant score) | the `aupr` reference, which is the prevalence of the task's declared positive: `P(L = 1)` success-positive, `P(L = 0)` error-positive, `P(OOD)` novelty-positive, `P(multiple)` ambiguity-positive |
 | Max-probability of the unmodified model | the default every mechanism is compared to |
 | Entropy / margin over the class distribution | the same logits, a different readout |
 | Feature-space distance score (class-conditional Gaussian, or kernel centroid) | a genuinely different mechanism |

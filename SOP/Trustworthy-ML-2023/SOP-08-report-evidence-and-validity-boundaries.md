@@ -44,7 +44,7 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `acc_worstgroup` | minimum accuracy over declared groups/cells | groups defined and non-empty | noisy when a cell is tiny |
 | `nll` | −(1/N) Σ log f_y(x) on the evaluation set | probabilistic outputs | mixes accuracy and calibration; floor unknown |
 | `brier` | (1/N) Σ [ (1 − f_y)² + Σ_{k≠y} f_k² ] | probabilistic outputs | as `nll`, softer tails |
-| `perplexity` | exponentiated `nll`, with the exponential base matching the logarithm base used for `nll`: `exp(nll)` for natural-log NLL, `2^(nll_bits)` for NLL measured in bits | language modeling | same confound as `nll`; invariant to the choice of a *common* base, but not to mixing bases |
+| `perplexity` | exponentiated `nll`, with the exponential base matching the logarithm base used for `nll`: `exp(nll)` for natural-log NLL, `2^(nll)` for NLL measured in bits | language modeling | same confound as `nll`; invariant to the choice of a *common* base, but not to mixing bases |
 | `ece` | Σ_m (\|B_m\|/N) · \|acc(B_m) − conf(B_m)\|, bins disclosed | scalar confidence in [0,1] | driven to 0 by a constant equal to the measured correctness rate of the scored set, which is an oracle quantity; bin-sensitive |
 | `mce` | max_m \|acc(B_m) − conf(B_m)\| | high-risk claims | pessimistic on small bins |
 | `reliability` | per-bin acc and (conf − acc), plotted with the confidence histogram | diagnosis of over/under-confidence | does not reveal `ece` without bin weights |

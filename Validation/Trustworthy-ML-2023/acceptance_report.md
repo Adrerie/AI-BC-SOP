@@ -1,23 +1,164 @@
 # Acceptance Report — Trustworthy ML (2023) package
 
-> **Status note:** Cycle 3 was accepted at commit `4f33897`, then superseded by a post-review metric
-> and validator patch. The current branch must complete Revision 03 before this report can again be
-> treated as the current acceptance record. Counts and PASS statements below describe the historical
-> Cycle 3 run unless a later Cycle 4 section replaces them.
+> **Status note:** Cycle 4 is the current acceptance record. Cycle 3 was accepted at commit
+> `4f33897` and is superseded on the points Revision 03 touched — its counts and PASS statements
+> describe the historical Cycle 3 run, which is kept in full below because its corrections still stand.
 
 
-This package has been accepted three times.
+This package has been accepted four times.
 
 | Cycle | What it was | Result | Where it stands |
 |---|---|---|---|
 | **1** | Plans `00`–`06` of `plans/Trustworthy-ML-2023/`: source audit, reconstruction, SOP group, Benchmark group, acceptance, wrap-up | 4 stage gates + 9 acceptance gates recorded as PASS | **Historical.** Superseded by external review; its checks were re-run from zero in Cycle 2 and its numbers appear below only where they were reproduced |
 | **2** | Revision 01, `plans/Trustworthy-ML-2023/revision-01/00`–`07`: metric, setting, evidence, robustness, reproducibility and architecture corrections | ACCEPTED, then superseded on two points | **Historical**, kept because it records the corrections that still stand. Its licensing limitation and its four-level disclosure ladder were both replaced by the direct corrections that opened Revision 02 |
-| **3** | Revision 02, `plans/Trustworthy-ML-2023/revision-02/00`–`03`: package-wide consistency sweep, validator hardening, final re-acceptance | See "Cycle 3 result" | **Current record** |
+| **3** | Revision 02, `plans/Trustworthy-ML-2023/revision-02/00`–`03`: package-wide consistency sweep, validator hardening, final re-acceptance | ACCEPTED at `4f33897`, then superseded on metric semantics and validator wording | **Historical**, kept because its sweep and its hardened validators are the ones still in force. Its citation and duplication counts predate Revision 03 and are superseded in C4.5 |
+| **4** | Revision 03, `plans/Trustworthy-ML-2023/revision-03/00`–`01`: validate the direct metric/parser patch, repair only what the run reveals, re-accept | See "Cycle 4 result" | **Current record** |
 
 Every cycle here applies the same rule the last review handed down: a prior PASS is evidence about the
 past, not a result to copy forward. Each mechanical claim below is produced by a committed script that
 was re-run in a clean checkout, and each claim that is not mechanical is labeled as a reading judgement
 and says what was read.
+
+---
+
+## Cycle 4 — Revision 03 metric semantics and validator patch
+
+### What Revision 03 was for
+
+A small finalization pass, deliberately. Four findings came back from the review of Cycle 3: a metric
+register that named only the two correctness-positive AUPR variants, a `check_metrics` tokenizer that
+could be walked past by writing a score inside a comparison expression, documentation that claimed the
+mutation run covered every detector when it covered ten representative cases, and a `SOURCE.md` opening
+that described the repository's own Python tooling as source-derived. The direct patch for all four was
+already on the branch when this cycle started (`879915d`…`c5f75d5`). The job here was to run it in a
+real checkout, repair only the regressions that run revealed, and write a current record — not to
+redesign anything.
+
+### How to re-run this
+
+| Field | Value |
+|---|---|
+| Branch | `plan/trustworthy-ml-2023` |
+| Direct patch under test | `879915d`…`c5f75d5` (20 artifact and tooling commits, plus the Revision 03 plan set) |
+| Acceptance commit | *(this commit)* — the tree the clean runs below were taken from |
+| Interpreter | Python 3.14.0, standard library only; PyMuPDF is needed for the index-verify row alone |
+| Source PDF | unset for the first row, `TRUSTWORTHY_ML_2023_PDF` for the second |
+
+```
+python Validation/Trustworthy-ML-2023/tools/run_acceptance.py --with-mutations
+TRUSTWORTHY_ML_2023_PDF=/path/to/the-book.pdf \
+  python Validation/Trustworthy-ML-2023/tools/run_acceptance.py --with-mutations
+```
+
+Both were executed in a clean clone of the pushed branch at a different absolute path, with no local
+audit working area present:
+
+| Invocation | Checks executed | Result |
+|---|---|---|
+| clean checkout, no source | 7 | 7 PASS, 0 FAIL |
+| clean checkout, `TRUSTWORTHY_ML_2023_PDF` set | 8 | 8 PASS, 0 FAIL |
+
+Current output, so a reader can diff theirs against it:
+`structure findings=0` · `links broken=0 asymmetric=0 duplicate_pairs=8 docs=22` ·
+`metrics parser_findings=0 unregistered=0 shape_findings=0 register_size=23` ·
+`prose vague=0 spelling_variants=0` ·
+`citations bound=437 drifting=0 unanchored=30` ·
+`gates markers_found=52 markers_total=20 regression_patterns=11 regressions=0 invariants=6
+invariant_misses=0 normative_files=23 hygiene_scanned=36 hygiene_misses=0` ·
+`mutation_test cases=10 failures=0` · index verified at `headings=243 definitions=87 captions=231
+offset=2 diffs=0`. The scope table in C3.1 still describes the scanners exactly; nothing about what is
+and is not scanned changed in this revision.
+
+### C4.1 The four findings, closed
+
+| # | Finding | Direct patch | Mechanical evidence | Final status |
+|---|---|---|---|---|
+| 1 | Generic AUPR semantics. The register defined `aupr_success` and `aupr_error` only, so a novelty- or ambiguity-positive detection score had no registered name and was written with a correctness-positive baseline attached | `SOP-08` §4 now registers generic `aupr` — declared binary task, positive class and score orientation stated, no-skill reference equal to that positive class's prevalence — and re-labels the two variants as named specializations for prediction correctness. `BM-04` §6 asks for `aupr` per declared target (H-ood positive = OOD, H-multiplicity positive = multiple-answer) and keeps the specializations for H-error only; its base-rate row and failure-mode row were re-worded to match | `register_size=23`, `unregistered=0`, `shape_findings=0`; gate markers `prevalence of the task's declared positive` (BM-04) and `no-skill reference is the prevalence of the designated positive` (SOP-08) | **CLOSED** — reading judgement: SOP-08 §4/§5, BM-03 §5/§6, BM-04 §5/§6/§9 and the Benchmark README rule 3 were read end to end; no statement now attaches a success- or error-positive baseline to a novelty- or ambiguity-positive task, and BM-03's use of the two specializations is correct because its target *is* prediction correctness |
+| 2 | Compound inline-code blind spot. The tokenizer matched a whole code span, so `metric_a > metric_b` was one non-matching token and neither identifier reached the register check | `check_metrics.py` extracts identifiers from *inside* each inline-code span and adds `parser_selftest()`, which asserts that a compound span yields both names and a plain one yields none | `parser_findings=0` in every run above; probe confirmed on demand: a compound span returns both identifiers, and a deliberately invented `fake_score` inside an expression is reported as UNREGISTERED | **CLOSED for the stated class** — the residual boundary is written down rather than hidden: identifiers shorter than four characters or containing capitals (`x_y`, `Acc_shift`) are still not treated as metric names, see C4.5 |
+| 3 | Mutation coverage overstated. `--with-mutations` was documented as provoking *every* gate detector, which ten worktree cases cannot do against 20 marker rows, 6 invariants and two hygiene scans | Docstring, `run_acceptance.py` label and help, `tools/README.md` and this report now say ten representative end-to-end mutations, and state separately that every regression pattern is exercised by a synthetic self-test inside `check_gates.py` | The separate claim is now countable rather than prose: `selftest()` runs 2 × 11 pattern assertions plus 6 path cases = 28 assertions, and returns empty | **CLOSED** — the two coverage kinds are distinguished wherever either is described |
+| 4 | `SOURCE.md` scope. Its opening said everything under the three package directories is source-derived, which mis-attributed the validators and matters because attribution obligations differ for derived text versus original code | The paragraph now separates source-derived documentation (`SOP/`, `Benchmark/`, the validation notes) from original repository code (`Validation/Trustworthy-ML-2023/tools/`) | Attribution markers `Mucsányi`, `trustworthyml.io`, `2310.08215`, `CC BY 4.0`, `does not redistribute` still present; the license regression pattern still quiet | **CLOSED** — reading judgement: the whole file was re-read against the Cycle 2 license verification; the license, attribution and non-redistribution statements are unchanged |
+
+### C4.2 What this cycle's run caught on its own
+
+The patch as delivered was not green. Four things the review did not name had to be repaired, and all
+four are validator-side rather than semantics-side — which is the honest signature of a patch that
+changed wording under a checker built to watch wording.
+
+- **A gate marker broke, and it broke for the reason Revision 02 warned about.** `check_gates` required
+  SOP-08 to contain `random baseline = prevalence`; Revision 03 rewrote that row for the better
+  — `no-skill reference is the prevalence of the designated positive` — and the marker failed while the
+  corrected position stood intact in the file. Re-pointed at the surviving phrase. This is the second
+  cycle in a row where a marker encoded a *sentence* rather than a *principle*; the difference now is
+  that the failure was loud.
+- **`nll_bits` was allowlisted as if it were a field name.** It is not: it names a score — the
+  registered `nll` with a stated log base — so allowing it past the register check is exactly what
+  Plan 00 §3 forbids. The formulas in SOP-04 step 3 and the SOP-08 `perplexity` row now read
+  `2^(nll)` with the base condition stated in words, the reading note in `source_coverage.md` matches,
+  and the allowlist entry is gone. `METRIC_ALLOW` still carries `c_frozen` (a formula-local symbol in
+  the one-bin ECE identity) and `comparison_class`, `cue_whitelist`, `deployment_axes`,
+  `target_samples` (all four are output-schema fields listed in SOP-01 §10); each was checked in place.
+- **A self-test example had gone stale.** The must-not-fire case for the AUPR pattern quoted the
+  pre-Revision-03 sentence, so the self-test was asserting against wording the package no longer
+  contains. Refreshed to the current row, which is what a regression guard should be quiet on.
+- **A comment described a rule that no longer exists.** The suppression note in `check_gates.py` still
+  said "the 48 characters before" a match, which is the window Revision 02 replaced with clause
+  scoping after it swallowed a real violation. Corrected.
+
+One measured side effect is worth recording because it looks like drift and is not:
+`duplicate_pairs` moved from 7 to 8. The new pair is BM-05 ↔ SOP-05, sharing a 14-word run — the
+robustness ordering sentence, which Revision 03 moved out of inline code and into prose, where the
+duplication probe can see it for the first time. It is the package's normal SOP-to-Benchmark restatement
+of one rule, the probe is informational, and the largest shared run is unchanged at 9 grams (SOP-01 ↔
+`source_coverage.md`).
+
+### C4.3 Regression check: what Revision 03 must not have broken
+
+| Property | Cycle 3 value | Now | Reading |
+|---|---|---|---|
+| SOP / Benchmark counts, schema | 8 / 8, `findings=0` | unchanged | No artifact renamed, split or merged |
+| Registered metric names | 22 | 23 | `aupr` added; the two specializations kept their names and their own baselines |
+| Cross-links | `broken=0 asymmetric=0` | unchanged | Nothing was orphaned by the row rewrites |
+| Presence markers | 52 of 52 | 52 of 52 | Two marker strings were re-pointed at wording that survives Revision 03; none was deleted |
+| Regression patterns, invariants, hygiene | 11 / 6 / 36 files, all quiet | unchanged | No pre-revision sentence came back |
+| Citation anchors | `bound=437 drifting=0 unanchored=30` | unchanged by the patch | The patch added no new page claims; the counts move only when this report is rewritten |
+| Mutation cases | 10 / 10 | 10 / 10 | Same ten cases, now described accurately |
+| Committed index | 243 / 87 / 231, offset 2, `diffs=0` | unchanged | Re-verified against the PDF, not copied |
+
+### C4.4 Limitations that remain open
+
+C3.5 is the standing list; these are the items whose numbers or wording Cycle 4 changes, plus one
+addition. The others carry forward unchanged.
+
+1. **`check_metrics` has a stated boundary.** A score name is only checked when it appears in an
+   inline-code span, is at least four characters long, is lower-case, and contains an underscore.
+   `x_y`, `Acc_shift`, or a metric named only in running prose pass unnoticed. This is the residual of
+   finding 2, not a closed case.
+2. **30 page anchors carry no locator** in their own clause (unchanged by this patch), and
+   `duplicate_pairs=8` with a largest shared run of 9 grams, both informational.
+3. **Wording-level guards stay wording-level.** The re-pointed marker in C4.2 shows the failure mode
+   plainly: a rewrite that keeps a principle but changes its sentence trips the guard, and a rewrite
+   that keeps the sentence but hollows the principle would not. Only the source-reading checks, recorded
+   in `source_coverage.md`, settle which of the two happened.
+4. **Claim grounding, numeric defaults, `ρ` direction, bounded sub-passes, printed folios, the CV-centric
+   example base and second-version replication** are unchanged from C3.5 items 1, 6, 7, 8, 9, 10 and 11.
+
+### Cycle 4 result
+
+**ACCEPTED, and ready for review toward `main` — but not merged.** Gate R3-1 passes: AUPR semantics are
+consistent across SOP-08, BM-03 and BM-04 with a generic name for declared detection targets, a compound
+code span cannot bypass the register check, no pseudo metric key survives as a registered-looking name
+in a normative artifact, the allowlist holds only schema fields and one formula-local symbol, and the
+mechanical suite is green both with and without the source. All four findings that opened the revision
+are closed above, and the six repairs this cycle made on its own initiative are listed rather than
+quietly folded in. Nothing from Revision 01 or Revision 02 was weakened: 52 markers, 11 silent
+regression patterns, 6 invariants and 36 hygiene-scanned files behave as at Cycle 3.
+
+| Revision 03 commit | Plan |
+|---|---|
+| `879915d`…`c5f75d5` | direct metric/parser patch, documentation and attribution scope, plus the Revision 03 plan set |
+| *(this commit)* | 00–01 — validation of the patch, the six repairs in C4.2, and this record |
+
+`main` was not touched: it remains at `ffdd0c0`, and the plan branch is the only thing pushed.
 
 ---
 

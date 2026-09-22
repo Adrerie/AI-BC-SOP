@@ -42,7 +42,7 @@ PRESENT = [
     ("P0-A metric definitions", "01", "SOP/%s/SOP-04-measure-confidence-truthfulness.md" % PACKAGE,
      ["The two bases must match", "prevalence of *its own* positive", "deployable", "oracle"]),
     ("P0-A metric register", "01", "SOP/%s/SOP-08-report-evidence-and-validity-boundaries.md" % PACKAGE,
-     ["random baseline = prevalence", "positive class", "oracle quantity"]),
+     ["no-skill reference is the prevalence of the designated positive", "positive class", "oracle quantity"]),
     ("P0-A AUPR in the suite", "01", "Benchmark/%s/BM-04-error-and-anomaly-detection.md" % PACKAGE,
      ["prevalence of the task's declared positive"]),
     ("P0-B information rights", "02", "SOP/%s/SOP-01-specify-deployment-setting.md" % PACKAGE,
@@ -88,7 +88,8 @@ ABSENT_PATTERNS = [
     ("P0-A AUPR baseline stated for one positive class",
      r"(random baseline = p\(l = 1\)|random aupr = p\(l = 1\)(?! for)|aupr.{0,40}near-useless)",
      "random baseline = P(L = 1), so near-useless at extreme rates",
-     "random baseline = prevalence **of the designated positive**: `P(L = 1)` for `aupr_success`"),
+     "no-skill reference is the prevalence of the designated positive; values are not comparable "
+     "across different positive-class definitions without relabeling"),
     ("P0-A perplexity base asserted without the log-base condition",
      r"exponentiated ?`?nll`? ?\(base 2\)",
      "| `perplexity` | exponentiated `nll` (base 2) | language modeling | same confound as `nll` |",
@@ -104,9 +105,11 @@ ABSENT_PATTERNS = [
 # Pattern names refer to the fixed principles in plans/Trustworthy-ML-2023/revision-02/00_MASTER.md.
 # Each entry: (principle, regex, must-fire example, must-not-fire example).
 #
-# Matched against the flattened text (emphasis markers removed, whitespace collapsed, lowercased), so
-# the patterns are written in lower case. A match is ignored when a negation or a history marker sits
-# in the 48 characters before it: "not as an OOD family" is the corrected position, not a violation.
+# Matched against the flattened text (fenced code removed, emphasis markers removed, whitespace
+# collapsed, lowercased), so the patterns are written in lower case. A match is ignored when a negation
+# or a history marker sits in the same *clause* -- the run of text since the last sentence end, table
+# cell or heading. A fixed-width window was tried and rejected: it let a real violation pass because
+# some earlier sentence happened to contain "not".
 SUPPRESS = re.compile(r"\b(not|never|without|neither|no longer|dropped|removed|replaced|"
                       r"superseded|corrected|revised)\b")
 # Where a clause ends in already-flattened text: sentence punctuation, a table cell, or a heading.

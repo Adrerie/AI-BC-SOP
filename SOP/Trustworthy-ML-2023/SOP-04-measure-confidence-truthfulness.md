@@ -58,8 +58,8 @@ lost honestly.
 3. Compute the metric battery on the frozen predictions:
    - **Proper scores**: NLL/CE, Brier (binary), multi-class Brier; perplexity only for language
      modeling, where it is the exponentiated NLL — `exp(nll)` when the loss used natural logarithms,
-     `2^(nll_bits)` when it was measured in bits. The two bases must match; the value is invariant to
-     a *common* base choice but not to mixing them.
+     `2^(nll)` when `nll` was computed with log base 2. The two bases must match; the value is
+     invariant to a *common* base choice but not to mixing them.
    - **Calibration**: bin the confidences, compute per-bin accuracy and mean confidence, report ECE
      (bin-weighted mean absolute gap), MCE (worst-bin gap), and the reliability diagram.
    - **Ranking**: AUROC and both AUPR variants of `c` against `L`, each naming its positive class —

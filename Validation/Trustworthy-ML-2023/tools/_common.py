@@ -67,7 +67,7 @@ METRIC_ALLOW = {
     "check_citations", "check_metrics", "check_prose", "check_schema", "check_structure",
     "check_tables", "citation_index", "source_index",
     "comparison_class", "cue_whitelist", "deployment_axes", "target_samples",
-    "nll_bits", "c_frozen",
+    "c_frozen",
 }
 
 
