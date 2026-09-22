@@ -2,12 +2,13 @@
 
     python run_acceptance.py              # every check that needs no source
     TRUSTWORTHY_ML_2023_PDF=/path/to/the-book.pdf python run_acceptance.py
-    python run_acceptance.py --source /path/to/the-book.pdf --rebuild-index
+    python run_acceptance.py --with-mutations
 
 Checks that only read committed markdown run anywhere. The citation check reads
 `citation_index.json`, which is committed; when a source PDF is configured -- through `--source` or
 the environment variable -- the suite also verifies that committed index against it (needs PyMuPDF).
-`--rebuild-index` regenerates the index instead of only comparing it.
+`--rebuild-index` regenerates the index instead of only comparing it, and `--with-mutations` adds the
+gate-provocation run, which needs `git` and takes a few seconds longer.
 
 Exit status is 0 only when every executed check passes, so this is usable as a gate.
 """
@@ -26,7 +27,7 @@ CHECKS = [
     ("metrics",     "metric register consistency",                    "check_metrics.py",    False),
     ("prose",       "vague phrasing, spelling variants",              "check_prose.py",      False),
     ("citations",   "page anchors vs the source's section structure",  "check_citations.py",  False),
-    ("gates",       "Revision 01 corrections still present",          "check_gates.py",      False),
+    ("gates",       "corrected principles still in force, no regressions",  "check_gates.py",      False),
 ]
 
 
@@ -42,6 +43,8 @@ def main(argv=None):
     ap.add_argument("--source", help="source PDF, used with --rebuild-index")
     ap.add_argument("--rebuild-index", action="store_true",
                     help="regenerate citation_index.json from --source before checking")
+    ap.add_argument("--with-mutations", action="store_true",
+                    help="also run mutation_test.py, which provokes every gate detector on purpose")
     args = ap.parse_args(argv)
 
     print(f"repository root: {C.ROOT}")
@@ -65,7 +68,15 @@ def main(argv=None):
         print(f"{'PASS' if rc == 0 else 'FAIL'}  {name:<14}  {what}  ->  {summary}")
         if rc:
             failures.append(name)
-    print(f"run_acceptance: executed={len(CHECKS) + (1 if pdf or args.rebuild_index else 0)} "
+    extra = 1 if (pdf or args.rebuild_index) else 0
+    if args.with_mutations:
+        rc, summary = run("mutation_test.py")
+        print(f"{'PASS' if rc == 0 else 'FAIL'}  {'mutations':<14}  every gate detector provoked "
+              f"on purpose  ->  {summary}")
+        extra += 1
+        if rc:
+            failures.append("mutations")
+    print(f"run_acceptance: executed={len(CHECKS) + extra} "
           f"failed={len(failures)}{' (' + ', '.join(failures) + ')' if failures else ''}")
     return 1 if failures else 0
 

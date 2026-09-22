@@ -31,7 +31,8 @@ when every executed check passes, so it can be wired into a commit hook or CI jo
 | `check_metrics.py` | every metric token used in the group is registered in `SOP-08` §4, and each register row is complete (definition, validity, degeneracy) | no |
 | `check_prose.py` | placeholder phrasing ("various methods", "as appropriate", "etc.") and non-American spelling outside quoted source wording; the spelling list expands each root to its inflexions, so `randomise` also catches `randomisation` | no |
 | `check_citations.py` | every printed-page anchor agrees with the section, definition or caption it is attached to | no (uses the committed index) |
-| `check_gates.py` | each Revision 01 correction is still present in the file that carries it, none of the pre-revision wording has crept back, and no tracked file holds a machine-local path or a bulk text dump | no |
+| `check_gates.py` | three things: each Revision 01/02 correction is still worded where it was put; none of the known-bad wordings has come back anywhere in the normative files; and no tracked file holds a machine-local path or a bulk text dump | no |
+| `mutation_test.py` | proves the gate checks still bite, by restoring each known-bad wording in a scratch worktree and requiring the checker to fail | no (needs `git`) |
 | `build_citation_index.py` | regenerate or verify `citation_index.json` against a PDF you hold | yes |
 | `run_acceptance.py` | run the suite and report the gate table | no |
 
@@ -78,14 +79,36 @@ is recorded anywhere in the repository: the bibliographic description of the sou
 - `check_citations bound=N drifting=0 unanchored=M` — `drifting` is the gate: an anchor whose pages
   contradict its own locator. `unanchored` counts page numbers stated without any locator in the same
   clause — permitted, and listed by `--verbose` so a human can confirm each is intentional.
-- `check_gates checked=N markers_found=M issues=20 missing=0 hygiene=0` — every Revision 01 correction
-  is still worded where it was put, no pre-revision sentence came back, and no tracked file carries a
-  machine-local path or bulk source text. `--list` prints the per-issue table.
+- `check_gates markers_found=M markers_total=20 regression_patterns=11 regressions=0
+  invariants=6 invariant_misses=0 normative_files=23 hygiene_scanned=N hygiene_misses=0` — corrections
+  still in place, no known-bad wording anywhere in the normative files, the attribution record
+  internally consistent, and no machine-local path or bulk text in tracked files. `--list` prints the
+  per-issue and per-principle tables.
+- `mutation_test cases=10 failures=0` — each detector was provoked on purpose and fired.
+
+## What is deliberately not scanned, and why
+
+Every exemption is a place a regression could hide, so they are listed rather than implicit.
+
+- `plans/` is excluded from the hygiene scan. It is the reviewer's input, kept verbatim, and it contains
+  one elided example path (`D:\...`) that is precisely the thing being discussed. Nothing in the
+  package reads it.
+- `acceptance_report.md` is excluded from the **negative** wording scans. Its job is to quote superseded
+  positions in order to record them, so a phrase-level scanner cannot tell its history from a
+  regression; the report is swept by hand each revision cycle instead, and the sweep is reported.
+- Fenced code blocks are excluded from wording scans, since commands and sample scripts are not
+  normative claims — `SOURCE.md`'s own license scanner, for instance, contains the strings it hunts.
+- A wording match is ignored when the *same clause* denies it: "not as an OOD family" asserts the
+  corrected position. The window is clause-scoped on purpose; a wider one suppressed real violations
+  that merely followed a sentence containing "not".
+- `check_gates.py` and `mutation_test.py` do not scan themselves, because they carry the patterns as
+  regex source.
 
 ## What these tools do not cover
 
 Claim grounding — that a stated position really appears in the source at the cited section — cannot be
-checked without reading the source, and the short quotations involved are exactly what this repository
-does not redistribute. Those checks stay in the audit trail: `source_coverage.md` records what was read
-and where, and `acceptance_report.md` states which claims were verified by targeted re-reading rather
-than by script, so the reader can see which is which.
+checked without reading the source. The book is CC BY 4.0, so short quotation is permitted; this
+repository still keeps the PDF and bulk extracts out of Git as an editorial choice, which means those
+grounding checks stay in the audit trail: `source_coverage.md` records what was read and where, and
+`acceptance_report.md` states which claims were verified by targeted re-reading rather than by script,
+so the reader can see which is which.
