@@ -25,9 +25,10 @@ Do not skip a gate. A later stage may revise an earlier artifact when validation
 
 ## Current Revision
 
-The initial package and Revision 01 are now historical context. The active execution entry point is:
+The active execution entry point is:
 
-- [revision-02/README.md](revision-02/README.md) — residual contradiction sweep, validation hardening,
-  and final re-acceptance after direct post-Revision-01 corrections.
+- [revision-03/README.md](revision-03/README.md) — final metric/parser patch validation and Cycle 4
+  re-acceptance.
 
-Do not treat the previous acceptance report as final until Revision 02 has been executed.
+Revision 01 and Revision 02 remain historical context. Cycle 3 acceptance is superseded by the
+post-review patch and must not be treated as current until Revision 03 completes.
