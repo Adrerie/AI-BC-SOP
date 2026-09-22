@@ -179,7 +179,13 @@ Nothing was merged to `main`. The work sits on `plan/trustworthy-ml-2023`:
 | `1a36b5c` | 04 — certification scope and attack adequacy |
 | `f2eedbd` | 05 — reproducible validation tooling |
 | `3c89a68` | 06 — staging architecture and attribution |
-| *(this commit)* | 07 — re-acceptance |
+| `e3a9c91` | 07 — re-acceptance and this report |
+| `de8fa4c` | 07 — fix to the new path detector, found by the clean-clone run |
+
+The last row is why the suite is run from a clone rather than from the directory it was written in:
+`check_gates`' hygiene scan passed in the working tree because its own source file was still untracked,
+and failed once it was committed. Both bugs it exposed were fixed and the detector now self-tests
+before it scans.
 
 ---
 
