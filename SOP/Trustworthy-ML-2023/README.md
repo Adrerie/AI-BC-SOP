@@ -50,16 +50,24 @@ cross-link check used at acceptance.
   published, or reused results. Do not fold optional methods into Core.
 - Recurring terms take the SOP-08 register meaning. A metric name may not be redefined locally.
 - Where one SOP depends on another, link it; do not copy the procedure.
-- Numbers quoted as examples come from the source and are labeled with their section and page.
-  The source supplies no default thresholds, bin counts, iteration budgets, or ε values, so none is
-  invented here: a procedure names the choice you must make and record.
+- **Integrity is setting-relative.** A method may use only the information rights its declared setting
+  grants; taking more changes the setting, and with it the class of results it may be compared
+  against. Nothing in this group forbids target-domain supervision as such, and nothing licenses
+  quoting a stricter setting's published results as the competition for a richer one.
+- Numbers quoted as examples come from the source and are labeled with their section and page. The
+  source's numeric values are **experimental regimes**, not general thresholds: where a procedure
+  repeats one, it says which experiment it came from, and no routing decision is made on it.
 - Every SOP ends with traceability so a later revision can re-check the claim against the book.
 
 ## Scope note
 
-This group is method-agnostic and application-neutral: it covers distribution shift, adversarial
-stress, uncertainty, and explanation evaluation as evaluation and execution practice. It does not
-cover the book's learning-setting variants that require deployment-stage supervision the procedures
-here forbid (domain adaptation with labeled targets, test-time training, continual and few-shot
-variants), nor its representation-learning showcase, nor the authors' forward-looking research
-agenda — each of which is recorded with its disposition in the coverage audit.
+This group is method-agnostic, application-neutral and **setting-neutral**: it covers distribution
+shift, adversarial stress, uncertainty, and explanation evaluation as evaluation and execution
+practice, and it grants nothing and forbids nothing on its own. A project may declare domain
+adaptation with labeled targets, test-time training, continual or few-shot adaptation, or
+target-informed calibration as its setting — the book catalogs these as first-class learning settings,
+not as violations — provided it then reports against the comparison class that setting implies. What
+the procedures reject is a mismatch between the resources used and the setting named, not the use of
+target information as such. The group does not cover the authors' representation-learning showcase,
+nor their forward-looking research agenda — each is recorded with its disposition in the coverage
+audit.

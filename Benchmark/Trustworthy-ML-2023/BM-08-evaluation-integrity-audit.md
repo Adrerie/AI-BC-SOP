@@ -27,7 +27,8 @@ The audit consumes, and checks the existence of, the outputs of
 [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md):
 
 - setting block per compared method, with the supervision each consumed;
-- split manifest with provenance groups, tuning rights, and contamination measurements;
+- split manifest with the declared independence unit, tuning rights, and contamination measurements,
+  plus which recovery was taken for any set whose results guided a selection;
 - test-contact log with the number of final-test evaluations;
 - shared metric implementation (or the divergence list);
 - tuning configuration and budget per method;
@@ -45,8 +46,11 @@ Stress the *protocol*, not the model, and report which perturbations flip the co
    degenerate cases (empty bins, zero-positive thresholds, ties).
 2. **Budget equalisation**: give the simplest baseline the same search space and evaluation count as
    the method being promoted.
-3. **Rights removal**: re-run selection steps with target-domain information withheld, reproducing
-   the setting the claim names.
+3. **Rights match**: re-run the selection steps under the information rights the claim's setting
+   grants. Where practice exceeded the declared setting — target data used under a
+   domain-generalization label — withhold them and record what survives. Where the setting genuinely
+   grants target access, the data stay and the audit moves to whether the label and the comparison
+   class match the resources used.
 4. **Control insertion**: add the trivial controls (constant confidence frozen on the calibration
    split, random ordering, random occlusion, single-step attack) to every table. Where a control uses
    labels of the scored set — an oracle constant, an oracle detector — it is a metric diagnostic and

@@ -38,12 +38,16 @@ restating it.
   design choices (validation), methodology and claim (test). Update cadence differs by orders of
   magnitude: milliseconds-to-seconds, minutes-to-days, months-to-years.
 - **Information leakage** — any information intended exclusively for deployment becoming available
-  during development. Four concrete forms: tuning on labeled target samples; tuning by *visually
-  inspecting* target samples; training on target samples labeled **or unlabelled**; tuning to
-  maximize publicly reported scores.
+  during development *under the declared setting*. The source lists four concrete forms: tuning on
+  labeled target samples; tuning by *visually inspecting* target samples; training on target samples
+  labeled **or unlabelled**; tuning to maximize publicly reported scores. Each is a violation only
+  where the setting withholds that information — the second scenario in the source's own list is a
+  domain-adaptation method, not a domain-generalization one, and the label is what decides.
 - **Test-set spoiling** — the loss of a test set's meaning as a generalization estimate caused by
   any decision being taken from its results, including reading other people's numbers on it.
   Spoiling is a spectrum: you can spoil less, never not at all, if you also want a benchmark.
+  Once final-test results have influenced a selection, that set is development evidence *for the
+  affected claim*, and running the chosen system over it again does not undo that.
 - **Shifted validation** — a validation subset drawn from a *different* domain than training, used
   only when the setting grants target-domain information. It measures something weaker than
   generalization and must be labeled as such.
@@ -55,9 +59,16 @@ restating it.
 
 **Core**
 
-1. Partition by *provenance group*, not randomly: assign every raw sample to exactly one of
-   train / IID-validation / shifted-validation / final-test, grouping by source (device, site,
-   subject, time window, annotator) so that no group straddles two splits.
+1. Choose the **split unit** from the dependence structure the claim actually rests on, then assign
+   every raw sample to exactly one of train / IID-validation / shifted-validation / final-test at that
+   unit level so that no unit straddles two splits.
+   - If observations are correlated through subject, site, device, time, household, sequence, plot,
+     patient, or source document, the split must be made by the highest relevant independence unit —
+     a random row split there leaks, and the leak is invisible in a per-row contamination check.
+   - If the samples genuinely are independent and identically distributed for the target claim, a
+     random split is valid and provenance grouping is unnecessary ceremony.
+   - State which of the two you assumed, and the unit you used. The justification is the claim and the
+     data-generating process, not the convention of the subfield.
 2. Set the test-set policy in writing: which subsets are final-test, what the contact budget is
    (default: one evaluation per project per final-test subset), and who may open the log.
 3. Run the contamination pass before anything is trained: exact-duplicate and near-duplicate
@@ -93,14 +104,21 @@ restating it.
 
 ## 6. Mandatory checks
 
-- [ ] **Group-disjointness**: no provenance group appears in two splits (verify by set
-      intersection of group ids, not by row count).
+- [ ] **Unit-disjointness**: the unit chosen in step 1 appears in only one split (verify by set
+      intersection of unit ids, not by row count). If the declared unit is the individual row, the
+      IID assumption that licenses it is stated in the setting block.
 - [ ] **Tuning-rights check**: for every tuned object (hyper-parameter, checkpoint, threshold,
       temperature, layer choice) record the split it was selected on; flag any selection made on a
       final-test subset.
-- [ ] **Ablation-under-shift check**: any ablation or model-selection table whose numbers come from
-      the held-out target domain is leakage; if such a table exists, either rebuild it on permitted
-      validation material or delete the claim that depends on it.
+- [ ] **Post-selection independence**: for every flagged final-test selection, record which response
+      was taken — (i) a new untouched test drawn from the intended evaluation distribution, (ii) a
+      pre-existing untouched secondary test, (iii) downgrade the claim and disclose that no
+      independent final test remains. Re-running the selected system on the same set is not a
+      response and must not be reported as one.
+- [ ] **Ablation-under-shift check**: an ablation or model-selection table whose numbers come from the
+      held-out target domain is leakage **when the setting withholds that domain**. Where the setting
+      grants it, the table is legitimate — but the project is then reported under that setting, and
+      compared against methods with the same access, not against the stricter one.
 - [ ] **Contact budget**: number of final-test evaluations ≤ declared budget; excess contacts are
       reported, not hidden.
 - [ ] **Contamination report**: overlap rates recorded with the detection method used; a claim of
@@ -111,10 +129,15 @@ restating it.
 
 ## 7. Decision or stop conditions
 
-- **Stop and re-declare the setting** if target-domain labels were used at all: you now have domain
-  adaptation or test-time adaptation, and domain-generalization comparisons are void.
-- **Stop the run** if any model-selection step is found to have consumed final-test results; the
-  affected numbers must be recomputed on permitted material or dropped.
+- **Re-declare the setting** if target-domain labels or unlabelled target data were used: the project
+  is now a domain-adaptation, test-time-training or continual-learning one, and the
+  domain-generalization comparison no longer applies. That ends the old comparison, not the work —
+  report it under the new setting, against methods granted the same access.
+- **Stop the run** if any model-selection step is found to have consumed final-test results. For the
+  affected claim that set is now development evidence, so recompute on permitted material, obtain a
+  new untouched test, use a pre-existing untouched secondary test, or downgrade the claim and disclose
+  that no independent final test remains. Rerunning the selected system over the same set after the
+  fact is not one of these and must not be presented as independence restored.
 - **Proceed with an explicit caveat** when the field offers no real validation set (the public
   subset that everyone calls "validation" is in fact the de-facto test set): state that your
   validation is the community's test set, and that accumulated overfitting in that field is
@@ -127,18 +150,23 @@ restating it.
 - Using the test set as the validation set because "there is no other labelled data".
 - Selecting the feature-drop / augmentation / layer strategy by average left-out-domain accuracy —
   an ablation that is individually reasonable and collectively invalid.
-- Treating visual inspection of deployment data as harmless because no label was read.
+- Treating visual inspection of deployment data as harmless because no label was read. The source
+  counts it as leakage in a setting that withholds the target domain and as legitimate adaptation in
+  one that grants it; what it never is, is setting-neutral.
 - Repeatedly evaluating on the same public leaderboard and reading it as independent confirmation.
 - Assuming a dataset revision is identical to the version you tuned on.
 - Reporting one number that mixes methods with different split access.
 - Counting "we looked once" while the internal development log shows a dozen passes.
+- Re-running the selected model over a set whose results guided the selection and calling the second
+  number independent evidence.
 
 ## 9. Required outputs
 
-- A split manifest: per split — provenance groups, size, labels available, construction rule, and
-  the tuning rights granted.
+- A split manifest: the independence unit chosen in step 1 and why, then per split — the units
+  assigned, size, labels available, construction rule, and the tuning rights granted.
 - A contamination report: method, thresholds, overlap rates, affected ids.
-- A test-contact log (date, subset, purpose, resulting decision).
+- A test-contact log (date, subset, purpose, resulting decision), and for any subset whose results
+  entered a selection, which recovery was taken.
 - Frozen-copy hashes (Extended).
 - A per-result supervision annotation table for the final report, marking every upper-bound row.
 
@@ -164,11 +192,12 @@ your validation set.
 
 ## 12. Source traceability
 
-Split roles and what each optimizes: §2.3.2, Definitions 2.20-2.22 (book pp. 26-27). Validation
-must share training domains for true OOD claims, with the pointer to leakage: §2.3.2 (p. 26) and
-§2.5.2. Testing as part of development and the impossibility of an unsullied test set: §2.3.3
-(p. 28). Information leakage definition and its four concrete forms: §2.5.1, Definition 2.24
-(pp. 36-37). Ranking-instead-of-scores and the differential-privacy/noise idea: §2.5.1 fn. 7
+Split roles and what each optimizes: §2.3.2, Definitions 2.20-2.22 (book pp. 26-27). Validation drawn
+from the training domains **for a claim that withholds the target domain**, with the pointer to
+leakage: §2.3.2 (p. 26) and §2.5.2; the source's own companion statement that a target-domain
+validation subset is a different setting rather than a sin: §2.5.1 (pp. 36-37). Testing as part of
+development and the impossibility of an unsullied test set: §2.3.3 (p. 28). Information leakage
+definition and its four concrete forms: §2.5.1, Definition 2.24 (pp. 36-37). Ranking-instead-of-scores and the differential-privacy/noise idea: §2.5.1 fn. 7
 (p. 36), §2.5.3 (p. 40). Ablation study definition and the OOD caveat: §2.5.2, Definition 2.25
 (pp. 38-39). "Specify the hyper-parameter selection method as part of the learning problem",
 test-set-once-per-project, benchmark refresh with significance tests: §2.5.3 (pp. 39-40).
@@ -176,4 +205,10 @@ Contamination in public Q&A benchmarks and models scoring near zero on the non-o
 §5.1.3 (pp. 335-338). Missing validation set and the second-version accuracy drop: §5.1.3
 (pp. 335-338). Oracle test-time selection as an upper bound: §2.14.1 (p. 82). Pretraining-set access
 forcing a "zero-shot" re-think: §2.5.1 (p. 37). Contact logging, hashes, and the check-list format
-are repository conventions.
+are repository conventions. Three rules here are **synthesized** and carry that label in
+`concept_reconstruction.md`: the split-unit conditionality (a random split is valid when the rows
+really are independent and identically distributed for the claim), since the source argues the grouped
+case without licensing either choice; the three permitted responses to a contaminated final test and
+the statement that rerunning cannot restore independence, which sharpens the spoiling spectrum
+(§2.3.3, p. 28; §2.5.3, pp. 39-40); and the four-level pretraining disclosure ladder, which turns the
+source's single "zero-shot needs re-thinking" remark (§2.5.1, p. 37) into a reporting rule.

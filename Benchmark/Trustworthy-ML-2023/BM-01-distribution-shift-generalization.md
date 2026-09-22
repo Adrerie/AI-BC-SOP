@@ -40,7 +40,11 @@ than M — historically the more common outcome.
 ## 4. Shift or stress construction
 
 **Core.** Leave-one-domain-out: hold out each declared domain in turn, train on the rest, evaluate
-on the held-out one.
+on the held-out one. This is the construction for a setting that withholds the target domain. A
+project that instead declares domain adaptation, test-time training, or continual/few-shot adaptation
+is not failing this check — it is reporting a different comparison class, and is scored here under its
+own setting label against methods granted the same access, per
+[`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-setting.md).
 
 **Extended.** Add:
 - *multi-source*: train on a subset of domains, evaluate on several unseen ones at once.
@@ -142,7 +146,8 @@ condition axis is measured by [`BM-05`](BM-05-adversarial-robustness.md) under
 ## 13. Source traceability
 
 Cross-domain versus ID generalization and the domain/environment vocabulary: §2.1.2,
-Definitions 2.5-2.8 (book pp. 18-19); learning settings §2.4.2-§2.4.7 (pp. 29-33). Leave-one-domain
+Definitions 2.5-2.8 (book pp. 18-19); learning settings §2.4.2-§2.4.11 (pp. 29-35), which is also the
+list of legitimate alternative settings for the clause in §4. Leave-one-domain
 protocol and the shared-class-set convention, plus the named benchmark family (PACS-style
 leave-one-out, the DomainBed suite, and a mixed DG/subpopulation-shift suite): §2.6-§2.6.1
 (pp. 40-43). Subpopulation-shift definition and worst-case-subpopulation requirement: §2.6,

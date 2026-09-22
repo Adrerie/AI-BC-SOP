@@ -194,8 +194,8 @@ correctness is needed, §4.6.2 (pp. 256-257); bin-count dependence and the fine-
 the tool summary §4.7 (p. 259). DNN calibration evidence and the NLL/accuracy disconnect:
 §4.8.1-§4.8.2 (pp. 259-262); temperature scaling protocol §4.8.3 (pp. 262-263). Ranking condition
 and detection metrics with the AUROC-over-AUPR recommendation: §4.9.1-§4.9.2 (pp. 263-266), where
-the random-detector value `P(L = 1)` is given for the success-positive task (p. 265) and AUPR-Error
-is defined by making errors the positive class (p. 265).
+§4.9.2 (p. 265) gives the random-detector value `P(L = 1)` for the success-positive task and defines
+AUPR-Error by making errors the positive class, and §4.9.2 (p. 266) records the AUROC recommendation.
 Non-predictive readouts as OOD and multiplicity detectors: §4.10-§4.10.3 (pp. 266-268). Epistemic
 mechanisms and their stated confounds: §4.11.2 (p. 271), §4.11.5 (p. 275), §4.11.9 (p. 290),
 §4.11.10 (pp. 290-291), §4.12.1-§4.12.3 (pp. 291-297). Aleatoric loss and its preconditions:

@@ -27,9 +27,15 @@ and the audited source universe in
 
 These apply to every component and are the reason the suite exists as a group:
 
-1. The final test set is never used for model, threshold, calibration-parameter, or attack selection.
+1. A final test set stays independent for a claim only if nothing about the reported system was
+   selected from that set's results — no model, threshold, calibration parameter, checkpoint or attack
+   choice. Once a selection has been made, the set is development evidence for that claim, and
+   re-running the chosen system over it does not restore independence: get a new untouched test, use a
+   pre-existing secondary one, or downgrade the claim and disclose.
 2. IID validation, shifted validation, and final-test conditions are named separately; a shifted
-   validation set changes the setting and therefore the comparison class.
+   validation set changes the setting and therefore the comparison class. Adaptation settings that
+   legitimately use target-domain information are in scope — they must simply be declared as what they
+   are and scored against methods granted the same access.
 3. Every metric states where it is invalid: proper scores mix accuracy and calibration and have an
    unknown floor; `ece` is driven to zero by a constant set equal to the measured correctness rate of
    the scored set — an oracle, not a baseline a deployed model can hold — and depends on the bin
@@ -70,9 +76,15 @@ are not redefined locally; if a component needs a new one, it is added to that r
 
 ## What this suite does not cover
 
-Two evaluation areas the source discusses were deliberately left out of the operational suite, each
-recorded with its reason in the coverage audit: (a) benchmarks that require deployment-stage
-supervision the integrity rules here forbid (domain adaptation with labeled targets, test-time
-training, continual and few-shot variants), and (b) the representation-learning showcase whose own
-evaluation the source labels qualitative and unguaranteed. The book's forward-looking research agenda
-and its historical narrative are likewise not operationalised.
+Two areas the source discusses were left out of the operational suite, each recorded with its reason
+in the coverage audit: the representation-learning showcase whose own evaluation the source labels
+qualitative and unguaranteed, and the navigation, legal, historical and research-agenda material that
+carries no reusable evaluation procedure.
+
+Learning settings that consume target-domain information are **not** out of scope. Domain adaptation
+(§2.4.4), test-time training (§2.4.6), domain- and task-incremental continual learning (§2.4.7,
+§2.4.11) and the K-shot / meta-learning variants (§2.4.9-§2.4.10) are first-class entries in the
+source's own setting catalogue, and the coverage audit records them as `incorporate` or `supporting`.
+This suite evaluates them on the same terms as any other setting: the project declares which setting
+it is running, and is compared against methods granted the same access. What the integrity rules
+forbid is the mismatch between resources used and setting named — not the use of target information.

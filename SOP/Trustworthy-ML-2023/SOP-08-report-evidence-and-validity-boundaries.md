@@ -132,6 +132,9 @@ supervision consumed.
 - **Do not publish** if a headline number's meaning depends on an undisclosed choice (bins, ε,
   occlusion operator, group definition, ρ direction).
 - **Stop and re-run `SOP-02` checks** if the report shows any selection made on a final-test subset.
+  Report which recovery was taken — a new untouched test, a pre-existing secondary one, or a
+  downgraded claim with the absence of an independent test disclosed. A second pass of the selected
+  system over the same set is not a recovery and may not be printed as one.
 - **Downgrade the claim** to the strongest setting actually evidenced; move stronger-setting results
   into their own table rather than merging them.
 
