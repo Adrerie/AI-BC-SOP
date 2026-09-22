@@ -72,7 +72,7 @@ is recorded anywhere in the repository: the bibliographic description of the sou
 - `check_structure findings=0` — schema and layout conform.
 - `check_links broken=0 asymmetric=0` — links resolve; every relationship is acknowledged both ways.
   The `duplicate_pairs` count is informational.
-- `check_metrics unregistered=0 register_size=22` — the shared register covers every score used.
+- `check_metrics parser_findings=0 unregistered=0 register_size=23` — the compound-inline-code parser self-test passes and the shared register covers every score used.
 - `check_prose vague=0 spelling_variants=0` — phrasing and spelling conform. Text inside typographic or
   straight double quotes is exempt by design, because wording reproduced from the source must not be
   restyled: the book is American-English apart from "towards", which it writes 37 times.
