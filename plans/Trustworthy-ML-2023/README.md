@@ -21,3 +21,12 @@ The local model must first inspect the complete table of contents and all availa
 7. [06_FINALIZATION.md](06_FINALIZATION.md)
 
 Do not skip a gate. A later stage may revise an earlier artifact when validation exposes a gap.
+
+
+## Current Revision
+
+The initial package has completed its first implementation and external review. The active work now continues in:
+
+- [revision-01/README.md](revision-01/README.md) — methodological correction and reproducible re-acceptance.
+
+When executing the current branch, follow the original plan only as historical context. The active execution entry point is `revision-01/README.md`. Do not treat the previous acceptance report as final.
