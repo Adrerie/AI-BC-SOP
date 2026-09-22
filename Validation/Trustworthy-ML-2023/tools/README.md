@@ -32,7 +32,7 @@ when every executed check passes, so it can be wired into a commit hook or CI jo
 | `check_prose.py` | placeholder phrasing ("various methods", "as appropriate", "etc.") and non-American spelling outside quoted source wording; the spelling list expands each root to its inflexions, so `randomise` also catches `randomisation` | no |
 | `check_citations.py` | every printed-page anchor agrees with the section, definition or caption it is attached to | no (uses the committed index) |
 | `check_gates.py` | three things: each Revision 01/02 correction is still worded where it was put; none of the known-bad wordings has come back anywhere in the normative files; and no tracked file holds a machine-local path or a bulk text dump | no |
-| `mutation_test.py` | proves the gate checks still bite, by restoring each known-bad wording in a scratch worktree and requiring the checker to fail | no (needs `git`) |
+| `mutation_test.py` | runs representative end-to-end mutations in a scratch worktree and requires the relevant gate class to fail; regex-level self-tests inside `check_gates.py` separately exercise every regression pattern | no (needs `git`) |
 | `build_citation_index.py` | regenerate or verify `citation_index.json` against a PDF you hold | yes |
 | `run_acceptance.py` | run the suite and report the gate table | no |
 
@@ -84,7 +84,7 @@ is recorded anywhere in the repository: the bibliographic description of the sou
   still in place, no known-bad wording anywhere in the normative files, the attribution record
   internally consistent, and no machine-local path or bulk text in tracked files. `--list` prints the
   per-issue and per-principle tables.
-- `mutation_test cases=10 failures=0` — each detector was provoked on purpose and fired.
+- `mutation_test cases=10 failures=0` — all 10 representative end-to-end injected regressions were detected. This is not a claim that every individual marker/invariant has its own worktree mutation; every regression regex is additionally exercised by `check_gates.py`'s synthetic self-test.
 
 Output is UTF-8 whatever the console's code page is, and that is a correctness property rather than
 cosmetics: `run_acceptance.py` and `mutation_test.py` read a checker's stdout as UTF-8, so a finding
