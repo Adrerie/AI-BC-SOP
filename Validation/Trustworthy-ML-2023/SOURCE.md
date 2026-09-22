@@ -21,30 +21,41 @@ not.
 Title, authors, year, format and page structure above are read directly from the audited file, so they
 are verifiable by anyone who holds the same copy.
 
-## Official source and license: recorded as unverified
+## Official source and license
 
-The audited copy contains **no publisher page, ISBN, DOI of its own, or license/copyright notice**.
-This was checked, not assumed: scanning all 375 pages plus the PDF metadata finds no ISBN or
-ISBN-shaped number anywhere, and the word "copyright" occurs exactly once — in §3.13 (printed p. 218),
-where training-data attribution is floated as a way to investigate copyright infringement in
-generative models. That is a topic the book discusses, not a notice about this book. Every occurrence
-of "DOI", "arXiv", "Springer" or "MIT Press" sits in a bibliography entry describing some *other*
-work. PDF metadata carries title, authors, keywords and the `pdfTeX` producer only, with no publisher
-field. An attempt to confirm an official publisher or project page from the web during Revision 01 did
-not produce something verifiable enough to cite, so nothing is cited here.
+The book's official project website is [trustworthyml.io](https://trustworthyml.io/). The site
+identifies the work as *Trustworthy Machine Learning: Theory, Applications, Intuitions*, provides the
+book download and table of contents, gives the citation as arXiv:2310.08215, and explicitly labels the
+book **CC BY 4.0**.
 
-This file therefore does **not** assert a URL, a publisher, or a license for the book. Treat the work
-as **all rights reserved by its authors** unless and until an official notice says otherwise. Anyone
-who confirms the official reference should add it here with the date and the page it was read from,
-rather than editing this section in place.
+The arXiv record for *Trustworthy Machine Learning* is **arXiv:2310.08215** and names the same five
+authors. It also identifies `https://trustworthyml.io/` as the book's dedicated website.
 
-The consequence we act on is deliberate and does not depend on the uncertainty: **no book text is
-redistributed in this repository.**
+### License
+
+The official project website states **CC BY 4.0 (Creative Commons Attribution 4.0 International)**.
+
+For this repository, that means source-derived adaptations must provide appropriate attribution,
+identify the source, link to the license, and indicate that the material has been adapted or
+reconstructed. The repository does not redistribute the source PDF or bulk extracted book text.
+
+| Source fact | Verified from |
+|---|---|
+| Official project website | `https://trustworthyml.io/` |
+| Citation | Mucsányi et al., *Trustworthy Machine Learning*, arXiv:2310.08215 (2023) |
+| Source license | CC BY 4.0, stated on the official project website |
+| Repository relationship | reconstructed/adapted methodology artifacts, not a verbatim republication |
+
+The audited local PDF itself does not expose the license in its metadata or front matter. That is a
+property of that PDF copy, not evidence that the work is unlicensed or all-rights-reserved. External
+source verification therefore takes precedence for the bibliographic and licensing record.
+
+The practical source-handling rule remains conservative:
 
 | Kept out of Git | Present in the artifacts |
 |---|---|
 | the source PDF itself | section numbers and printed page numbers (`§4.6.2`, `pp. 256-257`) |
-| bulk extracted text and per-page dumps | short cited notes needed to identify a definition, and the occasional quoted phrase or clause-length fragment |
+| bulk extracted text and per-page dumps | short cited notes needed to identify a definition, and occasional brief quotations |
 | any machine-local path to the book | a derived citation index of labels → printed pages, containing no sentences (`tools/citation_index.json`) |
 
 ## What these files are
@@ -73,10 +84,13 @@ derivative-work question becomes material (for example, publishing these artifac
 license, or quoting at greater length), resolve the "Official source and license" gap above first —
 the uncertainty is documented here precisely so that it is not silently assumed away.
 
-## Re-running the license scan
+## Re-running local source checks
 
-The statements above are a claim about one file, and they take ten lines to re-check against a copy you
-hold. With PyMuPDF installed:
+The local PDF scan remains useful for confirming edition metadata, pagination, headings, and the
+absence of an embedded license notice in that particular file. It is **not** the authority for the
+book's licensing status. Licensing should be verified from the official project website.
+
+With PyMuPDF installed, the local-file metadata scan can still be repeated with:
 
 ```python
 import re, sys, fitz
@@ -90,5 +104,5 @@ for n, page in enumerate(doc, 1):
 print("metadata:", doc.metadata)
 ```
 
-Expected on the audited edition: one body-text hit for "copyright" (§3.13), no ISBN or license hit, and
-a metadata dictionary with no publisher or rights field.
+A missing license string in the local PDF must not be interpreted as overriding the CC BY 4.0 notice
+on the official project website.
