@@ -10,7 +10,9 @@ is right -- establishing that stays a source-reading job, recorded in `source_co
 
 Two repository-level invariants are checked here too, because they are gates in their own right:
 no machine-local path in a committed file, and no bulk source text (the derived index holds labels and
-page numbers only).
+page numbers only). The path detector runs a self-test first, since a scan that has quietly stopped
+matching anything is worse than no scan; and it skips this file, which necessarily contains the
+patterns it looks for.
 
     python check_gates.py            # summary
     python check_gates.py --list     # also print every marker that was found
@@ -75,8 +77,16 @@ ABSENT = [
      "Always split by subject"),
 ]
 
-LOCAL_PATH = re.compile(r"(?:[A-Za-z]:[\\/](?:Users|Documents and Settings|home)\b)|(?:/home/[^/\s]+/)")
+# An absolute path in a committed file: a drive-qualified Windows path, or a unix home directory.
+# The lookbehind keeps `https://` from reading as a drive letter, and inline code is stripped before
+# matching, because that is where this package writes the placeholder paths it tells a reader to
+# substitute. A real home directory in running prose is still caught.
+LOCAL_PATH = re.compile(
+    r"(?:(?:^|(?<=[\s\"'(=]))[A-Za-z]:[\\/][^\s\"'`,)]{2,})|(?:(?:/home|/Users|/root)/[A-Za-z0-9._-]+/)")
+INLINE_CODE = re.compile(r"`[^`\n]*`")
 BULK_TEXT = re.compile(r"\.txt$")
+# This file necessarily contains the patterns above as regex source; scanning it would report itself.
+SELF = "Validation/Trustworthy-ML-2023/tools/check_gates.py"
 
 
 def _text(rel):
@@ -120,15 +130,41 @@ def check_markers():
     return missing, found
 
 
+def _scan_line(line):
+    return LOCAL_PATH.search(INLINE_CODE.sub(" ", line))
+
+
+# Cases the detector must keep getting right. A checker that quietly stops matching is worse than none.
+PATH_CASES = [
+    (r"read from D:\.Myfile\books\the-book.pdf", True),
+    (r"read from C:\Users\someone\the-book.pdf", True),
+    (r"read from /home/someone/books/the-book.pdf", True),
+    ("see https://example.org/a/b and `pip install pymupdf`", False),
+    ("python build_citation_index.py --source /path/to/the-book.pdf", False),
+    ("recorded as `D:\\...` in the plan, which is an elision, not a location", False),
+]
+
+
+def selftest():
+    bad = []
+    for text, want in PATH_CASES:
+        got = bool(_scan_line(text))
+        if got != want:
+            bad.append(f"path detector {'missed' if want else 'matched'}: {text!r}")
+    return bad
+
+
 def check_hygiene():
     """No machine-local paths and no bulk source text among the tracked files."""
-    problems = []
+    problems = selftest()
     try:
         out = subprocess.run(["git", "-C", C.ROOT, "ls-files"], capture_output=True, text=True,
                              encoding="utf-8", check=True).stdout.split()
     except (OSError, subprocess.CalledProcessError):
         return ["git is unavailable, so tracked-file hygiene was not checked"]
     for rel in out:
+        if rel == SELF:
+            continue
         if not rel.endswith((".md", ".py", ".json", ".yaml", ".yml", ".txt")):
             continue
         if rel.startswith("plans/"):          # the plans are the reviewer's input, quoted verbatim
@@ -138,7 +174,7 @@ def check_hygiene():
             continue
         text = _text(rel) or ""
         for n, line in enumerate(text.splitlines(), 1):
-            if LOCAL_PATH.search(line):
+            if _scan_line(line):
                 problems.append(f"{rel}:{n}: machine-local path in a tracked file")
     ignored = _text(".gitignore") or ""
     if "_audit" not in ignored:
