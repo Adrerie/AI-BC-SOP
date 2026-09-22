@@ -94,7 +94,7 @@ supervision consumed.
    conventionally handled differently in your subfield, state the convention chosen.
 3. Attach a trivial or reference row to every table: constant baseline, random ordering, unmodified
    model, tuned-simple baseline. Use the frozen deployable constant here, not the oracle constant of
-   §4 — an oracle row is a metric diagnostic and must be labelled as one if it appears at all. A
+   §4 — an oracle row is a metric diagnostic and must be labeled as one if it appears at all. A
    number without a reference row is not evidence.
 4. State the boundaries explicitly as a short list of "does not show" claims, drawn from the checks
    that failed or were skipped.
@@ -208,7 +208,7 @@ rank correlation §3.7.5 (pp. 182-185); HITL §3.8.2, Definition 3.15 (pp. 189-1
 family and recalibration status: §4.8.1-§4.8.3 (pp. 259-263). The register format, the "does not
 show" list and the sensitivity panel are repository conventions.
 
-Three statements in §4 go beyond the source wording and are labelled **synthesized**: carrying the
+Three statements in §4 go beyond the source wording and are labeled **synthesized**: carrying the
 random-detector value over to the error-positive task as `P(L = 0)` (the source gives the value for
 its success-positive task and defines AUPR-Error by relabelling the positive class, but states the
 swap only for the curve, not the baseline); separating an oracle constant from a frozen deployable

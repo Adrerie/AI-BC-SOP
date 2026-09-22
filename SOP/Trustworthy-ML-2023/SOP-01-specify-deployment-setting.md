@@ -198,7 +198,7 @@ vocabulary: §2.3.1 (Definitions 2.14-2.19, book pp. 24-25). Supervision-keyed l
 resources?" (p. 25) and §5.3.1 (pp. 342-343). Information leakage as an influx into a closed
 development system (Definition 2.24), and the instruction that once the target-domain information is
 available "we cannot call it a domain generalization setup anymore" but must set up a new setting,
-benchmark and comparison class: §2.5.1 (p. 36). Scenarios 1-4 — labelled tuning, unlabelled tuning,
+benchmark and comparison class: §2.5.1 (p. 36). Scenarios 1-4 — labeled tuning, unlabeled tuning,
 visual inspection, and choosing hyper-parameters against published scores — together with the
 admission that evaluating on a new domain necessarily uses target-domain data and that the definition
 of domain generalization "may need to shift ... into something that allows some validation in the

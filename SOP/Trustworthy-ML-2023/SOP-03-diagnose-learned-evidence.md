@@ -176,9 +176,9 @@ the localization-evaluation fallacy: §3.7.3 (pp. 179-181). Missingness bias in 
 materiality threshold and the output-file shapes are repository conventions.
 
 **Where this SOP reads the source more narrowly than the source reads itself.** The source states its
-decision rules causally: altering the task cue and finding no significant drop means "our model is
-biased towards an irrelevant cue, meaning our system is misspecified", and altering the bias cue with
-a significant drop means "we also know what our model is biased towards" (§2.10, pp. 55-56). Steps 3-4
+decision rules causally: altering the task cue and finding no significant drop means “our model is
+biased towards an irrelevant cue, meaning our system is misspecified”, and altering the bias cue with
+a significant drop means “we also know what our model is biased towards” (§2.10, pp. 55-56). Steps 3-4
 and 6 here keep the two alterations and their decision directions unchanged, but report the outcome as
 sensitivity to the edit rather than as proven cue use or non-use. The reason is internal to the same
 passage: both rules are listed with the ingredient *cue disentanglement* — "the ability to change cues

@@ -145,7 +145,7 @@ the source supports it as a *view* on existing metrics (2.12.1, 4.6.2).
 |---|---|---|
 | A setting must enumerate dev resources, deployment distribution, and time; methods with different resources are not comparable | source-derived | Def 2.18 + 2.3.1 "How to compare methods…" (p. 25) |
 | Allowing extra ingredients turns a benchmark into an unfair comparison | source-derived | 5.3.1 (pp. 342-343) |
-| Tuning on target-domain data — even visually, even unlabelled — changes the setting: the "domain generalization" label is void and the work is a different problem with its own comparison class, not a failed project | source-derived | 2.5.1 Scenarios 1-3 (pp. 36-37) |
+| Tuning on target-domain data — even visually, even unlabeled — changes the setting: the "domain generalization" label is void and the work is a different problem with its own comparison class, not a failed project | source-derived | 2.5.1 Scenarios 1-3 (pp. 36-37) |
 | Integrity is defined by the information rights the declared setting grants, so adaptation settings (domain adaptation, test-time training, continual, K-shot) are legitimate as declared | source-derived (setting catalogue) + synthesized (rights formulation) | 2.4.2-2.4.11 (pp. 29-35), 2.5.1 (pp. 36-37) |
 | A contaminated final test cannot be repaired by rerunning it; obtain a new untouched set, use a secondary one, or downgrade and disclose | synthesized from the spoiling spectrum | 2.3.3 (p. 28), 2.5.3 (pp. 39-40) |
 | Split by the highest relevant independence unit; a random split is valid when rows really are IID for the claim | synthesized (the source argues the grouped case only) | 2.3.2 (p. 26), 5.1.3 (pp. 335-338) |
@@ -160,7 +160,7 @@ the source supports it as a *view* on existing metrics (2.12.1, 4.6.2).
 | Use the held-out test set sparingly; once per paper is the book's own rule of thumb | source-derived | 2.5.3 (p. 39) |
 | Publish a ranking instead of scores to slow test-set spoiling | source-derived (as a suggestion) | 2.5.1 fn. 7 (p. 36) |
 | Reporting a proper-scoring number alone cannot separate calibration from accuracy | source-derived | 4.5.9 remarks 3-4 (p. 254) |
-| A constant confidence equal to the measured correctness rate reaches ECE = 0 without truthfulness; it is an oracle diagnostic because that constant is computed from the scored set's labels | source-derived (degeneracy) + synthesized (oracle labelling) | 4.6.2 (pp. 256-257) |
+| A constant confidence equal to the measured correctness rate reaches ECE = 0 without truthfulness; it is an oracle diagnostic because that constant is computed from the scored set's labels | source-derived (degeneracy) + synthesized (oracle labeling) | 4.6.2 (pp. 256-257) |
 | A constant frozen on the calibration split is a legitimate baseline, but its final ECE is the gap to final accuracy | synthesized | 4.6.2 (pp. 256-257) |
 | Fix the number of ECE bins and report it; consider finer bins at high confidence | source-derived (bin sensitivity) + repository convention (make disclosure mandatory) | 4.6.2 (pp. 256-257) |
 | Perplexity is the exponentiated NLL and must share that NLL's logarithm base; the value is invariant to a *common* base | source-derived, incl. fn. 18 | 4.5.9 (p. 252) |

@@ -40,7 +40,7 @@ before any conclusion drawn from it.
 - **Soundness (faithfulness)** — the explanation identifies the true causes of the prediction, i.e.
   of *this model's* behavior.
 - **Four separate contracts**, none of which follows from passing the one before it:
-  (i) **model-dependence sanity** — the score responds when the model is randomised or its weights
+  (i) **model-dependence sanity** — the score responds when the model is randomized or its weights
   changed; (ii) **attribution ordering** — the ranking tracks perturbation sensitivity under a named
   occlusion operator and its artifacts; (iii) **end-goal usefulness** — a human, a debugging task, or
   a data-attribution claim performs better with the explanation; (iv) **causal explanation** — the

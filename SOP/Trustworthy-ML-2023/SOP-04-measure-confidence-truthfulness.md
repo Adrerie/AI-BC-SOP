@@ -68,7 +68,7 @@ lost honestly.
 4. Run the **trivial-score controls** as first-class rows in the same table:
    (i) a constant confidence — the *deployable* form, whose value is frozen on the calibration split
    before final testing, plus the *oracle* form set equal to the measured correctness rate of the set
-   being scored, which is a metric diagnostic and must be labelled as one rather than shipped as a
+   being scored, which is a metric diagnostic and must be labeled as one rather than shipped as a
    baseline; (ii) uniformly random scores; (iii) the uncalibrated softmax baseline of the same model.
    A claim is measured against these, not against zero.
 5. Decompose before comparing: report task accuracy next to every confidence metric, and never read

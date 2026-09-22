@@ -73,8 +73,8 @@ silent failure.
    - confidence is the problem, decisions are fine → post-hoc recalibration.
    - adversarial strategy space declared → adversarial training
      ([`SOP-05`](SOP-05-run-worst-case-stress-evaluation.md)).
-   - nothing admissible → step 6, and note that "abstain" is admissible only if its own
-     prerequisites hold; otherwise the output is "no validated action policy".
+   - nothing admissible → step 6 — where "abstain" is itself admissible only if its prerequisites
+     hold, otherwise the output is "no validated action policy".
 2. Establish the **tuned simple baseline first**: train the plainest admissible method with the same
    tuning budget as every candidate. Every candidate is measured against this reference, not against a
    default-settings straw man — and the reference is a necessary comparison point, not an automatic

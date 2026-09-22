@@ -110,7 +110,7 @@ compare against a control row rather than interpreting the absolute value.
 | `ece` = 0 only under an oracle constant set to measured accuracy | expected degeneracy of the metric, recorded as a diagnostic; it says nothing about the model |
 | Better `nll` while accuracy also improves | not evidence about uncertainty alone |
 | `auroc` high, `ece` high | good ranking, bad probability: acceptable for a threshold filter, unacceptable as a reported probability |
-| `aupr` high on an imbalanced subset | may be the prevalence of the positive class that variant designated; read it against `P(L = 1)` or `P(L = 0)` as appropriate and prefer `auroc` |
+| `aupr` high on an imbalanced subset | may be the prevalence of the positive class that variant designated; read it against `P(L = 1)` or `P(L = 0)` according to which class that variant designates, and prefer `auroc` |
 | Worst-bin (`mce`) large while `ece` small | a rare but badly mis-stated confidence region; high-risk use fails |
 | Calibration degrades under shift while accuracy holds | confidence is distribution-bound; re-fit and disclose, do not silently transfer |
 | Distance-based score "detects" ambiguity as unfamiliarity | mechanism conflation; route to `BM-04` interpretation |

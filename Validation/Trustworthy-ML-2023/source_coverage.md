@@ -6,14 +6,14 @@ Plan 1 artifact. Produced before any SOP or Benchmark drafting (see Gate A at th
 
 | Field | Value |
 |---|---|
-| Primary source path | `D:\.Myfile\D1s1\学习路径方向\书\Trustworthy Machine Learning book 2023.pdf` |
+| Primary source | *Trustworthy Machine Learning book 2023.pdf* — file name and edition only; the repository does not distribute the PDF and does not record any user's filesystem location. Re-running the source-dependent checks requires your own copy, pointed at via `--source` or `TRUSTWORTHY_ML_2023_PDF` (see [`tools/README.md`](tools/README.md)). Bibliographic details and license: [`SOURCE.md`](SOURCE.md). |
 | File type | PDF 1.5, 375 pages, produced by `pdfTeX-1.40.25` (LaTeX + hyperref) |
 | Title / edition / year | *Trustworthy Machine Learning*, first edition, 2023 (document created 2023-10-11) |
 | Authors | Bálint Mucsányi, Michael Kirchhof, Elisa Nguyen, Alexander Rubinstein, Seong Joon Oh (University of Tübingen / Tübingen AI Center) |
 | Subject keywords in file | Machine Learning, Scalability, Trustworthiness, OOD Generalization, Explainability, Uncertainty, Evaluation |
 | Text completeness | Full text: front matter, all 5 chapters, appendix, list of definitions, bibliography. Text layer is extractable (not scanned images), so the audit works on real body text. |
 | Headings machine-readable? | **Not via bookmarks** — `doc.get_toc()` returns 0 entries, i.e. the PDF has no outline/named destinations. Headings were recovered from font metadata (size + weight) and cross-checked against the printed table of contents; see Step 2. |
-| Secondary copies in workspace | Two unrelated PDFs (`TensorFlow深度学习`, `深度学习进阶：自然语言处理`) sit in the same folder; neither is a copy of this book, so no secondary source was needed to recover structure. |
+| Secondary copies of the source | None were used. Every structural fact below comes from one file, so nothing was cross-recovered from another printing; the printed table of contents inside that file served as the independent check (step 4 below). |
 | Pagination mapping | Printed book page = PDF page − 2 (verified: chapter 1 starts on PDF p.9 = book p.7 as listed in the printed TOC; every `Definition x.y` page in the printed *List of Definitions* reproduces under this mapping). |
 
 ## Step 2 — Structural universe as extracted
@@ -22,14 +22,30 @@ Plan 1 artifact. Produced before any SOP or Benchmark drafting (see Gate A at th
 - 49 section headings (`x.y`)
 - 188 subsection headings (`x.y.z`)
 - **247 headings in total**, every one of them listed in the coverage table below with a disposition.
+  Of these, 243 carry a number a locator can point at (`1`, `1.2.3`, `A.2`); the remaining 4 are
+  unnumbered front- and back-matter blocks (foreword-style pages, references, index). The committed
+  [`tools/citation_index.json`](tools/citation_index.json) therefore holds 243 heading labels — no
+  citation in this package can address an unnumbered block.
 
-Extraction procedure (repeatable):
+Extraction procedure, as committed in
+[`tools/build_citation_index.py`](tools/build_citation_index.py) (repeatable against a PDF you supply;
+the audit pass originally used a bold-percentage filter, and the two agree on all 243 numbered labels):
 
 1. Attempt PDF outline first (`PyMuPDF.get_toc`) → 0 entries, so outline-based extraction is impossible.
-2. Walk every page's text dictionary; keep every line whose maximum span size is one of the heading sizes and whose characters are ≥60 % bold/semibold. Observed heading sizes: 45.8 pt (chapter title), 19.9 pt (`Chapter N` banner), 14.3 pt (`x.y`), 12.0 pt (`x.y.z`). Body text is 10.0 pt.
-3. Join a number line with the following title line(s) on the same page at the same size — the typesetter puts the heading number and the heading title in separate text runs, and some titles use `SemiBold` rather than `Bold`, which is why a naive bold-only filter loses 11 titles.
-4. Cross-check the recovered `x.y` list against the printed table of contents (PDF pages 4–5) → 49 sections on both sides, no heading present in one source and missing in the other.
-5. Validate numbering: within every section, subsection numbers are contiguous `1..n`; 6 sections (1.3, 2.10, 2.11, 3.13, 4.4, 4.7) legitimately have no subsections.
+2. Read the page offset from the book's own printed folios rather than assuming one: bare page numbers in
+   the bottom fifth of each page vote on `pdf page − printed page`, and 363 of them agree on an offset of
+   2 (a single folio is not trusted, because odd/even running heads differ).
+3. Walk every page's text dictionary; a heading number line must be set above body size (body text is
+   10.0 pt; observed heading sizes: 45.8 pt chapter title, 19.9 pt `Chapter N` banner, 14.3 pt `x.y`,
+   12.0 pt `x.y.z`) and be followed on the same page by a title line at the same size. The typesetter puts
+   the number and the title in separate text runs, and some titles use `SemiBold` rather than `Bold`, which
+   is why a naive bold-only filter loses 11 titles.
+4. Reject artifacts that look like headings: a "number" line must match a real locator
+   (`[1-9]` or `[A-Z]`, optionally dotted), which excludes the stray `0.0` runs the scan produces.
+5. Cross-check the recovered `x.y` list against the printed table of contents inside the same file
+   → 49 sections on both sides, no heading present in one source and missing in the other.
+6. Validate numbering: within every section, subsection numbers are contiguous `1..n`; 6 sections
+   (1.3, 2.10, 2.11, 3.13, 4.4, 4.7) legitimately have no subsections.
 
 Two headings needed manual repair and are recorded here as source-fidelity notes, not silently fixed:
 
@@ -495,7 +511,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   "can also lead to unrealistically pessimistic solutions".
 - Attack objectives: FGSM x + ε·sgn(∇_x L(θ,x,y)) with ε bounding the L∞ magnitude (p. 89); PGD as
   constrained maximisation of the loss with projection onto the ε-ball, step size α, T iterations,
-  convergence checked via ‖x_{t+1} − x_t‖₂ ≤ 1e−5 (p. 90-91). Strength ordering FGSM < PGD is
+  convergence checked via ‖x_{t+1} − x_t‖₂ ≤ 1e−5 (pp. 90-91). Strength ordering FGSM < PGD is
   explicit, with the reason: a single gradient step "does not even find local optima in general",
   and PGD is non-convex so "no guarantee for the globally optimal solution, even within a small
   ε-ball" — hence attack strength depends on the optimiser used.
