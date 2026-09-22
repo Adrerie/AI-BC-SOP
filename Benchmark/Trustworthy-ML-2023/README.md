@@ -54,7 +54,10 @@ These apply to every component and are the reason the suite exists as a group:
 6. Report average **and** failure-oriented views (worst cell, worst bin, worst subgroup, risk at
    coverage) whenever they differ in direction.
 7. Report cost — compute, memory, labels, human review — next to the gain.
-8. Mark every upper-bound row (oracle selection, train-on-target, post-hoc certificate) as such.
+8. Mark oracle or stronger-information rows (for example oracle selection or train-on-target)
+   explicitly as upper bounds or stronger-setting references where appropriate. A certified robust
+   accuracy is not an upper-bound row: under a valid certificate it is a provable lower bound on the
+   true robust accuracy for the stated threat model.
 
 ## How to pick components
 
