@@ -51,7 +51,11 @@ not be pooled.
 - **Adversarial stress:** additionally test whether the confidence mechanism reacts to
   adversarially constructed failures from
   [`BM-05`](BM-05-adversarial-robustness.md). Treat this as a separate stress axis, not as an OOD
-  family and not as evidence of OOD-detection capability.
+  family and not as evidence of OOD-detection capability. This does not contradict
+  [`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-setting.md) listing adversarial
+  as one generalization *type*: that is the source's taxonomy of train-to-test differences, whereas
+  the claim excluded here is the detection-specific one — that firing on constructed inputs would
+  show the detector finds natural novelty.
 - Open-set stress: unforeseen classes that *should* produce low confidence; here a top-1 accuracy
   score is the wrong readout and the confidence statistic is the right one.
 - Coverage sweep: detection quality as a function of accepted coverage, which is what

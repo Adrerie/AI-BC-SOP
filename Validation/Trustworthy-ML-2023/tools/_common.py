@@ -8,9 +8,31 @@ particular user is recorded here or in the artifacts.
 import os
 import re
 import glob
+import sys
 
 SOURCE_ENV = "TRUSTWORTHY_ML_2023_PDF"
 PACKAGE = "Trustworthy-ML-2023"
+
+
+def _utf8_streams():
+    """Print findings in UTF-8 no matter what the console's code page is.
+
+    The artifacts contain em dashes, section signs and mathematical symbols, and the finding lines
+    quote them. On a Windows console the default stream encoding is the ANSI code page, so a child
+    writing "—" emits bytes its parent -- which decodes as UTF-8 -- cannot read; the reader thread
+    dies and the caller sees an empty result, which a gate runner would report as "detector silent"
+    rather than as "output lost". Forcing the encoding here, in the module every checker imports,
+    removes that whole class of environment-dependent false negative. `errors="replace"` covers a
+    stream that cannot be reconfigured at all.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):      # not a reconfigurable stream, or Python < 3.7
+            pass
+
+
+_utf8_streams()
 
 # Repository root is two levels above this file: <root>/Validation/<PACKAGE>/tools/_common.py
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))

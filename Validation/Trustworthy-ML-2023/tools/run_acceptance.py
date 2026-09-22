@@ -33,7 +33,10 @@ CHECKS = [
 
 def run(script, extra=()):
     cmd = [sys.executable, os.path.join(HERE, script)] + list(extra)
-    proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
+    # `errors="replace"` so that a checker's output can never be *lost* to a decoding error: a lost
+    # line reads as a silent detector, which is the one result worse than a failure. `_common` makes
+    # the children print UTF-8; this guards against a stream that was reconfigured by neither.
+    proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     line = (proc.stdout or "").strip().splitlines()
     return proc.returncode, (line[-1] if line else (proc.stderr or "").strip().splitlines()[:1])
 

@@ -1,20 +1,185 @@
 # Acceptance Report — Trustworthy ML (2023) package
 
-This package has been accepted twice.
+This package has been accepted three times.
 
 | Cycle | What it was | Result | Where it stands |
 |---|---|---|---|
-| **1** | Plans `00`–`06` of `plans/Trustworthy-ML-2023/`: source audit, reconstruction, SOP group, Benchmark group, acceptance, wrap-up | 4 stage gates + 9 acceptance gates recorded as PASS | **Historical.** Superseded by external review; its checks were re-run from zero in Cycle 2 and its numbers are restated below only where they were reproduced |
-| **2** | Revision 01, `plans/Trustworthy-ML-2023/revision-01/00`–`07`: metric, setting, evidence, robustness, reproducibility and architecture corrections | See "Cycle 2 result" | **Current record** |
+| **1** | Plans `00`–`06` of `plans/Trustworthy-ML-2023/`: source audit, reconstruction, SOP group, Benchmark group, acceptance, wrap-up | 4 stage gates + 9 acceptance gates recorded as PASS | **Historical.** Superseded by external review; its checks were re-run from zero in Cycle 2 and its numbers appear below only where they were reproduced |
+| **2** | Revision 01, `plans/Trustworthy-ML-2023/revision-01/00`–`07`: metric, setting, evidence, robustness, reproducibility and architecture corrections | ACCEPTED, then superseded on two points | **Historical**, kept because it records the corrections that still stand. Its licensing limitation and its four-level disclosure ladder were both replaced by the direct corrections that opened Revision 02 |
+| **3** | Revision 02, `plans/Trustworthy-ML-2023/revision-02/00`–`03`: package-wide consistency sweep, validator hardening, final re-acceptance | See "Cycle 3 result" | **Current record** |
 
-Revision 01's governing rule was that previous PASS statements are provisional, so nothing below is
-carried forward from Cycle 1 without being re-executed. Every mechanical claim in this report is
-produced by a script that is now in the repository, and every claim that is not mechanical is labeled
-as a reading judgement and says what was read.
+Every cycle here applies the same rule the last review handed down: a prior PASS is evidence about the
+past, not a result to copy forward. Each mechanical claim below is produced by a committed script that
+was re-run in a clean checkout, and each claim that is not mechanical is labeled as a reading judgement
+and says what was read.
+
+---
+
+## Cycle 3 — Revision 02 consistency and final re-acceptance
+
+### What Revision 02 was for
+
+Revision 01 corrected positions; the review that followed found that correcting a position in one file
+does not retire it from the others. Six residues survived into the package that this cycle swept, and
+the more durable problem was that the validators could not see them: `check_gates` tested whether
+certain sentences were still present, which says nothing about a sentence elsewhere that quietly
+re-adopted the position those sentences reject. So this cycle did two things — swept the normative
+files against the seven fixed principles, and rebuilt the checks to test the principles rather than
+their own markers.
+
+### How to re-run this
+
+```
+cd Validation/Trustworthy-ML-2023/tools
+python run_acceptance.py --with-mutations
+```
+
+Python 3.8+, no third-party packages, no network, and no copy of the book. Add
+`TRUSTWORTHY_ML_2023_PDF=/path/to/the-book.pdf` to verify the committed citation index against a PDF
+you hold (needs PyMuPDF). `--with-mutations` is the Revision 02 addition: it provokes every gate
+detector on purpose in a scratch `git worktree`.
+
+Executed in a detached clean checkout at a different absolute path, with no local audit area:
+
+| Invocation | Checks | Result |
+|---|---|---|
+| clean checkout, no source | 7 | 7 PASS, 0 FAIL |
+| clean checkout, `TRUSTWORTHY_ML_2023_PDF` set | 8 | 8 PASS, 0 FAIL |
+
+Current output, so a reader can diff theirs against it:
+`structure findings=0` · `links broken=0 asymmetric=0 duplicate_pairs=7 docs=22` ·
+`metrics unregistered=0 register_size=22` · `prose vague=0 spelling_variants=0` ·
+`citations bound=437 drifting=0 unanchored=30` ·
+`gates markers_found=52 markers_total=20 regression_patterns=11 regressions=0 invariants=6
+invariant_misses=0 normative_files=23 hygiene_scanned=36 hygiene_misses=0` ·
+`mutations cases=10 failures=0` · index verified at `headings=243 definitions=87 captions=231
+offset=2 diffs=0`.
+
+### C3.1 Validation scope, stated exactly
+
+Claims about coverage are the easiest thing in a report to overstate, so the tool prints its own scope
+and this section repeats it rather than paraphrasing it generously.
+
+| Scan | Covers | Does not cover |
+|---|---|---|
+| Hygiene (paths, bulk text) | 36 tracked non-plan files (`.md`, `.py`, `.json`, `.yaml`, `.txt`) | `plans/` (22 files: reviewer input, kept verbatim, and it contains the elided example path `D:\...` that is the thing under discussion); this checker's own two source files, which carry the patterns as regex text |
+| Regression wording (11 patterns) | 23 normative files: root README, both group READMEs, 8 SOPs, 8 Benchmarks, SOURCE.md, `concept_reconstruction.md`, `source_coverage.md`, `tools/README.md` | `plans/`, and `acceptance_report.md` — this document, whose job is to quote superseded wording; it is swept by hand each cycle, and this cycle's sweep is C3.2 below |
+| Presence markers, invariants, schema, links, metrics, prose, citations | the committed package artifacts | anything requiring the source's text; see C3.4 |
+| Wording matches inside a clause that denies them | suppressed ("not as an OOD family" asserts the corrected position) | suppression is clause-scoped, deliberately: a wider window once hid a real violation because the previous sentence happened to contain "not" |
+
+### C3.2 The latest review's issues, item by item
+
+Each row gives the defect, whether the fix came in the direct corrections or in Revision 02, the
+mechanical evidence, and the reading judgement where a script cannot settle it.
+
+| # | Fixed principle | Defect as found | Correction | Mechanical evidence | Reading judgement | Result |
+|---|---|---|---|---|---|---|
+| 1 | Source license | Cycle 2 recorded the license as unverified because the audited PDF carries no notice, and `SOURCE.md` said to treat the work as all rights reserved | Direct: `SOURCE.md` now cites the official website, arXiv:2310.08215 and CC BY 4.0; the PDF scan is retained only as an edition/metadata check | `check_gates` presence markers + the attribution invariant; the regression pattern fires if "all rights reserved" or a license-unknown claim returns anywhere in the normative files | Verified independently for this cycle: the official site states "CC BY 4.0" with the subtitle *Theory, Applications, Intuitions* and a bibtex entry for arXiv:2310.08215; the arXiv record lists the same five authors, calls the work a 373-page textbook, and links the same website. Read 2026-09-22, and consistent with the audited file (375 PDF pages, printed = PDF − 2) | **PASS** |
+| 2 | Information rights | SOP-01's check-list still demanded that "nothing from the deployment stream … enter development", a universal ban the same revision had just replaced | Direct: the check is now "no deployment or target-domain information beyond the rights granted by the declared setting", with undeclared access named as the failure | Regression pattern 2 across 23 normative files; presence markers in SOP-01; the mutation test restores the old sentence and requires a failure | The rule is a scope condition, not a permission to be careless: reading of SOP-01 §6/§7 and SOP-02 §4-§6 confirms every other statement is rights-relative | **PASS** |
+| 3 | Zero-shot terminology | SOP-01 imposed a repository-wide definition ("zero-shot may be used only for level (i)", semantic exposure counted as contamination), and two other files still described a four-level ladder | Direct: SOP-01 now requires exposure disclosed by kind and defers the term to the benchmark or study's own definition. Revision 02: SOP-02's and `concept_reconstruction.md`'s stale ladder references rewritten to match | Regression pattern 3 (fires on "may be used only for level (i)" or semantic exposure called contamination); SOP-01 presence markers `does not impose a universal zero-shot definition` | Reading SOP-01 §6, SOP-02 §12 and the reconstruction rows together: duplicate contamination, benchmark-specific adaptation and semantic exposure are now kept separate everywhere, and the book's single remark (§2.5.1, printed p. 37) is labeled synthesized | **PASS** |
+| 4 | Adversarial ≠ OOD | BM-04 told the reader to feed BM-05's inputs "as an extreme OOD family" | Direct: that bullet now calls it a separate stress axis and denies OOD-evidence. Revision 02 added a sentence reconciling it with SOP-01 listing adversarial as a generalization *type* — the source's taxonomy of train-to-test differences, not a detection claim | Regression pattern 4; the BM-04 invariant requires both "separate stress axis" and the denial of OOD-detection evidence | `source_coverage.md` keeps the book's own §2.15 title "Adversarial OOD Generalization" as a quoted heading, which is a source fact, not the package's position | **PASS** |
+| 5 | Three layers of worst-case robustness | SOP-05 and BM-05 collapsed the target, the attack and the certificate; the attack ladder was presented as if its top rung settled the worst case, and certification was defined through the source's LP/SDP chain | Direct: both files now name the target quantity, the empirical probe and the certificate separately; LP/SDP is labeled one admissible family rather than the definition | Regression patterns 5 and 6; invariants require all three layers in both files | The source supplies the masking progression and the bound chain (§2.15.12, §2.15.15, printed pp. 102-113); the separation into layers is ours, and is labeled **synthesized** in both traceability sections | **PASS** |
+| 6 | Certified accuracy direction | BM README rule 8 listed "post-hoc certificate" among upper-bound rows, inverting the inequality | Direct: rule 8 now separates oracle/stronger-information rows from certificates. Revision 02: the ordering is stated where the claims are made — SOP-05 §4, BM-05 §2, the `certified_acc` register row, and the reconstruction row | Regression pattern 7 (denial-aware, so "is not an upper-bound row" passes while the old list fails); presence markers for the ordering string in both files | `certified ≤ true ≤ empirical` is analytic, not a book statement, and is now labeled that way in three places; the proviso that the comparison is void across different threat models, samples or definitions is included wherever it appears | **PASS** |
+| 7 | Validation claims must match checker scope | The report and the tool described path hygiene as covering "tracked files" while the implementation skipped `plans/` | Revision 02: the tool prints its own scope, this section restates it in a table, and the exemption list is in `tools/README.md` | Regression pattern 8 catches over-claiming phrases such as "all tracked files in the repository"; the gate line reports `hygiene_scanned=36` and `normative_files=23` | — | **PASS** |
+
+### C3.3 What the sweep found beyond the seven issues
+
+Contradictions are usually older than the review that names them, so the same scan was run against the
+principles as a set rather than one at a time.
+
+- Two `check_gates` presence markers had encoded the *pre-correction* position: they required
+  `SOURCE.md` to say "unverified" and "no book text is redistributed". They passed while the file was
+  correct and would have failed once the license was fixed. Replaced with the attribution facts.
+- Three superseded sentences were pinned to one file each in the checker's absence list, so the same
+  wording reintroduced anywhere else would have passed. All three are now package-wide patterns
+  (`random baseline = P(L = 1)`, `exponentiated nll (base 2)`, `Always split by subject`).
+- `concept_reconstruction.md` contained a garbled sentence — "The two-layer/binary conditions on the
+  source's bound scope that construction" — which has been rewritten.
+- The clause-scoped suppression rule was itself found by a failing self-test: the first version used a
+  fixed 48-character window, and a mutation injecting "attacked accuracy proves the worst case" into
+  SOP-05 slipped through because the preceding sentence contained "not".
+- Two defects in the checking environment surfaced only on the re-run, and both are now fixed in the
+  tools rather than worked around by hand. A checker's finding line is written to the console in the
+  machine's code page, and on one such console the em dash in the quoted sentence came back as bytes
+  the parent could not decode: the output was lost and a detector that had in fact fired was reported
+  as silent — the worst possible failure mode for a gate. `_common.py` now forces UTF-8 on the streams
+  every checker writes to, and both callers decode with replacement rather than exception. Separately,
+  `check_citations` flagged a real drift in this document: an internal reference written "§3.2" is
+  indistinguishable from a citation to the book's own §3.2, and it sat in the same clause as a list of
+  page numbers. Cycle 3's subsections therefore carry a `C3.` prefix, which no source section number
+  can be confused with; the citation check across the whole report is `drifting=0`.
+
+### C3.4 Regression check: what Revision 02 must not have broken
+
+| Property | Status | Evidence |
+|---|---|---|
+| 8 SOP / 8 Benchmark structure | Unchanged | `check_structure findings=0`, 22 documents, 12- and 13-section schemas in order |
+| Source traceability | Extended, not reduced | 437 anchors bound to their locator's span, 0 drifting; every SOP §12 and BM §13 present; four new traceability clauses added this cycle |
+| Non-mirroring reconstruction | Unchanged | No artifact renamed, split or merged; the reconstruction gained two provenance rows |
+| Operational executability | Unchanged | Steps remain numbered and imperative; `check_prose vague=0`, so no rule was softened into discretion |
+| Cross-links | Unchanged | `broken=0 asymmetric=0`; the new BM-04 → SOP-01 and BM-05 → reconstruction references resolve and are answered |
+| Core / Extended tiering | Unchanged | All 16 group documents carry the tier vocabulary |
+| Package size | ≈57 800 words across 22 committed documents | `wc -w` over the three artifact directories |
+| Revision 01's corrections | Still in force | 52 of 52 presence markers found; nothing in Revision 02's diffs removed a Revision 01 rule |
+
+### C3.5 Limitations that remain open
+
+The Revision 01 list is carried forward except where Revision 02 resolved it; the source-license
+uncertainty is **no longer an open limitation** and appears nowhere below this line except as history.
+
+1. **Claim grounding is not mechanically decidable here.** `check_citations` proves a page number does
+   not contradict the section beside it; it cannot prove the stated position occurs in that section.
+   Cycle 1 checked 56 needles by reading; Revision 02's re-reads covered printed pp. 37, 55-56, 89-92,
+   102-113, 252, 256-257, 263-266, 333-342, plus the two web records in C3.2 row 1. Re-checking those
+   requires the book and, for the license, the official site.
+2. **The gate checks test wording, not truth.** A pattern can be satisfied by a sentence that states the
+   right position fluently and misapplies it in the next paragraph. That is why `mutation_test.py`
+   exists — it shows the detectors bite on the specific known regressions, which is a weaker claim than
+   "the package is correct".
+3. **Negative scans skip this document and `plans/`.** Both exclusions are deliberate and listed in
+   C3.1; the report's own wording is swept by hand each cycle, which is a judgement, not a check.
+4. **30 page anchors carry no locator** in their own clause, all of them in `source_coverage.md`'s
+   reading notes and in this report's narrative, where the page is the citation.
+5. **`duplicate_pairs=7` remains informational** — the largest shared run is 9 words and both printed
+   cases are definitional.
+6. **Numeric defaults are still absent by design**; the source supplies none and the package invents none.
+7. **`ρ` direction stays a documented fidelity flag** — each artifact states the direction it uses.
+8. **Catalogue clusters were read in bounded sub-passes** (attribution methods, uncertainty estimator
+   families, DG benchmark survey).
+9. **Page anchors are printed folios of this edition** (`printed = pdf page − 2`); section numbers
+   survive another typesetting, folios do not.
+10. **The package inherits the book's CV-centric examples**; a text or tabular deployment substitutes its
+    own edit and partition operators.
+11. **Second-version replication** is only runnable where a field re-collects evaluation data, and is
+    recorded as inapplicable rather than passed where it cannot run.
+
+### Cycle 3 result
+
+**ACCEPTED, and ready for review toward `main` — but not merged.** All seven fixed principles hold
+package-wide, both Revision 02 gates pass (C2-1 sweep with zero unresolved contradictions; C2-2
+mutation provocation, 10/10 detectors firing and the clean tree passing again), every pre-existing
+mechanical check passes in a clean checkout, and Revision 01's corrections are all still in force.
+No P0 or P1 item from the latest review remains open; the open items in C3.5 are limitations, not
+unaddressed findings.
+
+| Revision 02 commit | Plan |
+|---|---|
+| `e810c46`…`4cf0ce1` | direct post-Revision-01 corrections (license, information rights and zero-shot, adversarial vs OOD, three robustness layers, certificate direction, report scope) |
+| `9329881` | Revision 02 plan set added |
+| `39c62fb` | 01 — package-wide consistency sweep and repairs |
+| `405e91c` | 02 — validators rebuilt around the principles, plus `mutation_test.py` |
+| *(this commit)* | 03 — final re-acceptance and this record |
+
+`main` was not touched: it remains at `ffdd0c0`, and the plan branch is the only thing pushed.
 
 ---
 
 ## Cycle 2 — Revision 01 re-acceptance
+
+> **Superseded on two points, recorded here in full because Revision 01's corrections still stand.**
+> The licensing limitation in §2.5 item 2 and the four-level pretraining-disclosure ladder referred to
+> in §2.1 were both replaced by the direct corrections that opened Revision 02 — see Cycle 3, C3.2
+> rows 1 and 3. Everything else below was re-run in Cycle 3 and still passes.
 
 ### How to re-run this
 

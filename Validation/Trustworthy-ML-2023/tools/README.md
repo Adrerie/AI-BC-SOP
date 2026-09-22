@@ -86,6 +86,12 @@ is recorded anywhere in the repository: the bibliographic description of the sou
   per-issue and per-principle tables.
 - `mutation_test cases=10 failures=0` — each detector was provoked on purpose and fired.
 
+Output is UTF-8 whatever the console's code page is, and that is a correctness property rather than
+cosmetics: `run_acceptance.py` and `mutation_test.py` read a checker's stdout as UTF-8, so a finding
+line written in a legacy code page would be *lost* on the way to the caller, who would report a
+detector that had in fact fired as silent. `_common.py` sets the encoding on import, and both callers
+decode with replacement instead of raising.
+
 ## What is deliberately not scanned, and why
 
 Every exemption is a place a regression could hide, so they are listed rather than implicit.

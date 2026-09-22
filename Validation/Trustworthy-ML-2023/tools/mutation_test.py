@@ -78,8 +78,11 @@ CASES = [
 
 def _run_gates(worktree):
     script = os.path.join(worktree, "Validation", G.PACKAGE, "tools", "check_gates.py")
+    # The finding lines quote the package's own typography, so decoding must not be allowed to fail:
+    # an undecodable byte would empty `out` and this script would report a *silent* detector instead
+    # of the fired one. `errors="replace"` degrades a stray byte to a placeholder and keeps the line.
     proc = subprocess.run([sys.executable, script], capture_output=True, text=True,
-                          encoding="utf-8", cwd=worktree)
+                          encoding="utf-8", errors="replace", cwd=worktree)
     return proc.returncode, (proc.stdout or "") + (proc.stderr or "")
 
 
@@ -94,8 +97,11 @@ def main(argv):
 
     worktree = tempfile.mkdtemp(prefix="tml-mut-")
     os.rmdir(worktree)
+    # git echoes the worktree path, which on this repository is not ASCII; decoding that with the
+    # console's code page and reading it as UTF-8 is what made a child look silent.
     added = subprocess.run(["git", "-C", ROOT, "worktree", "add", "--detach", "--quiet", worktree,
-                            "HEAD"], capture_output=True, text=True)
+                            "HEAD"], capture_output=True, text=True, encoding="utf-8",
+                           errors="replace")
     if added.returncode != 0:
         print("mutation_test: could not create a worktree:", added.stderr.strip()[:200])
         return 1

@@ -353,8 +353,8 @@ def check_hygiene():
     problems = []
     try:
         out = subprocess.run(["git", "-C", C.ROOT, "ls-files"], capture_output=True, text=True,
-                             encoding="utf-8", check=True).stdout.split()
-    except (OSError, subprocess.CalledProcessError):
+                             encoding="utf-8", errors="replace", check=True).stdout.split()
+    except (OSError, subprocess.CalledProcessError, AttributeError):
         return ["git is unavailable, so tracked-file hygiene was not checked"], 0
     scanned = 0
     for rel in out:

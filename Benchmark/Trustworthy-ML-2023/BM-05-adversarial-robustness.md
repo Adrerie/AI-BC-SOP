@@ -182,4 +182,7 @@ empirical and certified tracks, are repository conventions. The scope limits in 
 (pp. 111-113) describe the construction analyzed there; reading them as conditions on one certificate
 rather than as limits of the field, and requiring an adaptive attack per defense mechanism, are
 synthesized — see [`SOP-05`](../../SOP/Trustworthy-ML-2023/SOP-05-run-worst-case-stress-evaluation.md)
-§12.
+§12. The ordering in §2 (`certified ≤ true ≤ empirical`) is stated by definition rather than by the
+source: the book gives the certified row and the attacked row separately and never lines them up, so
+treating a certificate as a lower bound on the target quantity is labeled **synthesized** here and in
+[`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md).

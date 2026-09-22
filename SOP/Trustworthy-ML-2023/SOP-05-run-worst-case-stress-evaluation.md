@@ -220,4 +220,6 @@ construction analyzed there. This SOP reads them as conditions on *that* bound, 
 or were not applicable. The corresponding requirements — argument-based attack adequacy, adaptive
 attacks against the mechanism, and train-time exposure only where the defense's definition needs it —
 are **synthesized**; the source supplies the masking progression, the attack ladder and the
-train-and-inference transform example, but no general rule of those forms.
+train-and-inference transform example, but no general rule of those forms. The ordering in §4,
+`certified ≤ true ≤ empirical`, is likewise ours: it follows from what the two rows are defined to
+measure, and the book reports them separately without lining them up.
