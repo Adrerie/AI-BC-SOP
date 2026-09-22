@@ -74,9 +74,9 @@ PRESENT = [
     ("P1-B attribution", "06", "Validation/%s/SOURCE.md" % PACKAGE,
      ["Mucsányi", "trustworthyml.io", "2310.08215", "CC BY 4.0", "does not redistribute"]),
     ("R2 worst-case ordering", "r2", "SOP/%s/SOP-05-run-worst-case-stress-evaluation.md" % PACKAGE,
-     ["certified_acc ≤ true_robust_acc ≤ empirical_attack_acc", "never compare a certificate"]),
+     ["certified robust accuracy ≤ exact finite-sample robust accuracy ≤ empirical attacked accuracy under attack suite A", "never compare a certificate"]),
     ("R2 benchmark ordering", "r2", "Benchmark/%s/BM-05-adversarial-robustness.md" % PACKAGE,
-     ["certified_acc ≤ true_robust_acc ≤ empirical_attack_acc", "never an upper-bound row"]),
+     ["certified robust accuracy ≤ exact finite-sample robust accuracy ≤ empirical attacked accuracy under attack suite A", "never an upper-bound row"]),
     ("R2 zero-shot by benchmark definition", "r2", "SOP/%s/SOP-01-specify-deployment-setting.md" % PACKAGE,
      ["does not impose a universal zero-shot definition", "Information-rights compliance"]),
 ]
