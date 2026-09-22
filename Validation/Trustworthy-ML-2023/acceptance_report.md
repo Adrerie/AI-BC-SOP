@@ -1,5 +1,11 @@
 # Acceptance Report — Trustworthy ML (2023) package
 
+> **Status note:** Cycle 3 was accepted at commit `4f33897`, then superseded by a post-review metric
+> and validator patch. The current branch must complete Revision 03 before this report can again be
+> treated as the current acceptance record. Counts and PASS statements below describe the historical
+> Cycle 3 run unless a later Cycle 4 section replaces them.
+
+
 This package has been accepted three times.
 
 | Cycle | What it was | Result | Where it stands |
@@ -36,8 +42,8 @@ python run_acceptance.py --with-mutations
 
 Python 3.8+, no third-party packages, no network, and no copy of the book. Add
 `TRUSTWORTHY_ML_2023_PDF=/path/to/the-book.pdf` to verify the committed citation index against a PDF
-you hold (needs PyMuPDF). `--with-mutations` is the Revision 02 addition: it provokes every gate
-detector on purpose in a scratch `git worktree`.
+you hold (needs PyMuPDF). `--with-mutations` is the Revision 02 addition: it runs 10 representative end-to-end gate mutations
+in a scratch `git worktree`; every regression regex is separately exercised by the gate self-test.
 
 Executed in a detached clean checkout at a different absolute path, with no local audit area:
 
@@ -157,7 +163,7 @@ uncertainty is **no longer an open limitation** and appears nowhere below this l
 
 **ACCEPTED, and ready for review toward `main` — but not merged.** All seven fixed principles hold
 package-wide, both Revision 02 gates pass (C2-1 sweep with zero unresolved contradictions; C2-2
-mutation provocation, 10/10 detectors firing and the clean tree passing again), every pre-existing
+representative mutation provocation, 10/10 injected cases detected and the clean tree passing again), every pre-existing
 mechanical check passes in a clean checkout, and Revision 01's corrections are all still in force.
 No P0 or P1 item from the latest review remains open; the open items in C3.5 are limitations, not
 unaddressed findings.
