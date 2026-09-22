@@ -1,9 +1,11 @@
-"""Gate C2-2 as an executable: break each rule on purpose and prove a checker notices.
+"""Representative end-to-end gate mutations in an isolated worktree.
 
 A regression list is only as good as the assumption that its patterns still match something. This
-script restores known-bad wordings, softens known invariants, rewrites a presence marker and drops a
-machine-local path into an otherwise clean checkout, and requires `check_gates.py` to fail for the
-right reason each time. It then checks that undoing the damage returns the suite to green, so a
+script injects representative known-bad wordings, softens selected invariants, rewrites a presence
+marker and drops a machine-local path into an otherwise clean checkout, then requires
+`check_gates.py` to fail for the right reason each time. It is not one worktree mutation per marker or
+invariant; `check_gates.py` separately self-tests every regression regex against positive and negative
+examples. It then checks that undoing the damage returns the suite to green, so a
 pattern that fires on everything also fails here.
 
 Nothing in the working repository is touched: the mutations run in a detached `git worktree` in the
