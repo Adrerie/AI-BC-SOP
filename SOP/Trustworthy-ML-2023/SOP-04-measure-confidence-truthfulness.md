@@ -165,15 +165,15 @@ Quantity definitions: §4.2.1-§4.2.4, Definitions 4.1-4.7 (pp. 228-238) includi
 the decomposition requires assumptions and remains open. Score formats: §4.4 (pp. 240-242). Proper
 scoring: §4.5.1, Definition 4.8 (p. 243); log-probability and Brier claims and proofs §4.5.2-§4.5.3
 (pp. 245-246); BCE/max-prob §4.5.5, Definition 4.9 (pp. 246-247); CE as a lower bound §4.5.6
-(p. 248); multi-class Brier §4.5.8 (pp. 251-252); "not all strictly proper rules are equally good
-objectives" §4.5.7 (p. 252); evaluation on the test set and the four interpretation caveats
+(p. 248); multi-class Brier §4.5.8 (pp. 250-251); "not all strictly proper rules are equally good
+objectives" §4.5.7 (pp. 249-250); evaluation on the test set and the four interpretation caveats
 §4.5.9 (pp. 253-254). Calibration: §4.6.1, Definitions 4.11-4.15 with the 5-step ECE recipe and MCE
-(pp. 254-257); gaming ECE with a constant prediction §4.6.2 (pp. 257-258); bin-count dependence and
-the fine-bins suggestion §4.6.2 (p. 258); reliability diagrams and their limits §4.6.3 (p. 259);
-the tool summary §4.7 (p. 261). DNN calibration evidence and the NLL/accuracy disconnect:
-§4.8.1-§4.8.2 (pp. 261-264); temperature scaling protocol §4.8.3 (pp. 264-265). Ranking condition
-and detection metrics with the AUROC-over-AUPR recommendation: §4.9.1-§4.9.2 (pp. 265-268).
-Non-predictive readouts as OOD and multiplicity detectors: §4.10-§4.10.3 (pp. 268-269). Epistemic
+(pp. 254-257); gaming ECE with a constant prediction §4.6.2 (pp. 256-257); bin-count dependence and
+the fine-bins suggestion §4.6.2 (pp. 256-257); reliability diagrams and their limits §4.6.3 (p. 259);
+the tool summary §4.7 (p. 259). DNN calibration evidence and the NLL/accuracy disconnect:
+§4.8.1-§4.8.2 (pp. 259-262); temperature scaling protocol §4.8.3 (pp. 262-263). Ranking condition
+and detection metrics with the AUROC-over-AUPR recommendation: §4.9.1-§4.9.2 (pp. 263-266).
+Non-predictive readouts as OOD and multiplicity detectors: §4.10-§4.10.3 (pp. 266-268). Epistemic
 mechanisms and their stated confounds: §4.11.2 (p. 271), §4.11.5 (p. 275), §4.11.9 (p. 290),
 §4.11.10 (pp. 290-291), §4.12.1-§4.12.3 (pp. 291-297). Aleatoric loss and its preconditions:
 §4.13.1-§4.13.5 (pp. 298-308). Binary-only equivalence of the predictive and aleatoric scoring

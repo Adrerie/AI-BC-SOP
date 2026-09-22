@@ -125,20 +125,24 @@ review capacity — detection is bought with human attention downstream.
 ## 12. Related SOPs
 
 Executed by [`SOP-04`](../../SOP/Trustworthy-ML-2023/SOP-04-measure-confidence-truthfulness.md)
-§5 steps 9-11; stress inputs from
+§5 steps 9-11, with the mitigation reading in
+[`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md); stress inputs from
 [`SOP-05`](../../SOP/Trustworthy-ML-2023/SOP-05-run-worst-case-stress-evaluation.md); abstention
 consequences in [`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md) and
 [`BM-07`](BM-07-selective-prediction-under-cost.md); training-data attribution variant in
-[`BM-06`](BM-06-explanation-quality.md).
+[`BM-06`](BM-06-explanation-quality.md), executed as described in
+[`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md) §5 step 11;
+reported through
+[`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
 
 ## 13. Source traceability
 
 Confidence as a detector of three different targets and the non-alignment arguments: §4.10
-(pp. 268-269); OOD-detector construction: §4.10.1 (p. 269); multiplicity detector: §4.10.2 (p. 269);
-menu of evaluation methods so far: §4.10.3 (p. 269). Epistemic-uncertainty proxy reasoning and the
-model-independence of "OOD-ness": §4.2.3 (pp. 236-239) and §4.3.1 (p. 240). AUROC/AUPR definitions,
-base-rate behaviour and the AUROC recommendation: §4.9.2 (pp. 266-268). Threshold filtering as the
-application that only needs ranking: §4.9.1 (pp. 265-266). Distance-score comparison against
+(pp. 266-268); OOD-detector construction: §4.10.1 (p. 267); multiplicity detector: §4.10.2 (p. 267);
+menu of evaluation methods so far: §4.10.3 (pp. 267-268). Epistemic-uncertainty proxy reasoning and the
+model-independence of "OOD-ness": §4.2.3 (pp. 236-239) and §4.3.1 (p. 239). AUROC/AUPR definitions,
+base-rate behaviour and the AUROC recommendation: §4.9.2 (pp. 264-266). Threshold filtering as the
+application that only needs ranking: §4.9.1 (pp. 263-264). Distance-score comparison against
 max-probability with detection metrics on multiple OOD pairs, and the cautions against generalising
 one pair and against reading ambiguity as novelty: §4.12.1-§4.12.2 (pp. 291-297); the summary that
 both estimator families are evaluated through OOD detection *as a proxy task*: §4.12.3 (p. 297).

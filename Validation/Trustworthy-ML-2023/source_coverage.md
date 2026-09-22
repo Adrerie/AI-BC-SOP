@@ -363,8 +363,8 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 - Stage vocabulary is normative, not descriptive: *development* is where design choices are made
   (Def 2.14), *deployment* is where the model meets a changing environment (Def 2.15), and
   *testing* is "a lab setup designed to mimic the deployment scenario closely" (Def 2.17) which
-  the book explicitly keeps **inside development** from the practice point of view (2.3.1, p. 23).
-- A *setting* (Def 2.18, p. 24) enumerates dev resources (datasets, labels, supervision, inductive
+  the book explicitly keeps **inside development** from the practice point of view (2.3.1, pp. 24-26).
+- A *setting* (Def 2.18, p. 25) enumerates dev resources (datasets, labels, supervision, inductive
   bias, engineer skill), the deployment distribution, **and time**. Consequence the book draws:
   methods may only be compared when they are given the same setting; a method that consumes fewer
   dev resources cannot be compared fairly to one that consumes more (2.3.1, p. 25, "How to compare
@@ -374,7 +374,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   choices, O(min-d); test set → "the methodology and overall approach through the shift of the
   field", O(months-y). For true OOD generalisation the validation set **must** come from the
   training domain(s), otherwise the target domain is being tuned on.
-- 2.3.3 (p. 29) states the dilemma plainly: any decision taken from test results — including
+- 2.3.3 (p. 28) states the dilemma plainly: any decision taken from test results — including
   reading other people's test numbers — destroys the test set's meaning as a generalisation
   estimate; benchmarks are still necessary, so the achievable standard is "spoil the test set
   less", never "do not spoil it".
@@ -411,7 +411,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   as non-exhaustive.
 - Def 2.7 ID/OOD and Def 2.5 environment/domain fix the vocabulary; Def 2.6 cue/feature/attribute
   are "characteristics of the dataset", explicitly **independent of the model** (p. 18).
-- Settings taxonomy (2.4, p. 28-36) separates *domain-dependent* (domain adaptation, domain
+- Settings taxonomy (2.4, pp. 28-35) separates *domain-dependent* (domain adaptation, domain
   generalization, test-time training, domain-incremental CL) from *task-dependent* OOD (K-shot,
   meta-learning + K-shot, task-incremental CL). The distinction is resource-based: which labels and
   how many are available, and from where.
@@ -506,7 +506,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   adversarial training" and " theoretically 0 % accuracy in principle, nonzero only because of
   imperfections". Curves over ε or adversary strength, and matrices of train-condition ×
   test-condition, are used rather than single numbers (Fig. 2.58, 2.60, 2.63).
-- Obfuscated gradients (Def 2.44, 2.15.12, p. 102-109) is the cluster's core integrity lesson:
+- Obfuscated gradients (Def 2.44, 2.15.12, pp. 102-107) is the cluster's core integrity lesson:
   three mechanisms (shattering, stochasticity, exploding/vanishing), the headline evidence that
   7 of 9 ICLR'18 defenses did not actually work, and the decisive statement that "the model being
   safe is not equivalent to no gradient-based algorithm being able to find an attack". The
@@ -545,7 +545,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   simpler reasoning can be perfectly sound" (3.5.3, p. 135). The *soundness–explainability
   trade-off* (3.4.1, p. 126) is stated as a frontier: the DNN itself is sound and uninterpretable, a
   sparse global linearization is interpretable and cannot be sound, and no method may be declared
-  perfect "by design" — which is the stated reason empirical evaluation is mandatory (3.7.1, p. 179).
+  perfect "by design" — which is the stated reason empirical evaluation is mandatory (3.7.1, p. 178).
   A second, orthogonal trade-off is interpretability vs *accuracy* (3.5.19, p. 172-173, CALM changes
   the model and loses accuracy).
 - Method catalog (3.5.x, 3.10, 3.11) is incorporated as a **baseline menu with assumption lists**,
@@ -566,17 +566,17 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
      (randomly initialised model ⇒ informationless map) is called "probably a way too strong
      necessary condition", the relaxed version being that attribution maps must change visibly when
      the model changes.
-  3. *Sanity checks* (3.7.5, p. 183-187): cascading randomisation (randomise weights top-down and
+  3. *Sanity checks* (3.7.5, pp. 182-185): cascading randomisation (randomise weights top-down and
      watch the map change) and label randomisation (a model trained on random labels must not yield
      informative maps), scored quantitatively by rank correlation between true- and random-label
      attributions. Book's verdicts: Guided Backprop and Guided Grad-CAM fail as edge detectors;
      Gradient⊙Input and Integrated Gradients are unconvincing; Grad-CAM and SmoothGrad pass.
      Explicit warning: this "seemingly simple sanity check already conflicts with the theoretically
      justified completeness axioms".
-  4. *Simulated inputs with known ground truth* (3.7.6, p. 187): images with a caption whose
+  4. *Simulated inputs with known ground truth* (3.7.6, pp. 185-186): images with a caption whose
      agreement noise p is controlled by the experimenter, so the correct attribution is known by
      construction (at p = 0 the caption must dominate; at p = 1 it must not be used).
-  5. *Remove-and-Classify* (Def 3.14, 3.7.7, p. 186-188): rank features by attribution, remove in
+  5. *Remove-and-Classify* (Def 3.14, 3.7.7, pp. 186-187): rank features by attribution, remove in
      that order, measure the accuracy drop relative to random erasing, summarise by AUC (lower
      better); four variants exist (most/least important first, occlude/inpaint-in, single/batched)
      and some papers average them. *Missingness bias* (3.7.8, p. 188) is the validity boundary:
@@ -584,10 +584,10 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
      example predicts "crossword" from the masking pattern — so the occlusion operator is a
      hyper-parameter, ViT is far less susceptible, and "remove-and-classify is not the perfect
      soundness evaluation metric. However, it is the most popular and one of the best".
-- Evaluation types are a cost/validity axis, not alternatives (3.7.2, p. 180): functionally-grounded
+- Evaluation types are a cost/validity axis, not alternatives (3.7.2, pp. 178-179): functionally-grounded
   (proxy tasks, cheap, but "as explainability is necessarily human-grounded, such evaluations should
   only be considered **in addition to** human-grounded studies"), human-grounded, application-
-  grounded. End goals (3.8.1, p. 189-192) are debugging, understanding (can humans *predict* the
+  grounded. End goals (3.8.1, p. 189) are debugging, understanding (can humans *predict* the
   model's behaviour?), and trust/approach acceptance; soundness addresses only an intermediate step,
   and there is a named absence: "we have yet to see a successful use case of XAI for model
   debugging". HITL evaluation (Def 3.15) is therefore unavoidable.
@@ -620,7 +620,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   S = −(q − y)² (4.5.3, p. 246), BCE for max-prob c(x) = max(f(x), 1−f(x)) (Def 4.9, 4.5.5,
   p. 246-247), multi-class CE as a lower bound of the log-probability score (4.5.6, p. 248), and
   the multi-class Brier score with its analogous lower-bound claim (4.5.8, p. 251).
-- "Not all strictly proper scoring rules are equally good training objectives" (4.5.7, p. 252) —
+- "Not all strictly proper scoring rules are equally good training objectives" (4.5.7, pp. 249-250) —
   demonstrated by a tuned comparison where the max-prob formulation reaches 54 % on CIFAR-10 against
   67 % for NLL training, on a noisier loss surface. Numerical optimisation, not just the metric, is
   part of the evaluation design.
@@ -642,20 +642,20 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   90-100 %.
 - Empirical calibration evidence (4.8): modern networks can overfit NLL while accuracy keeps
   improving — "the network learns better classification accuracy at the expense of well-modelled
-  probabilities" (4.8.1, p. 262) — calibration varies by architecture family (4.8.2, p. 263), and
+  probabilities" (4.8.1, pp. 259-261) — calibration varies by architecture family (4.8.2, pp. 261-262), and
   temperature scaling f(x;T) = softmax(g(x)/T) with T chosen by grid search on a validation set to
-  minimise ECE is the cheap fix (4.8.3, p. 264, 8-10 % → sub-2 % ECE). The protocol detail that
+  minimise ECE is the cheap fix (4.8.3, p. 263, 8-10 % → sub-2 % ECE). The protocol detail that
   matters for benchmark integrity: T is fitted on **validation** data, never on the test set.
-- The ranking condition (4.9.1, p. 266) is the weaker requirement — preserve the order of
+- The ranking condition (4.9.1, pp. 263-264) is the weaker requirement — preserve the order of
   P(L = 1 | x) — which is "sufficient for many applications, such as when we filter out too-uncertain
   examples via a threshold", and is equivalent to calibration up to an unknown monotone g. It turns
-  evaluation into a binary detection problem of L from feature c (4.9.2, p. 267): TP/FP/FN/TN sets,
+  evaluation into a binary detection problem of L from feature c (4.9.2, pp. 264-266): TP/FP/FN/TN sets,
   precision/recall curves, AUPR-Success and AUPR-Error, ROC and AUROC, with the imbalance rule
   recorded verbatim in both directions — random-detector AUPR = P(L = 1), so AUPR "lacks the
   resolution" under severe imbalance, hence "AUROC the recommended metric over AUPR, especially on
   unbalanced datasets"; and the AP corner case (undefined precision at empty thresholds) resurfaces
   in 5.1.3 as a reason to share one metric implementation.
-- Non-predictive uncertainty gets its own benchmarks (4.10, p. 268-269): the *same* confidence score
+- Non-predictive uncertainty gets its own benchmarks (4.10, pp. 266-268): the *same* confidence score
   may be scored as an OOD detector (Y = "outside the training distribution", epistemic proxy) or as a
   multiplicity detector (Y = "several true answers", aleatoric proxy), each with AUPR/AUROC, and the
   book repeatedly warns that these quantities are "not perfectly aligned" with predictive
@@ -704,9 +704,9 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
     theoretical upper bound; exceeding an upper bound forces an explanation — evaluation bug, flawed
     bound, or a different set of ingredients (5.1.1, p. 333).
   - Cost of wrong evaluation is quantified as wasted effort (4+ years in deep metric learning),
-    opportunity cost, and practitioners mis-selecting methods (5.1.2, p. 335-337), with a named list
+    opportunity cost, and practitioners mis-selecting methods (5.1.2, pp. 333-335), with a named list
     of eight "evaluation scandals" across CV/NLP.
-  - 5.1.3 (p. 337-341) enumerates the failure modes as a checklist: per-paper metric
+  - 5.1.3 (pp. 335-338) enumerates the failure modes as a checklist: per-paper metric
     implementations (with the AP-empty-bin corner case) → use one shared evaluation library or
     server; confounding factors (different backbones while claiming a loss-function gain); hiding
     extra resources, i.e. reporting accuracy without latency/compute; train-test contamination
@@ -714,14 +714,14 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
     0 % on the non-overlapping subset); and missing validation sets, where ImageNet's "validation"
     set *is* the de-facto test set and re-collected second versions (ImageNet v2, CIFAR v2) show a
     systematic drop below the identity line — evidence of accumulated test-set overfitting.
-  - Practical pointers (5.1.3, p. 341): before trusting a field's benchmark, look for a fair
+  - Practical pointers (5.1.3, pp. 335-338): before trusting a field's benchmark, look for a fair
     re-evaluation paper; if none exists, either produce one, or trust it only because the task and
     its ingredients are simple, or stay sceptical.
-  - Simple wins (5.2.2, p. 341-343): fairly tuned ERM — "the simplest method — is not worse at all"
+  - Simple wins (5.2.2, pp. 339-341): fairly tuned ERM — "the simplest method — is not worse at all"
     — and the untuned-baseline pathology, where an unoptimised default (learning rate 0.1, weight
     decay 1e−4) is reported as the baseline; weight decay is singled out as routinely omitted and
     decisive.
-  - 5.2.3 (p. 343): the tuning protocol the book endorses is random search over per-parameter
+  - 5.2.3 (pp. 341-342): the tuning protocol the book endorses is random search over per-parameter
     *sensible exponential ranges* with a **fixed sample budget shared by all compared methods**,
     justified because only a few hyper-parameters matter; stated preconditions are approximate
     unimodality and independence, and the fallback for wiggly regions is Bayesian optimisation.
@@ -731,7 +731,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
     our "report the data regime, do not transfer a ranking between regimes" rule.
   - Method-centric vs dataset-centric solutions (5.3.5, p. 349-350): a fixed benchmark imposes an
     information cap, so scaling complicated methods fails; adding supervision (the "How", Z) is the
-    way to raise the cap. 5.3.1 (p. 342-344) also states that letting competitors use extra
+    way to raise the cap. 5.3.1 (pp. 342-343) also states that letting competitors use extra
     ingredients is no longer a benchmark — "It is unfair" — which is the cleanest source statement of
     the equal-ingredients rule.
 
@@ -769,17 +769,17 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 | Calibration | ECE | `Σ_m (\|B_m\|/n)\|acc(B_m) − conf(B_m)\|`, M bins, 5-step recipe | Def 4.13, 4.6.1 p. 255 |
 | Calibration, worst bin | MCE | `max_m \|acc(B_m) − conf(B_m)\|` | Def 4.14 p. 256 |
 | Calibration, signed picture | Reliability diagram (+ confidence histogram mandatory) | binned `acc(B_m)` vs `conf(B_m)−acc(B_m)` barplot | Def 4.15, 4.6.3 p. 257 |
-| Ranking of correctness by confidence | AUROC (preferred), AUPR-Success / AUPR-Error | `TP/FP/FN/TN(t)` sets; `AUROC = P(c > c&#39; \| L=1, L&#39;=0)`; random AUPR = `P(L=1)`, random AUROC = 0.5 | 4.9.2 p. 267-268 |
-| Epistemic quality (proxy) | OOD-detection AUROC/AUPR of `1−c(x)` | binary task `Y = 1[x outside training distribution]` | 4.10.1 p. 269 |
-| Aleatoric quality (proxy) | Multiplicity / corruption detection AUROC/AUPR | binary task `Y = 1[several true labels for x]` | 4.10.2 p. 269 |
+| Ranking of correctness by confidence | AUROC (preferred), AUPR-Success / AUPR-Error | `TP/FP/FN/TN(t)` sets; `AUROC = P(c > c&#39; \| L=1, L&#39;=0)`; random AUPR = `P(L=1)`, random AUROC = 0.5 | 4.9.2 pp. 264-266 |
+| Epistemic quality (proxy) | OOD-detection AUROC/AUPR of `1−c(x)` | binary task `Y = 1[x outside training distribution]` | 4.10.1 p. 267 |
+| Aleatoric quality (proxy) | Multiplicity / corruption detection AUROC/AUPR | binary task `Y = 1[several true labels for x]` | 4.10.2 p. 267 |
 | Aleatoric recovery (regression) | Heteroscedastic Gaussian NLL | `(1/2σ̂²)‖y−µ̂‖² + (d/2) log σ̂² + C` | 4.13.5 p. 307 |
 | Robustness to perturbation | Accuracy under attack at a norm-qualified ε; sweep over ε | `max_{‖δ‖_p ≤ ε, x+δ∈[0,1]} L(f(x+δ),y)` | 2.15.3 p. 90; Table 2.8 p. 103 |
 | Robustness, sound claim | Certified robust accuracy | bound chain `Ã(A(x)) ≤ Ã(x) + ε‖∇Ã‖₁ ≤ … ≤ Ã_SDP(x)` | 2.15.15 p. 111 |
-| Explanation dependence on the model | Sanity-check rank correlation (label & weight randomisation) | Kendall-type rank correlation of maps, true vs random labels | 3.7.5 p. 183-187 |
+| Explanation dependence on the model | Sanity-check rank correlation (label & weight randomisation) | Kendall-type rank correlation of maps, true vs random labels | 3.7.5 pp. 182-185 |
 | Explanation soundness (ordering) | Remove-and-Classify relative accuracy drop, AUC lower-better | iterative occlusion in attribution rank vs random erasing | Def 3.14, 3.7.7 p. 186 |
 | Explanation usefulness to humans | HITL / application-grounded task performance | human accuracy or behaviour change with vs without the explanation | Def 3.15, 3.8.2 p. 189 |
 | Training-data attribution usefulness | Self-influence mislabel detection | AUROC / AP over self-influence scores | Def 3.16, 3.12.2 p. 216 |
-| Calibration repair | Temperature scaling | `f(x;T) = softmax(g(x)/T)`, T grid-searched on validation to minimise ECE | 4.8.3 p. 264 |
+| Calibration repair | Temperature scaling | `f(x;T) = softmax(g(x)/T)`, T grid-searched on validation to minimise ECE | 4.8.3 pp. 262-263 |
 
 ## Gate A — Source Coverage
 

@@ -170,21 +170,21 @@ fix, state what changed in the model afterwards and how it was measured.
 ## 12. Source traceability
 
 Explanation/interpretability/explainability/justification and attribution targets: §3.1-§3.1.2,
-Definitions 3.1-3.6 (pp. 117-118). Properties of good explanations: §3.3.1 (pp. 122-125).
-Taxonomy and the soundness–explainability trade-off: §3.4-§3.4.1 (pp. 124-128); linearization types
-§3.6.6 (pp. 176-178); no attribution method is fully sound and fully explainable: §3.5.3 (p. 135).
-Why empirical evaluation is required: §3.7.1 (p. 179). Evaluation types and their cost ladder:
-§3.7.2 (pp. 179-181). Confirmation bias and the rejection of qualitative-only evidence: §3.7.3,
+Definitions 3.1-3.6 (pp. 117-118). Properties of good explanations: §3.3.1 (pp. 122-123).
+Taxonomy and the soundness–explainability trade-off: §3.4-§3.4.1 (pp. 124-127); linearization types
+§3.6.6 (pp. 176-177); no attribution method is fully sound and fully explainable: §3.5.3 (p. 135).
+Why empirical evaluation is required: §3.7.1 (p. 178). Evaluation types and their cost ladder:
+§3.7.2 (pp. 178-179). Confirmation bias and the rejection of qualitative-only evidence: §3.7.3,
 Definition 3.13 (pp. 179-181); the localization fallacy and "we should not evaluate according to our
-expectations": §3.7.3 (p. 181). Necessary conditions and their relaxation: §3.7.4 (pp. 181-183).
+expectations": §3.7.3 (p. 181). Necessary conditions and their relaxation: §3.7.4 (pp. 181-182).
 Sanity checks (cascading randomisation, label randomisation, rank correlation) and the explicit
-conflict with completeness axioms: §3.7.5 (pp. 183-187). Simulated inputs with controllable ground
-truth: §3.7.6 (pp. 187-188). Remove-and-classify and its variants: §3.7.7, Definition 3.14
-(pp. 188-189). Missingness bias and the occlusion-operator caveat: §3.7.8 (pp. 189-190). End goals
+conflict with completeness axioms: §3.7.5 (pp. 182-185). Simulated inputs with controllable ground
+truth: §3.7.6 (pp. 185-186). Remove-and-classify and its variants: §3.7.7, Definition 3.14
+(pp. 186-187). Missingness bias and the occlusion-operator caveat: §3.7.8 (pp. 187-188). End goals
 and the absence of a demonstrated debugging use case: §3.8-§3.8.1 (pp. 190-193). Human-in-the-loop
-evaluation: §3.8.2, Definition 3.15 (pp. 193-197). Feature granularity and partition preference:
+evaluation: §3.8.2, Definition 3.15 (pp. 189-193). Feature granularity and partition preference:
 §3.5.1, Definition 3.7 (pp. 128-130). Method-specific assumptions (concept separability,
-architecture transfer): §3.5.13, §3.5.14, §3.5.16-§3.5.19 (pp. 155-176). Training-sample attribution
+architecture transfer): §3.5.13, §3.5.14, §3.5.16-§3.5.19 (pp. 153-174). Training-sample attribution
 and its end-goal evaluation with self-influence: §3.11.1, §3.12.1-§3.12.2, Definition 3.16
 (pp. 203, 214-217). Axioms are not necessities: §3.5.10 (p. 150). Control-first ordering and the
 usability log are repository conventions.

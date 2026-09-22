@@ -132,23 +132,32 @@ cost and masking audit by
 [`BM-08`](BM-08-evaluation-integrity-audit.md); reporting by
 [`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
 
+
 ## 13. Source traceability
 
-Educated-guess versus worst-case framing, with the pessimism caveat: §2.15 (pp. 86-87). Threat model
-as goal / strategy space / knowledge and the Devil: §2.15.1, Definitions 2.35-2.40 (pp. 87-88).
-Single-step and projected attack formulations, non-convexity and optimiser dependence:
-§2.15.2-§2.15.3 (pp. 89-91). Relative attack strength, the "single step does not find even a local
-optimum" argument, and the ε policy (small, fixed, comparable across studies): §2.15.4 (pp. 91-92).
-Strategy-space families and the total-variation bounded flow construction: §2.15.5-§2.15.7,
-Definition 2.41 (pp. 93-98). White-box versus black-box, substitute model assumptions, query cost
-and the logits-not-labels access requirement: §2.15.8-§2.15.10, Definitions 2.42-2.43 (pp. 98-101).
-Adversarial training objective, its pass-count cost and the "still no guarantees" statement:
-§2.15.11, §2.15.13 (pp. 101-107). Gradient masking, its three mechanisms, the broken-defenses
-evidence, and the joint-pipeline / straight-through / expectation-over-transforms progression with
-the bit-depth and estimator definitions: §2.15.12, Definitions 2.44-2.46 (pp. 102-109). Transform
-defences applied at both training and inference: §2.15.14 (pp. 110-111). Certification, bound chain,
-looseness of post-hoc bounds, and the binary/two-layer scope: §2.15.15, Definition 2.47
-(pp. 111-113). Reporting conventions (norm-qualified distance column, footnotes for combined
-defenses, ε sweeps, train × test matrices): §2.15.13 and Table 2.8 (pp. 101-103). Upper-bound
-violation reasoning: §5.1.1 (p. 335). Hidden-resource failure: §5.1.3 (pp. 338-339). The matrix
-reporting requirement and tiering are repository conventions.
+Threat-model vocabulary, attack formulations, and the defense-side discussion are anchored in
+[`SOP-05`](../../SOP/Trustworthy-ML-2023/SOP-05-run-worst-case-stress-evaluation.md) §12: the
+worst-case framing (§2.15, pp. 86-87), the threat model and its parts (§2.15.1, Definitions 2.35-2.40,
+pp. 87-88), the attack formulations and their strength ordering (§2.15.2-§2.15.4, pp. 89-92),
+strategy spaces beyond pixel norms (§2.15.5-§2.15.7, Definition 2.41, pp. 92-97), access levels and
+query accounting (§2.15.8-§2.15.10, Definitions 2.42-2.43, pp. 93-100), adversarial training cost
+(§2.15.11, §2.15.13, pp. 101-107), gradient masking and its circumvention progression (§2.15.12,
+Definitions 2.44-2.46, pp. 102-107), transform defences at train and inference time (§2.15.14,
+pp. 108-110), and certification with its scope limits (§2.15.15, Definition 2.47, pp. 111-113).
+
+Anchors specific to this benchmark's measurements:
+
+- The reporting row shape — dataset, norm-qualified distance, accuracy, with combined defenses
+  footnoted: Table 2.8 (p. 103).
+- Sweeps over adversary strength and over ε, and the train × evaluation condition matrix:
+  §2.15.13 (pp. 107-113), §2.15.15 (p. 110).
+- Defenses whose theoretical optimum is full failure, reported as nonzero only through
+  implementation imperfection: §2.15.12 (p. 103).
+- Certification assumes a bounded loss model; the looseness question and the joint training
+  objective: §2.15.15 (pp. 111-113).
+- An upper-bound violation must be explained as bug, flawed bound, or different ingredients:
+  §5.1.1 (p. 333).
+- Hiding resources behind an accuracy-only comparison: §5.1.3 (pp. 335-338).
+
+Per-configuration reporting as an acceptance requirement, and the Core/Extended split between
+empirical and certified tracks, are repository conventions.

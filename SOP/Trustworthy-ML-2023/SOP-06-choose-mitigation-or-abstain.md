@@ -153,6 +153,8 @@ separate table from the original setting's results.
   comparison class whose ranking a mitigation must beat.
 - [`BM-03`](../../Benchmark/Trustworthy-ML-2023/BM-03-confidence-truthfulness.md) — recalibration
   and confidence-side effects.
+- [`BM-04`](../../Benchmark/Trustworthy-ML-2023/BM-04-error-and-anomaly-detection.md) — whether the
+  mitigation restored the system's ability to notice its own failures.
 - [`BM-07`](../../Benchmark/Trustworthy-ML-2023/BM-07-selective-prediction-under-cost.md) — the
   abstention branch.
 - [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — equal-budget
@@ -169,12 +171,12 @@ Definitions 2.31-2.33 (pp. 65-66, 74-75). Contrast methods' documented failure w
 roles are swapped: §2.13.1 (pp. 67-70); dual biased/unbiased evaluation sets and the ρ sweep:
 §2.13.2 (pp. 70-75). Deployment-label regime, test-time selection, and the diversity-by-orthogonal
 gradients construction with its oracle-selection caveat: §2.14-§2.14.1 (pp. 75-85). Retraining and
-model-selection cadence as an engineering cost: §2.2.1-§2.2.2 (pp. 19-24), Definitions 2.9-2.11.
-Recalibration as a cheap confidence fix: §4.8.3 (pp. 264-265). Cost table with abstention preferred
+model-selection cadence as an engineering cost: §2.2.1-§2.2.2 (pp. 20-24), Definitions 2.9-2.11.
+Recalibration as a cheap confidence fix: §4.8.3 (pp. 262-263). Cost table with abstention preferred
 over an asymmetric error, and the confidence-threshold acceptance rule: §4.1.3 (pp. 223-228).
-Ranking being sufficient for threshold filtering: §4.9.1 (pp. 265-266). "Fairly tuned ERM is not
-worse", the untuned-baseline pathology and the weight-decay example: §5.2.2 (pp. 341-343). Shared
-random-search budget: §5.2.3 (p. 343). Toy-versus-real cost of validating complicated methods:
+Ranking being sufficient for threshold filtering: §4.9.1 (pp. 263-264). "Fairly tuned ERM is not
+worse", the untuned-baseline pathology and the weight-decay example: §5.2.2 (pp. 339-341). Shared
+random-search budget: §5.2.3 (pp. 341-342). Toy-versus-real cost of validating complicated methods:
 §5.2 (pp. 338-340). Extra supervision as the scalable direction and the information cap of a fixed
 benchmark: §5.3-§5.3.5 (pp. 342-350). Admissibility table format and the escalation ladder are
 repository conventions.

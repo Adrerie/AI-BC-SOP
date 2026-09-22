@@ -115,10 +115,12 @@ free: an unpriced fallback path turns a good curve into a bad system.
 ## 12. Related SOPs
 
 Executed by [`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md)
-abstention branch; scores from
+abstention branch, on the cost statement registered by
+[`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-setting.md); scores from
 [`SOP-04`](../../SOP/Trustworthy-ML-2023/SOP-04-measure-confidence-truthfulness.md); detection
 mechanisms from [`BM-04`](BM-04-error-and-anomaly-detection.md); audit by
-[`BM-08`](BM-08-evaluation-integrity-audit.md).
+[`BM-08`](BM-08-evaluation-integrity-audit.md); reported through
+[`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
 
 ## 13. Source traceability
 
@@ -130,10 +132,10 @@ for a better photo and returning several candidate results as alternative respon
 (p. 224). Open-set regimes with and without an explicit "I don't know" output, and the stated
 disadvantage of the unsupervised variant: §4.1.3 (pp. 225-226). Active learning as uncertainty-driven
 sample selection, and comparable scores across candidates for proposal pruning: §4.1.3
-(pp. 226-228). Ranking condition being sufficient for threshold filtering: §4.9.1 (pp. 265-266).
-Detection-metric definitions used for the curves: §4.9.2 (pp. 266-268). Calibration under shift and
-recalibration cost: §4.8.1-§4.8.3 (pp. 261-265). Test-time selection from a small labelled
+(pp. 226-228). Ranking condition being sufficient for threshold filtering: §4.9.1 (pp. 263-264).
+Detection-metric definitions used for the curves: §4.9.2 (pp. 264-266). Calibration under shift and
+recalibration cost: §4.8.1-§4.8.3 (pp. 259-263). Test-time selection from a small labelled
 deployment sample, and its oracle-selection caveat: §2.14 (pp. 75-77), §2.14.1 (p. 82).
-Retraining/model-selection cadence as the standard response to drift: §2.2.1 (pp. 19-21),
+Retraining/model-selection cadence as the standard response to drift: §2.2.1 (pp. 20-24),
 Definitions 2.9-2.11. Worst-group reporting obligation: §2.12.1 (pp. 59-61). Cost table ownership,
 curve-only reporting and the tiering are repository conventions.

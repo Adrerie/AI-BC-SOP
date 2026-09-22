@@ -164,8 +164,8 @@ comparison class did not have. If ρ appears, give its numeric value and its dir
 
 Setting, development, deployment, training, testing, setting-resources and real-world-scenario
 vocabulary: §2.3.1 (Definitions 2.14-2.19, book pp. 24-25). Supervision-keyed learning settings:
-§2.4.2-§2.4.11 (pp. 31-37). Equal-resources rule: §2.3.1, "How to compare methods with different
-resources?" (p. 25) and §5.3.1 (p. 344). Generalization types: §2.1.2, Definition 2.8 (p. 18).
+§2.4.2-§2.4.11 (pp. 29-35). Equal-resources rule: §2.3.1, "How to compare methods with different
+resources?" (p. 25) and §5.3.1 (pp. 342-343). Generalization types: §2.1.2, Definition 2.8 (p. 18).
 Cue/feature/attribute and ID/OOD: §2.1.2, Definitions 2.5-2.7 (p. 18). Causal vs spurious cues:
 §1.4.1 (pp. 11-12). Unidentifiability of the deployment cue on a diagonal set: §2.8.2 (p. 47).
 Pretraining leakage and the limits of zero-shot claims at scale: §2.5.1 (p. 37). ρ as part of the

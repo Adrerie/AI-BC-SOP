@@ -144,22 +144,22 @@ the source supports it as a *view* on existing metrics (2.12.1, 4.6.2).
 | Rule as it will appear | Provenance | Anchor |
 |---|---|---|
 | A setting must enumerate dev resources, deployment distribution, and time; methods with different resources are not comparable | source-derived | Def 2.18 + 2.3.1 "How to compare methods…" (p. 25) |
-| Allowing extra ingredients turns a benchmark into an unfair comparison | source-derived | 5.3.1 (p. 344) |
+| Allowing extra ingredients turns a benchmark into an unfair comparison | source-derived | 5.3.1 (pp. 342-343) |
 | Tuning on target-domain data — even visually, even unlabelled — changes the setting and voids the "generalization" claim | source-derived | 2.5.1 Scenarios 1-3 (p. 36-37) |
 | Use the held-out test set sparingly; once per paper is the book's own rule of thumb | source-derived | 2.5.3 (p. 39) |
 | Publish a ranking instead of scores to slow test-set spoiling | source-derived (as a suggestion) | 2.5.1 fn. 7 (p. 36) |
 | Reporting a proper-scoring number alone cannot separate calibration from accuracy | source-derived | 4.5.9 remarks 3-4 (p. 254) |
-| A constant-confidence model can reach ECE = 0 without being truthful | source-derived | 4.6.2 (p. 257-258) |
-| Fix the number of ECE bins and report it; consider finer bins at high confidence | source-derived (bin sensitivity) + repository convention (make disclosure mandatory) | 4.6.2 (p. 258) |
-| Prefer AUROC over AUPR when the positive rate is far from 0.5; report both curves anyway | source-derived (AUROC recommendation) + synthesized (report-both) | 4.9.2 (p. 267-268) |
+| A constant-confidence model can reach ECE = 0 without being truthful | source-derived | 4.6.2 (pp. 256-257) |
+| Fix the number of ECE bins and report it; consider finer bins at high confidence | source-derived (bin sensitivity) + repository convention (make disclosure mandatory) | 4.6.2 (pp. 256-257) |
+| Prefer AUROC over AUPR when the positive rate is far from 0.5; report both curves anyway | source-derived (AUROC recommendation) + synthesized (report-both) | 4.9.2 (pp. 264-266) |
 | Epistemic uncertainty and OOD-detection performance are related but not interchangeable | source-derived | 4.3.1 (p. 239), 4.12.3 (p. 297) |
 | Distance-based confidence conflates OOD-ness with aleatoric ambiguity; do not read it as pure epistemic | source-derived | 4.12.1-4.12.2 (p. 292-296) |
 | Attack strength must be reported as a configuration; a single-attack evaluation underestimates the attack | source-derived (FGSM < PGD reasoning, ε policy) | 2.15.2-2.15.4 (p. 89-92) |
-| A defense that breaks gradients can look robust; run the progression of attacks before believing high robust accuracy | source-derived | 2.15.12 (p. 102-109) |
+| A defense that breaks gradients can look robust; run the progression of attacks before believing high robust accuracy | source-derived | 2.15.12 (pp. 102-107) |
 | Certified and empirical robustness are different claims; post-hoc certificates may be arbitrarily loose | source-derived | 2.15.15 (p. 110-113) |
-| Tuning is a shared budget, and an untuned baseline invalidates the ranking | source-derived | 5.2.2 (p. 341-343), 2.12.2 (p. 64) |
-| Random search over sensible exponential ranges with a fixed shared sample count | source-derived | 5.2.3 (p. 343) |
-| Report compute alongside accuracy; accuracy-only plots hide the decisive axis | source-derived | 5.1.3 (p. 338-339) |
+| Tuning is a shared budget, and an untuned baseline invalidates the ranking | source-derived | 5.2.2 (pp. 62-341), 2.12.2 (p. 64) |
+| Random search over sensible exponential ranges with a fixed shared sample count | source-derived | 5.2.3 (pp. 341-342) |
+| Report compute alongside accuracy; accuracy-only plots hide the decisive axis | source-derived | 5.1.3 (pp. 335-338) |
 | Explanations must not be judged by human plausibility alone | source-derived | 3.7.3 (p. 179-181) |
 | Occlusion choice is a hyperparameter of the soundness metric, not a detail | source-derived | 3.7.7-3.7.8 (p. 186-188) |
 | Ground-truth explanations do not exist in general; use proxies and say so | source-derived | 3.7.3 (p. 181) |

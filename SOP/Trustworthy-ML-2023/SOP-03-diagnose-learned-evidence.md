@@ -145,6 +145,8 @@ and, where an attribution instrument contributed, which `SOP-07` checks that ins
   supplies the shifted cells this SOP diagnoses.
 - [`BM-06`](../../Benchmark/Trustworthy-ML-2023/BM-06-explanation-quality.md) — governs the
   instruments used in step 9.
+- [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — checks that
+  the diagnosis consumed no final-test information and disclosed its thresholds.
 
 ## 12. Source traceability
 
@@ -158,5 +160,5 @@ decision rules, plus the "different papers do it differently" caveat: §2.10 (pp
 Atypicality/co-occurrence counting without bias labels: §2.12 (pp. 57-59). Myopic-model assumption
 used as a diagnostic handle: §2.13, Definitions 2.31-2.33 (pp. 65-66, 74-75). Confirmation bias and
 the localization-evaluation fallacy: §3.7.3 (pp. 179-181). Missingness bias in occlusion operators:
-§3.7.8 (pp. 188-189). Worst-group versus average reporting: §2.12.1 (pp. 59-61). Pre-declaring the
+§3.7.8 (pp. 187-188). Worst-group versus average reporting: §2.12.1 (pp. 59-61). Pre-declaring the
 materiality threshold and the output-file shapes are repository conventions.

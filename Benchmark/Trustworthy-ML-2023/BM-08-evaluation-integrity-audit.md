@@ -120,6 +120,8 @@ recomputation time. Report it, because "we did not check" is usually a budget st
 
 Audits the outputs of [`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-setting.md),
 [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md),
+[`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md) (cell support,
+materiality threshold, occlusion operator),
 [`SOP-04`](../../SOP/Trustworthy-ML-2023/SOP-04-measure-confidence-truthfulness.md),
 [`SOP-05`](../../SOP/Trustworthy-ML-2023/SOP-05-run-worst-case-stress-evaluation.md),
 [`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md),
@@ -130,21 +132,21 @@ to every other benchmark in this group.
 ## 13. Source traceability
 
 Purpose of evaluation as a ranking, and the obligation to explain an upper-bound violation:
-§5.1.1 (p. 335). Costs of wrong evaluation, the metric-learning case, opportunity cost and
-practitioner mis-selection, plus the eight-case scandal list: §5.1.2 (pp. 335-337). Failure recipes:
+§5.1.1 (p. 333). Costs of wrong evaluation, the metric-learning case, opportunity cost and
+practitioner mis-selection, plus the eight-case scandal list: §5.1.2 (pp. 333-335). Failure recipes:
 per-paper metric code and the undefined-precision corner case, confounded ingredients, hidden
 resources and the accuracy-only plot, train/test overlap with the reported overlap rates and the
 zero-accuracy non-overlapping subset, missing validation sets with ImageNet/CIFAR second-version
 evidence, and the three practical pointers (find-or-write a fair comparison; trust only simple
-ingredients; stay sceptical): §5.1.3 (pp. 337-341). Leakage forms and their remedies, ranking-only
+ingredients; stay sceptical): §5.1.3 (pp. 335-338). Leakage forms and their remedies, ranking-only
 exposure and the noised-accuracy idea: §2.5.1 (pp. 36-37), §2.5.3 (pp. 39-40). Test-set spoiling as
-unavoidable-but-minimisable: §2.3.3 (p. 29). Ablation-study caveat for OOD claims: §2.5.2
+unavoidable-but-minimisable: §2.3.3 (p. 28). Ablation-study caveat for OOD claims: §2.5.2
 (pp. 38-39). Equal-budget hyper-parameter practice and reading how papers choose hyper-parameters:
-§2.12.2 (p. 64). Random search with a fixed shared budget: §5.2.3 (p. 343). Fairly tuned simple
-methods and the untuned-baseline/weight-decay example: §5.2.2 (pp. 341-343). Toy-versus-real regime
+§2.12.2 (p. 64). Random search with a fixed shared budget: §5.2.3 (pp. 341-342). Fairly tuned simple
+methods and the untuned-baseline/weight-decay example: §5.2.2 (pp. 339-341). Toy-versus-real regime
 costs: §5.2 (pp. 338-340). Equal-ingredients-as-fairness and the information cap of a fixed
 benchmark: §5.3.1 (p. 344), §5.3.5 (pp. 349-350). Metric gaming: constant-confidence ECE §4.6.2
-(pp. 257-258); base-rate AUPR §4.9.2 (pp. 266-268). Apparent robustness from broken gradients:
-§2.15.12 (pp. 102-109). Explanation metrics distorted by the occlusion operator: §3.7.8
-(pp. 188-189). Requirement lists, pass-rate scoring and the perturbation protocol are repository
+(pp. 256-257); base-rate AUPR §4.9.2 (pp. 264-266). Apparent robustness from broken gradients:
+§2.15.12 (pp. 102-107). Explanation metrics distorted by the occlusion operator: §3.7.8
+(pp. 187-188). Requirement lists, pass-rate scoring and the perturbation protocol are repository
 conventions built on these sections.

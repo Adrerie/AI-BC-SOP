@@ -156,6 +156,8 @@ the distance column norm-qualified and must mark which rows combine adversarial 
   threat-model + attack-ladder + masking-check protocol.
 - [`BM-01`](../../Benchmark/Trustworthy-ML-2023/BM-01-distribution-shift-generalization.md) —
   corruption/severity sweeps as the non-adversarial sibling.
+- [`BM-04`](../../Benchmark/Trustworthy-ML-2023/BM-04-error-and-anomaly-detection.md) — whether the
+  confidence score notices stressed inputs.
 - [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — audits ε
   parity, configuration reporting, and guarantee wording.
 
@@ -166,14 +168,14 @@ parts and the "missing critical ingredients" statement: §2.15.1, Definitions 2.
 (pp. 87-88). Attack formulations for the single-step and projected attacks, non-convexity caveat,
 and optimiser dependence: §2.15.2-§2.15.3 (pp. 89-91). Strength ordering and the ε policy:
 §2.15.4 (pp. 91-92). Strategy spaces beyond pixel norms and the total-variation definition:
-§2.15.5-§2.15.7, Definition 2.41 (pp. 93-98). White-box versus black-box, substitute models and
+§2.15.5-§2.15.7, Definition 2.41 (pp. 92-97). White-box versus black-box, substitute models and
 zeroth-order access requirements with query cost: §2.15.8-§2.15.10, Definitions 2.42-2.43
-(pp. 98-101). Adversarial-training objective, cost ledger, and transferability observation:
+(pp. 93-100). Adversarial-training objective, cost ledger, and transferability observation:
 §2.15.11 (pp. 101-102). Gradient masking, its three mechanisms, the "7 of 9 defenses" evidence, the
 joint-pipeline / straight-through / expectation-over-transforms progression, and the bit-depth and
-estimator definitions: §2.15.12, Definitions 2.44-2.46 (pp. 102-109). Effectiveness and limits of
-adversarial training: §2.15.13 (pp. 107, 110). Transform-based defence applied at both train and
-inference: §2.15.14 (pp. 110-111). Certification, the bound chain, looseness of post-hoc bounds and
+estimator definitions: §2.15.12, Definitions 2.44-2.46 (pp. 102-107). Effectiveness and limits of
+adversarial training: §2.15.13 (pp. 107-108). Transform-based defence applied at both train and
+inference: §2.15.14 (pp. 108-110). Certification, the bound chain, looseness of post-hoc bounds and
 the joint training objective, and the two-layer/binary scope: §2.15.15, Definition 2.47
 (pp. 111-113). Reporting table conventions with norm-qualified distance columns and footnoted
 combined defenses: Table 2.8 (p. 103). The attack-ladder step numbering and the guarantee-wording

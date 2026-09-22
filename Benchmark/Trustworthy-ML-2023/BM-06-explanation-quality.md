@@ -137,23 +137,28 @@ planted-dependence cases supplied by
 [`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md); reporting through
 [`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
 
+
 ## 13. Source traceability
 
-Explanation, interpretability, explainability, justification, attribution and explanation by
-attribution: §3.1-§3.1.2, Definitions 3.1-3.6 (pp. 117-118). Properties of good explanations and the
-primacy of soundness: §3.3.1 (pp. 122-125). Soundness-explainability trade-off and why empirical
-evaluation is unavoidable: §3.4.1 (pp. 126-127), §3.7.1 (p. 179). Linearization families and
-per-method assumptions: §3.6-§3.6.6 (pp. 174-178), §3.5.3 (p. 135), §3.5.9-§3.5.10 (pp. 146-152),
-§3.5.13 (pp. 153-155), §3.5.14-§3.5.19 (pp. 157-176), §3.10.1-§3.10.3 (pp. 197-202).
-Confirmation bias and the rejection of qualitative-only evidence: §3.7.3, Definition 3.13
-(pp. 179-181). Localization-as-soundness critique: §3.7.3 (p. 181). Necessary conditions and their
-relaxation: §3.7.4 (pp. 181-183). Sanity checks (cascading randomisation, label randomisation, rank
-correlation) and their conflict with completeness axioms: §3.7.5 (pp. 183-187). Simulated inputs with
-controllable ground truth: §3.7.6 (pp. 187-188). Remove-and-classify, its variants and relative-area
-reporting: §3.7.7, Definition 3.14 (pp. 188-189). Missingness bias and the inpainting/blurring
-choice: §3.7.8 (pp. 189-190). End goals, the debugging absence, and HITL: §3.8-§3.8.2,
-Definition 3.15 (pp. 190-197). Feature granularity and the partition preference: §3.5.1,
-Definition 3.7 (pp. 128-130). Training-sample attribution machinery and its approximation-versus-end-goal evaluation,
-self-influence mislabel detection with AUROC/AP and its assumptions: §3.11.2,
-§3.11.6-§3.11.7, §3.12.1-§3.12.2, Definition 3.16 (pp. 203-217). The ladder ordering and the
-per-hypothesis split are repository conventions.
+The instrument itself is audited in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md)
+§12, which carries the full source anchor list for the vocabulary (§3.1-§3.4.1), the method
+catalogue and its assumptions (§3.5-§3.6.6, §3.10-§3.11), the axioms discussion (§3.5.10), and the
+human-in-the-loop framing (§3.8.2). Anchors specific to this benchmark's measurements:
+
+- Pass/fail scoring of model dependence and the rank-correlation readout: §3.7.5
+  (book pp. 182-185).
+- Manufactured ground truth by controlled cue agreement: §3.7.6 (pp. 185-186).
+- Ordering metric, its four variants and relative-area reporting: §3.7.7, Definition 3.14
+  (pp. 186-187).
+- Occlusion operator as a metric hyper-parameter: §3.7.8 (pp. 187-188).
+- Localization is not soundness, and the qualitative-evaluation prohibition: §3.7.3,
+  Definition 3.13 (pp. 179-181).
+- End goals as the criterion for choosing the evaluation type: §3.8-§3.8.1 (pp. 190-193).
+- Cost per explanation for optimization-based and concept-based methods: §3.5.8 (pp. 142-146),
+  §3.5.13 (pp. 155-157), §3.11.6-§3.11.7 (pp. 210-214).
+- End-goal evaluation of training-sample attribution with AUROC/AP and its stated assumptions:
+  §3.12.1-§3.12.2, Definition 3.16 (pp. 214-217).
+- Partition-over-overlap granularity rule: §3.5.1, Definition 3.7 (pp. 128-130).
+
+Hypothesis separation, the ladder tiers, and the requirement to report cross-method disagreement are
+repository conventions.

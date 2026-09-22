@@ -133,24 +133,32 @@ threshold consequences read by
 [`BM-07`](BM-07-selective-prediction-under-cost.md); reported through
 [`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
 
+
 ## 13. Source traceability
 
-Predictive uncertainty as `c(x) = P(L = 1)`: §4.2.1, Definition 4.1 (p. 228). Formats of
-uncertainty (scalar, per-evidence vector, distribution over embeddings, disentangled pair): §4.4
-(pp. 240-242). Proper scoring definition and instances: §4.5.1-§4.5.3, Definition 4.8 (pp. 243-246);
-BCE/max-prob §4.5.5, Definition 4.9 (pp. 246-247); CE lower bound §4.5.6 (p. 248); "not all strictly
-proper rules are equally good objectives" §4.5.7 (p. 252); multi-class Brier §4.5.8 (pp. 251-252);
-test-set evaluation, perplexity reading and the four caveats §4.5.9 (pp. 253-254). Calibration
-definitions and recipes: §4.6.1, Definitions 4.11-4.13 with the 5-step ECE procedure (pp. 254-256);
-MCE and per-class worst case §4.6.2 (p. 256); gaming ECE with a constant prediction §4.6.2
-(pp. 257-258); bin-count sensitivity and fine bins at high confidence §4.6.2 (p. 258); reliability
-diagrams, their relation to ECE/MCE and the binary-axis pitfall §4.6.3 (pp. 259-261); tool summary
-§4.7 (p. 261). Probabilistic overfitting while accuracy improves: §4.8.1 (pp. 261-263).
-Architecture-family dependence and recalibration status: §4.8.2 (pp. 263-264). Temperature scaling
-protocol and fitted-on-validation rule: §4.8.3 (pp. 264-265). Ranking condition and its sufficiency
-for threshold filtering: §4.9.1 (pp. 265-266). Detection metrics, AUPR-at-base-rate and the AUROC
-recommendation: §4.9.2 (pp. 266-268). Aleatoric/predictive scoring equivalence and its binary-case
-limit: §4.13.3 (pp. 303-305); heteroscedastic NLL recommendation and preconditions §4.13.5
-(pp. 307-308). Ensemble-score improvement confounded by accuracy: §4.11.5 (p. 275). Distance-score
-conflation of ambiguity and OOD: §4.12.1-§4.12.2 (pp. 291-296). Controls, tiers and the table of
-interpretations are repository conventions.
+Quantity definitions, the proper-scoring derivation chain, the calibration and ranking metric
+definitions, and the estimator-level confounds are anchored in
+[`SOP-04`](../../SOP/Trustworthy-ML-2023/SOP-04-measure-confidence-truthfulness.md) §12:
+predictive/aleatoric/epistemic and their formats (§4.2.1-§4.2.4, §4.4, Definitions 4.1-4.10,
+book pp. 228-247); proper scoring and its instances (§4.5.1-§4.5.9, pp. 243-254); calibration,
+ECE/MCE and reliability (§4.6.1-§4.6.3, Definitions 4.11-4.15, pp. 254-259); the tool summary
+(§4.7, p. 259); DNN calibration evidence and temperature scaling (§4.8.1-§4.8.3, pp. 259-263);
+the ranking condition and detection metrics (§4.9.1-§4.9.2, pp. 263-266); aleatoric scoring and its
+binary-case limit (§4.13.3, §4.13.5, pp. 303-308); and the estimator confounds (§4.11.5, §4.12.1-
+§4.12.3, pp. 275-297).
+
+Anchors specific to this benchmark's measurements:
+
+- Calibration is necessary, not sufficient, for truthful per-sample confidence — and the constant
+  score that games it: §4.6.2 (pp. 256-257).
+- Bin-count disagreement across published evaluations, and the recommendation for finer bins at high
+  confidence: §4.6.2 (pp. 256-257).
+- Reliability diagrams cannot recover ECE without bin weights, and require the confidence histogram:
+  §4.6.3 (pp. 257-259).
+- Proper scores have an unknown floor and mix accuracy: §4.5.9 (pp. 253-254).
+- Probabilistic overfitting while classification error improves: §4.8.1 (pp. 259-261).
+- Calibration varies by architecture family and persists after recalibration: §4.8.2 (pp. 261-262).
+- Score comparability across candidates rather than per sample: §4.1.3 (pp. 227-228).
+
+The three-hypothesis split, the control-row table, and the bin-sensitivity requirement are
+repository conventions.

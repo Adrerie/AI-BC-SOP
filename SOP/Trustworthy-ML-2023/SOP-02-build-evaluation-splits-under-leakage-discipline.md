@@ -157,6 +157,8 @@ your validation set.
   from this SOP's manifest.
 - [`BM-03`](../../Benchmark/Trustworthy-ML-2023/BM-03-confidence-truthfulness.md) —
   post-hoc-recalibration parameters must be fitted on the split designated here.
+- [`BM-05`](../../Benchmark/Trustworthy-ML-2023/BM-05-adversarial-robustness.md) — attack-time
+  thresholds and defense parameters are selected on validation material only, under this manifest.
 - [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — audits this
   SOP's outputs directly.
 
@@ -165,13 +167,13 @@ your validation set.
 Split roles and what each optimises: §2.3.2, Definitions 2.20-2.22 (book pp. 26-27). Validation
 must share training domains for true OOD claims, with the pointer to leakage: §2.3.2 (p. 26) and
 §2.5.2. Testing as part of development and the impossibility of an unsullied test set: §2.3.3
-(p. 29). Information leakage definition and its four concrete forms: §2.5.1, Definition 2.24
+(p. 28). Information leakage definition and its four concrete forms: §2.5.1, Definition 2.24
 (pp. 36-37). Ranking-instead-of-scores and the differential-privacy/noise idea: §2.5.1 fn. 7
 (p. 36), §2.5.3 (p. 40). Ablation study definition and the OOD caveat: §2.5.2, Definition 2.25
 (pp. 38-39). "Specify the hyper-parameter selection method as part of the learning problem",
 test-set-once-per-project, benchmark refresh with significance tests: §2.5.3 (pp. 39-40).
 Contamination in public Q&A benchmarks and models scoring near zero on the non-overlapping subset:
-§5.1.3 (pp. 339-340). Missing validation set and the second-version accuracy drop: §5.1.3
-(p. 340). Oracle test-time selection as an upper bound: §2.14.1 (p. 82). Pretraining-set access
+§5.1.3 (pp. 335-338). Missing validation set and the second-version accuracy drop: §5.1.3
+(pp. 335-338). Oracle test-time selection as an upper bound: §2.14.1 (p. 82). Pretraining-set access
 forcing a "zero-shot" re-think: §2.5.1 (p. 37). Contact logging, hashes, and the check-list format
 are repository conventions.

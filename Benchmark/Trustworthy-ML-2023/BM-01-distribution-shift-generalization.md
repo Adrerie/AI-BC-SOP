@@ -133,12 +133,16 @@ Executed by [`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-s
 axes, comparison class) and [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md)
 (split provenance, contact budget); interpreted by
 [`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md) and reported by
-[`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
+[`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md), and
+attributed to a specific cue by
+[`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md); the adversarial branch of the same
+condition axis is measured by [`BM-05`](BM-05-adversarial-robustness.md) under
+[`SOP-05`](../../SOP/Trustworthy-ML-2023/SOP-05-run-worst-case-stress-evaluation.md).
 
 ## 13. Source traceability
 
 Cross-domain versus ID generalization and the domain/environment vocabulary: §2.1.2,
-Definitions 2.5-2.8 (book pp. 18-19); learning settings §2.4.2-§2.4.7 (pp. 31-35). Leave-one-domain
+Definitions 2.5-2.8 (book pp. 18-19); learning settings §2.4.2-§2.4.7 (pp. 29-33). Leave-one-domain
 protocol and the shared-class-set convention, plus the named benchmark family (PACS-style
 leave-one-out, the DomainBed suite, and a mixed DG/subpopulation-shift suite): §2.6-§2.6.1
 (pp. 40-43). Subpopulation-shift definition and worst-case-subpopulation requirement: §2.6,
@@ -146,8 +150,8 @@ Definition 2.26 (p. 40). Ill-defined behaviour off the training support: §2.7.1
 Tuning-rights parity, once-per-project test use, and benchmark refresh with significance testing:
 §2.5.3 (pp. 39-40). Upper-bound rows for target-domain training and oracle selection: §2.12.2
 (p. 65), §2.14.1 (p. 82). Worst-group versus average reporting: §2.12.1 (pp. 59-61). Second-version
-evaluation-set drop as evidence of accumulated overfitting: §5.1.3 (p. 340). Fairly tuned simple
-baseline, and the accuracy-without-cost reporting failure: §5.2.2 (pp. 341-343), §5.1.3 (p. 338).
+evaluation-set drop as evidence of accumulated overfitting: §5.1.3 (pp. 335-338). Fairly tuned simple
+baseline, and the accuracy-without-cost reporting failure: §5.2.2 (pp. 335-341), §5.1.3 (p. 338).
 Toy-versus-real regime properties: §5.2 (pp. 338-340). Corruption benchmark construction (many
 corruptions applied to a held-out set) is described in §2.6.1 (p. 42). Severity curves, matrix
 reporting and the tier split are repository conventions shaped by those sections.

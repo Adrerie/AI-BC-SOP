@@ -45,7 +45,7 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `nll` | −(1/N) Σ log f_y(x) on the evaluation set | probabilistic outputs | mixes accuracy and calibration; floor unknown |
 | `brier` | (1/N) Σ [ (1 − f_y)² + Σ_{k≠y} f_k² ] | probabilistic outputs | as `nll`, softer tails |
 | `perplexity` | exponentiated `nll` (base 2) | language modelling | same confound as `nll` |
-| `ece` | Σ_m (|B_m|/N) · \|acc(B_m) − conf(B_m)\|, bins disclosed | scalar confidence in [0,1] | gameable by constant confidence; bin-sensitive |
+| `ece` | Σ_m (\|B_m\|/N) · \|acc(B_m) − conf(B_m)\|, bins disclosed | scalar confidence in [0,1] | gameable by constant confidence; bin-sensitive |
 | `mce` | max_m \|acc(B_m) − conf(B_m)\| | high-risk claims | pessimistic on small bins |
 | `reliability` | per-bin acc and (conf − acc), plotted with the confidence histogram | diagnosis of over/under-confidence | does not reveal `ece` without bin weights |
 | `auroc` | probability that a correct case outranks an incorrect one by `c` | ranking claims | insensitive to the absolute scale |
@@ -145,26 +145,34 @@ list. If any of these is absent, the result is not yet a trustworthy-ML result �
 
 - [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — executes the
   audit of this SOP's outputs.
-- All other benchmarks (`BM-01` … `BM-07`) define their reporting fields against §4 of this document.
+Every other benchmark in the group defines its reporting fields against §4 of this document and is
+the counterpart of a report assembled here:
+[`BM-01`](../../Benchmark/Trustworthy-ML-2023/BM-01-distribution-shift-generalization.md),
+[`BM-02`](../../Benchmark/Trustworthy-ML-2023/BM-02-spurious-cue-dependence.md),
+[`BM-03`](../../Benchmark/Trustworthy-ML-2023/BM-03-confidence-truthfulness.md),
+[`BM-04`](../../Benchmark/Trustworthy-ML-2023/BM-04-error-and-anomaly-detection.md),
+[`BM-05`](../../Benchmark/Trustworthy-ML-2023/BM-05-adversarial-robustness.md),
+[`BM-06`](../../Benchmark/Trustworthy-ML-2023/BM-06-explanation-quality.md),
+[`BM-07`](../../Benchmark/Trustworthy-ML-2023/BM-07-selective-prediction-under-cost.md).
 
 ## 12. Source traceability
 
 Setting and resources vocabulary: §2.3.1, Definitions 2.14-2.19 (book pp. 24-25). Split roles:
-§2.3.2, Definitions 2.20-2.22 (pp. 26-27). Test-set spoiling as a spectrum: §2.3.3 (p. 29).
+§2.3.2, Definitions 2.20-2.22 (pp. 26-27). Test-set spoiling as a spectrum: §2.3.3 (p. 28).
 Cue/ID-OOD/generalization types: §2.1.2, Definitions 2.5-2.8 (pp. 18-19). Spurious correlation,
 underspecification, shortcut bias: §2.7.1, §2.8.2, §2.9, Definitions 2.27-2.29 (pp. 45-50).
 Metric-implementation divergence and the empty-bin precision case; hidden-resources/compute axis;
 train-test contamination; missing-validation-set pathology; shared evaluation server or library:
-§5.1.3 (pp. 337-341). Upper-bound violation must be explained (bug, flawed bound, or different
-ingredients): §5.1.1 (p. 335). Cost of wrong evaluation and the scandal list: §5.1.2 (pp. 335-337).
-Tuned-baseline and weight-decay examples: §5.2.2 (pp. 341-343). Random search with shared budget:
-§5.2.3 (p. 343). Toy-versus-large-scale trade-off: §5.2 (pp. 338-340). Benchmark fairness requires
-equal ingredients: §5.3.1 (p. 344). Metric definitions: ECE/MCE/reliability §4.6.1-§4.6.3,
+§5.1.3 (pp. 335-338). Upper-bound violation must be explained (bug, flawed bound, or different
+ingredients): §5.1.1 (p. 333). Cost of wrong evaluation and the scandal list: §5.1.2 (pp. 333-335).
+Tuned-baseline and weight-decay examples: §5.2.2 (pp. 339-341). Random search with shared budget:
+§5.2.3 (pp. 341-342). Toy-versus-large-scale trade-off: §5.2 (pp. 338-340). Benchmark fairness requires
+equal ingredients: §5.3.1 (pp. 342-343). Metric definitions: ECE/MCE/reliability §4.6.1-§4.6.3,
 Definitions 4.11-4.15 (pp. 254-259); NLL/Brier/perplexity §4.5.2-§4.5.9 (pp. 245-254);
-AUROC/AUPR §4.9.2 (pp. 267-268); risk at coverage and threshold filtering §4.9.1 (pp. 265-266);
+AUROC/AUPR §4.9.2 (pp. 264-266); risk at coverage and threshold filtering §4.9.1 (pp. 263-264);
 `acc_under_eps` and its reporting table §2.15.3-§2.15.4 and Table 2.8 (pp. 90-92, 103); certified
-accuracy §2.15.15 (pp. 111-113); remove-and-classify §3.7.7, Definition 3.14 (pp. 186-188); sanity
-rank correlation §3.7.5 (pp. 185-187); HITL §3.8.2, Definition 3.15 (pp. 193-197); self-influence
+accuracy §2.15.15 (pp. 111-113); remove-and-classify §3.7.7, Definition 3.14 (pp. 186-187); sanity
+rank correlation §3.7.5 (pp. 182-185); HITL §3.8.2, Definition 3.15 (pp. 189-193); self-influence
 §3.12.2, Definition 3.16 (pp. 216-217). Worst-group reporting: §2.12.1 (pp. 59-61). Architecture
-family and recalibration status: §4.8.1-§4.8.3 (pp. 261-265). The register format, the "does not
+family and recalibration status: §4.8.1-§4.8.3 (pp. 259-263). The register format, the "does not
 show" list and the sensitivity panel are repository conventions.

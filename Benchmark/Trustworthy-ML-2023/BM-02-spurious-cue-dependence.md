@@ -130,7 +130,9 @@ model is an additional training run).
 
 ## 12. Related SOPs
 
-Needs [`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-setting.md) §5 step 4 (cue
+[`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md) governs any
+attribution instrument consulted while interpreting these cells. The design needs
+[`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-setting.md) §5 step 4 (cue
 whitelist, ρ) and [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md)
 §5 step 4 (off-diagonal cells); executed by
 [`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md); mitigation results
@@ -154,5 +156,5 @@ with bias-as-domain encodings: §2.12.2 (pp. 62-65). Biased/myopic model definit
 different" supervision: §2.13, Definitions 2.31-2.33 (pp. 65-66, 74-75). Role-swap failure of the
 contrast method: §2.13.1 (pp. 67-70). Biased-versus-unbiased dual test sets and the ρ sweep:
 §2.13.2 (pp. 70-75). Compositional independence remark: §2.8 (p. 46). Missingness/occlusion
-artefacts: §3.7.8 (pp. 188-189). Tiering and the pre-declared materiality threshold are repository
+artefacts: §3.7.8 (pp. 187-188). Tiering and the pre-declared materiality threshold are repository
 conventions built on the source's note that papers differ in how they judge a "significant" drop.
