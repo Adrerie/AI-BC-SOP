@@ -19,7 +19,7 @@ import _common as C
 
 REGISTER_FILE = "SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md"
 INLINE_CODE = re.compile(r"`([^`\n]+)`")
-IDENT = re.compile(r"\b[a-z][a-z0-9_]{3,}\b")
+IDENT = re.compile(r"\b[a-z](?:[a-z0-9_]{2,}[a-z0-9])\b")
 CELLS = re.compile(r"(?<!\\)\|")          # an escaped \| inside a formula is not a column break
 
 
@@ -45,6 +45,21 @@ def register():
     return names, rows, width
 
 
+def inline_identifiers(text):
+    """Yield snake_case identifiers from inside inline-code spans, including compound expressions."""
+    for span in INLINE_CODE.findall(text):
+        for tok in IDENT.findall(span):
+            if "_" in tok:
+                yield tok
+
+
+def parser_selftest():
+    sample = "`metric_alpha > metric_beta` and `plain`"
+    got = set(inline_identifiers(sample))
+    want = {"metric_alpha", "metric_beta"}
+    return [] if got == want else [f"compound inline-code parser got {sorted(got)}, want {sorted(want)}"]
+
+
 def check_unregistered():
     reg, _, _ = register()
     used = defaultdict(set)
@@ -52,11 +67,10 @@ def check_unregistered():
         if kind == "val":
             continue                       # the validation record may quote field names
         text = C.read(rel)
-        for span in INLINE_CODE.findall(text):
-            for tok in IDENT.findall(span):
-                if "_" not in tok or tok in reg or tok in C.METRIC_ALLOW:
-                    continue
-                used[tok].add(rel)
+        for tok in inline_identifiers(text):
+            if tok in reg or tok in C.METRIC_ALLOW:
+                continue
+            used[tok].add(rel)
     return used
 
 
@@ -82,17 +96,20 @@ def check_register_cites():
 def main(argv):
     quiet = "--quiet" in argv
     reg, rows, width = register()
+    parser = parser_selftest()
     unreg = check_unregistered()
     shape = check_register_cites()
+    for f in parser:
+        print("PARSER " + f)
     for tok, where in sorted(unreg.items()):
         print(f"UNREGISTERED `{tok}` in {sorted(where)}")
     for f in shape:
         print("REGISTER SHAPE " + f)
     if not quiet:
         print(f"register: {rows} rows x {width} columns, {len(reg)} metric names")
-    print(f"check_metrics unregistered={len(unreg)} shape_findings={len(shape)} "
-          f"register_size={len(reg)}")
-    return 1 if (unreg or shape) else 0
+    print(f"check_metrics parser_findings={len(parser)} unregistered={len(unreg)} "
+          f"shape_findings={len(shape)} register_size={len(reg)}")
+    return 1 if (parser or unreg or shape) else 0
 
 
 if __name__ == "__main__":
