@@ -66,6 +66,8 @@ METRIC_ALLOW = {
     "concept_reconstruction", "acceptance_report", "build_citation_index", "run_acceptance",
     "check_citations", "check_metrics", "check_prose", "check_schema", "check_structure",
     "check_tables", "citation_index", "source_index",
+    "comparison_class", "cue_whitelist", "deployment_axes", "target_samples",
+    "nll_bits", "c_frozen",
 }
 
 
