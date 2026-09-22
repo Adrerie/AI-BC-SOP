@@ -37,20 +37,24 @@ fooled into reporting one that does not exist.
   worst), **strategy space** (the set of environments the adversary may choose from), and
   **knowledge** (what the adversary knows about the model). Leaving any one unspecified means the
   reported robustness has no referent.
-- **Worst-case framing** — preparing for the worst yields a lower bound on performance *restricted
-  to the declared strategy space*, and may be unrealistically pessimistic relative to the true
+- **Worst-case framing** — the target quantity is model performance under the worst allowed
+  perturbation inside the declared strategy space. An empirical attack only probes this quantity and
+  may miss stronger failures; a valid certificate can provide a provable guarantee under its own
+  assumptions. The worst-case target may also be unrealistically pessimistic relative to the true
   deployment distribution.
 - **ε** — the radius bound of the strategy space, always norm-qualified (`ℓ∞`, `ℓ2`, or a total
   variation budget for flow-style transforms).
 - **Gradient masking (obfuscated gradients)** — a defense that breaks the gradient path, so a
   gradient-based attack reports safety that is not there. Three mechanisms: shattering, stochasticity,
   exploding/vanishing gradients.
-- **Certified evaluation** — proving no successful perturbation exists within the ball, as opposed to
-  failing to find one; achieved by bounding the loss over the ball through a relaxation chain
-  (empirical robust loss → first-order bound → LP → SDP relaxation).
-- **Attack strength ordering** — a single gradient step does not in general even find a local
-  optimum; iterative projected gradient descent is the reference white-box attack, and its strength
-  depends on the optimiser configuration.
+- **Certified evaluation** — establishes a provable robustness guarantee within a specified
+  threat model under the assumptions of the chosen certificate. The source illustrates one
+  relaxation-based route through first-order, LP, and SDP bounds; that is an example of certification,
+  not the definition of the field.
+- **Empirical attack evaluation** — attempts to find violating inputs and therefore provides
+  evidence about robustness, not a proof that the worst case has been solved. A single gradient step
+  is a weak diagnostic in the source's setting; iterative projected attacks are stronger references
+  there, but adequacy depends on the threat model, the defense, and whether the attack is adaptive.
 
 ## 5. Procedure
 
@@ -63,11 +67,13 @@ fooled into reporting one that does not exist.
 2. Fix ε early, keep it small, and keep it *identical across all methods compared*; record the norm
    it is expressed in. Below a visibility threshold the perturbations stop being humanly meaningful,
    so also record whether the perturbed samples remain plausible.
-3. Run the attack ladder, reporting each rung separately:
-   - single-step attack (fast sanity bound on the model's sensitivity);
-   - multi-step projected attack at the *strongest configuration you can afford*, with the
-     configuration reported: step size, iteration count, restarts, projection, clipping;
-   - targeted variants if the goal is targeted misclassification rather than any error.
+3. Run an attack suite appropriate to the declared threat model, reporting each component
+   separately:
+   - a single-step attack as a fast sensitivity diagnostic where applicable;
+   - a multi-step projected attack as a reference for gradient-following norm-bounded settings, with
+     step size, iteration count, restarts, projection, clipping, and loss reported;
+   - an adaptive attack against the actual defense mechanism and full deployed pipeline;
+   - complementary or targeted variants when the threat model makes them relevant.
 4. If any part of the system is non-gradient-friendly (cropping, resizing, quantization,
    randomization), attack the **joint pipeline** rather than the differentiable core: compose the
    transforms, use a straight-through estimator for quantizing steps, and average gradients over
