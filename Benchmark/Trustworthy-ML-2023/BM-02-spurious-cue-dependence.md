@@ -77,7 +77,7 @@ Construct it by editing exactly one factor and verifying the others are unchange
 
 - `acc_worstgroup` over the cue cells — the headline.
 - Off-diagonal accuracy as its own column (never folded into an average).
-- Dependence delta: `acc_diagonal − acc_offdiagonal`.
+- Dependence delta: `Acc(diagonal) − Acc(off-diagonal)`.
 - Counterfactual drop: change in accuracy/loss under each single-cue edit, reported with its
   variability and a pre-declared materiality threshold.
 
