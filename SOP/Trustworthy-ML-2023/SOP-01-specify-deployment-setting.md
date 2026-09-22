@@ -119,17 +119,17 @@ Run all of these; each is a stop-and-fix, not a warning.
       undecided list is empty or explicitly accepted.
 - [ ] **Supervision honesty**: the declared labels match the data actually present on disk (count
       group/attribute labels; verify ρ by computing it, not by quoting the dataset paper).
-- [ ] **Pretraining disclosure**: for every pretrained component, name the corpus and record which
-      exposure level applies — (i) no task-specific examples and no adaptation; (ii) class-name or
-      semantic exposure during pretraining only; (iii) exact or near-duplicate evaluation material
-      present; (iv) benchmark-specific fine-tuning. Report the level. "Zero-shot" may be used only for
-      level (i), and only where the benchmark defines the term; semantic exposure is not
-      contamination, and duplicate exposure is a different problem from fine-tuning on the benchmark,
-      so the two must not be reported as one another.
+- [ ] **Pretraining disclosure**: for every pretrained component, name the corpus and record
+      relevant exposure separately — semantic/class exposure, exact or near-duplicate evaluation
+      material, and benchmark-specific adaptation or fine-tuning. Do not collapse these into one
+      contamination label. Whether the resulting experiment is called "zero-shot" follows the
+      explicit definition of the benchmark or study setting being used; this SOP does not impose a
+      universal zero-shot definition.
 - [ ] **Equal-ingredients check**: for each intended comparison, the other work's setting is
       recorded and the differences listed. Unequal resources ⇒ reclassify as a different setting.
-- [ ] **Deployment fiction preserved**: nothing from the deployment stream (labels, images, logs,
-      scores) has entered the development folder or the notebook history.
+- [ ] **Information-rights compliance**: no deployment or target-domain information beyond
+      the rights granted by the declared setting has entered development. Target-domain access is
+      legitimate when the setting grants it; undeclared access is the integrity failure.
 
 ## 7. Decision or stop conditions
 
@@ -160,7 +160,8 @@ Run all of these; each is a stop-and-fix, not a warning.
   neither.
 - Silent ρ drift: the sample count that was 2 % unbiased at project start becomes 20 % once
   convenient data are added.
-- Claiming zero-shot status while the pretraining corpus contains the target classes.
+- Using "zero-shot" without stating the benchmark or study definition and the model's
+  pretraining exposure.
 
 ## 9. Required outputs
 
