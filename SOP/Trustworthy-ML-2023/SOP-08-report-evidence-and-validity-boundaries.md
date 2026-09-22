@@ -49,7 +49,8 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `mce` | max_m \|acc(B_m) − conf(B_m)\| | high-risk claims | pessimistic on small bins |
 | `reliability` | per-bin acc and (conf − acc), plotted with the confidence histogram | diagnosis of over/under-confidence | does not reveal `ece` without bin weights |
 | `auroc` | probability that a randomly drawn **positive** example scores higher than a randomly drawn **negative** example, under a declared positive class and score orientation | ranking claims for any declared binary task | insensitive to the absolute scale; the number is meaningless until the positive class is named |
-| `aupr_success`, `aupr_error` | area under precision-recall, with the success class (`L = 1`) and the error class (`L = 0`) as the designated positive, respectively | ranking under imbalance, positive class named per task | random baseline = prevalence **of the designated positive**: `P(L = 1)` for `aupr_success`, `P(L = 0)` for `aupr_error` |
+| `aupr` | area under the precision-recall curve for a declared binary task, with positive class and score orientation stated | binary ranking/detection under imbalance | no-skill reference is the prevalence of the designated positive; values are not comparable across different positive-class definitions without relabeling |
+| `aupr_success`, `aupr_error` | named specializations of `aupr` for prediction correctness, with success (`L = 1`) and error (`L = 0`) designated positive, respectively | error/correctness ranking where these two orientations are both useful | random baseline = `P(L = 1)` for `aupr_success`, `P(L = 0)` for `aupr_error` |
 | `risk_at_coverage` | error rate among the top-k fraction by confidence | abstention | undefined without the coverage stated |
 | `acc_under_eps` | accuracy under a named attack, **norm + ε + attack configuration attached** | adversarial claims | fake-safe when the defense masks gradients |
 | `certified_acc` | fraction of inputs with a proof of invariance inside the ball | architectures the bound admits | bound may be arbitrarily loose — it is a lower bound on true robust accuracy for its own threat model, not an upper-bound row |
@@ -62,7 +63,7 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `conclusion_flip_count` | number of headline conclusions that change sign or significance under a protocol perturbation | protocol audits | depends on which perturbations were run |
 | `disclosure_completeness` | fraction of this SOP's §6 checklist items present in the report | any report | measures documentation, not correctness |
 
-*Baselines and positive classes.* Every `auroc` / `aupr_*` number belongs to a named binary task:
+*Baselines and positive classes.* Every `auroc` / `aupr` / `aupr_*` number belongs to a named binary task:
 state which class is positive and which way the score points. The no-skill value of a
 precision-recall summary is the prevalence **of that positive class**, so a success-positive and an
 error-positive detector on the same data have different random baselines (`P(L = 1)` and `P(L = 0)`),
