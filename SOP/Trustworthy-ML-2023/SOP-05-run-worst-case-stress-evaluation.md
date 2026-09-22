@@ -68,9 +68,9 @@ fooled into reporting one that does not exist.
    - multi-step projected attack at the *strongest configuration you can afford*, with the
      configuration reported: step size, iteration count, restarts, projection, clipping;
    - targeted variants if the goal is targeted misclassification rather than any error.
-4. If any part of the system is non-gradient-friendly (cropping, resizing, quantisation,
+4. If any part of the system is non-gradient-friendly (cropping, resizing, quantization,
    randomization), attack the **joint pipeline** rather than the differentiable core: compose the
-   transforms, use a straight-through estimator for quantising steps, and average gradients over
+   transforms, use a straight-through estimator for quantizing steps, and average gradients over
    sampled transforms when a single sampled gradient is too noisy to optimize.
 5. For black-box settings, state the access level and count the queries: an estimation-of-gradient
    attack pays a per-coordinate cost and may additionally require logits rather than labels.

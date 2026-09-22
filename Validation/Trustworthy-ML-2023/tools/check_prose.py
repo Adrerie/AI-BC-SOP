@@ -32,40 +32,46 @@ FORMS = {
     "maximized": ["maximised"], "utilize": ["utilise"], "prioritize": ["prioritise"],
     "standardize": ["standardise"], "randomize": ["randomise"], "randomized": ["randomised"],
     "characterize": ["characterise"], "characterized": ["characterised"],
+    "quantize": ["quantise"], "quantized": ["quantised"],
     "specialize": ["specialise"], "summarize": ["summarise"], "analyze": ["analyse"],
     "artifact": ["artefact"], "artifacts": ["artefacts"], "fulfill": ["fulfil"],
     "license": ["licence"], "defense": ["defence"], "center": ["centre"],
+    "favorite": ["favourite"], "favorable": ["favourable"],
+    "labor": ["labour"], "color": ["colour"],
     "toward": ["towards"], "while": ["whilst"],
 }
 
 QUOTES = [re.compile(r"“[^”]*”"), re.compile(r'"[^"]*"')]   # a quoted source wording may wrap lines
 
 
-def _expand(forms):
-    """Add the regular inflexions of each listed variant, so `randomise` also catches `randomisation`.
+def _pairs(forms):
+    """Flatten `american -> [british...]` into (british, american) search pairs.
 
-    The dictionary stays the source of truth for which roots are variants at all: expanding only from
-    listed stems is what keeps `advise`, `supervise`, `noise` and `otherwise` out of the results.
+    Each listed root also gets its regular inflexions, so `randomise` catches `randomisation` too. The
+    dictionary stays the source of truth for which roots are variants at all: deriving from listed stems
+    is what keeps `advise`, `supervise`, `noise` and `otherwise` out of the results.
     """
-    out = {k: list(v) for k, v in forms.items()}
+    out = set()
     for american, variants in forms.items():
-        for variant in list(variants):
-            generated = []
+        for variant in variants:
+            out.add((variant, american))
             if variant.endswith("ise") and american.endswith("ize"):
                 stem_b, stem_a = variant[:-3], american[:-3]
-                generated = [(stem_b + s, stem_a + a) for s, a in
-                             (("ises", "izes"), ("ising", "izing"),
-                              ("isation", "ization"), ("isations", "izations"))]
+                out.update((stem_b + s, stem_a + a) for s, a in
+                           (("ises", "izes"), ("ised", "ized"), ("ising", "izing"),
+                            ("isation", "ization"), ("isations", "izations")))
+            elif variant.endswith("yse") and american.endswith("yze"):
+                # `-yses` is left out on purpose: "analyses" is also the American plural of "analysis".
+                stem = variant[:-3]
+                out.update((stem + s, american[:-3] + a) for s, a in
+                           (("ysed", "yzed"), ("ysing", "yzing")))
             elif variant.endswith("ce"):
-                generated = [(variant + "s", american + "s")]
-            for brit, amer in generated:
-                target = out.setdefault(amer, [])
-                if brit not in target:
-                    target.append(brit)
-    return out
+                out.add((variant + "s", american + "s"))
+    # longest British form first: `defences` must be tried before `defence`, or it half-matches.
+    return sorted(out, key=lambda p: (-len(p[0]), p[0]))
 
 
-FORMS = _expand(FORMS)
+VARIANTS = _pairs(FORMS)
 
 
 def _quoted_spans(text):
@@ -113,18 +119,28 @@ def check_vague():
 
 
 def check_spelling():
-    """Report British-variant spellings outside quotations; capitalization is preserved."""
+    """Report British-variant spellings outside quotations; capitalization is preserved.
+
+    A prefix is allowed, so `mislabelled` and `unlabelled` are caught as forms of `labelled` and the
+    suggested fix keeps the prefix (`mislabeled`, `unlabeled`). A suffix is not: `\b...labelled\b`
+    cannot match `labelledly`, and prefix-only avoids inventing matches inside unrelated words.
+    """
     findings = []
     for rel, _ in C.artifacts():
         text = C.read(rel)
         spans = _quoted_spans(text)
-        for american, variants in FORMS.items():
-            for variant in variants:
-                for m in re.finditer(r"\b" + variant + r"\b", text, re.I):
-                    if _inside(m.start(), spans):
-                        continue
-                    line = text.count("\n", 0, m.start()) + 1
-                    findings.append(f"{rel}:{line} '{m.group(0)}' -> '{american}'")
+        seen = set()
+        for variant, american in VARIANTS:
+            for m in re.finditer(r"\b[A-Za-z]*" + variant + r"\b", text, re.I):
+                if _inside(m.start(), spans) or m.start() in seen:
+                    continue
+                seen.add(m.start())
+                word = m.group(0)
+                cut = len(word) - len(variant)
+                replacement = word[:cut] + (
+                    american.capitalize() if word[cut].isupper() else american)
+                line = text.count("\n", 0, m.start()) + 1
+                findings.append(f"{rel}:{line} '{word}' -> '{replacement}'")
     return findings
 
 

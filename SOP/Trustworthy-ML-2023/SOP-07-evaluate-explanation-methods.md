@@ -55,7 +55,7 @@ before any conclusion drawn from it.
 - **Ground-truth explanation** — does not exist in general; where one is needed, it must be
   manufactured by construction (simulated inputs, controlled noise, planted dependence).
 - **Remove-and-classify** — occlude features in the order an attribution ranking dictates and
-  measure the accuracy drop relative to a random-occlusion baseline; usually summarised by area
+  measure the accuracy drop relative to a random-occlusion baseline; usually summarized by area
   under the curve, lower meaning the ranking tracked true importance.
 
 ## 5. Procedure
@@ -93,10 +93,10 @@ before any conclusion drawn from it.
    and without the explanation; report the effect size and the task.
 10. Add an application-grounded study on the real task (debugging throughput, expert decision
     accuracy), accepting that this is the most expensive and the most aligned option.
-11. For training-sample attribution, evaluate against the end goal (find suspicious or mislabelled
+11. For training-sample attribution, evaluate against the end goal (find suspicious or mislabeled
     training items and check retrieval quality with ranking metrics) rather than only against an
     expensive retraining approximation; state how many mislabels the setup assumes and whether
-    systematic mislabelling is excluded.
+    systematic mislabeling is excluded.
 12. For concept-level or latent-space methods, verify the separability assumption the method needs
     (a concept direction that a linear probe can recover) and report the failure when it does not
     hold, for example with architectures whose latent geometry the method was not designed for.

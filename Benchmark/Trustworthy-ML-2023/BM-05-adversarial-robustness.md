@@ -37,7 +37,7 @@ claim transfers to attack configurations and ε values beyond the one reported.
 - **Semantic/geometry stress**: flow-style or transform-based perturbations bounded by a
   total-variation budget, where the intended worst case is a plausible change rather than pixel noise.
 - **Pipeline stress**: the attack is applied to the *whole* inference pipeline, so preprocessing,
-  resizing, quantisation and randomized components are inside the attacked function.
+  resizing, quantization and randomized components are inside the attacked function.
 - **Black-box stress**: substitute-model transfer, and query-bounded score-based estimation, with the
   access level recorded.
 - **Train/test condition matrix**: models trained under each condition evaluated under each other, to
@@ -55,7 +55,7 @@ claim transfers to attack configurations and ε values beyond the one reported.
 | Multi-step projected attack at the strongest affordable configuration | a reference floor for gradient-following threat models — not a sufficient adversarial evaluation on its own |
 | An **adaptive** attack built against the specific defense under test | the row that decides whether the defense survives the mechanism it claims |
 | Attack run end-to-end through preprocessing | masking detector |
-| Expectation-averaged and straight-through variants | randomized/quantising defense breakers |
+| Expectation-averaged and straight-through variants | randomized/quantizing defense breakers |
 | Black-box query-bounded attack | access-realistic reference |
 | Adversarially trained model | the defense that must be compared at equal inference cost |
 | Certified result (where computed) | the only row that may support an existential claim |

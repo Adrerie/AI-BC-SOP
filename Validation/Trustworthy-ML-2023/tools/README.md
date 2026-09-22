@@ -29,6 +29,7 @@ when every executed check passes, so it can be wired into a commit hook or CI jo
 | `check_metrics.py` | every metric token used in the group is registered in `SOP-08` §4, and each register row is complete (definition, validity, degeneracy) | no |
 | `check_prose.py` | placeholder phrasing ("various methods", "as appropriate", "etc.") and non-American spelling outside quoted source wording; the spelling list expands each root to its inflexions, so `randomise` also catches `randomisation` | no |
 | `check_citations.py` | every printed-page anchor agrees with the section, definition or caption it is attached to | no (uses the committed index) |
+| `check_gates.py` | each Revision 01 correction is still present in the file that carries it, none of the pre-revision wording has crept back, and no tracked file holds a machine-local path or a bulk text dump | no |
 | `build_citation_index.py` | regenerate or verify `citation_index.json` against a PDF you hold | yes |
 | `run_acceptance.py` | run the suite and report the gate table | no |
 
@@ -75,6 +76,9 @@ is recorded anywhere in the repository: the bibliographic description of the sou
 - `check_citations bound=N drifting=0 unanchored=M` — `drifting` is the gate: an anchor whose pages
   contradict its own locator. `unanchored` counts page numbers stated without any locator in the same
   clause — permitted, and listed by `--verbose` so a human can confirm each is intentional.
+- `check_gates checked=N markers_found=M issues=20 missing=0 hygiene=0` — every Revision 01 correction
+  is still worded where it was put, no pre-revision sentence came back, and no tracked file carries a
+  machine-local path or bulk source text. `--list` prints the per-issue table.
 
 ## What these tools do not cover
 

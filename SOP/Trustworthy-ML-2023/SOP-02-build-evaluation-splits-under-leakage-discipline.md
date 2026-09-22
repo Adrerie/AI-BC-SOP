@@ -40,7 +40,7 @@ restating it.
 - **Information leakage** — any information intended exclusively for deployment becoming available
   during development *under the declared setting*. The source lists four concrete forms: tuning on
   labeled target samples; tuning by *visually inspecting* target samples; training on target samples
-  labeled **or unlabelled**; tuning to maximize publicly reported scores. Each is a violation only
+  labeled **or unlabeled**; tuning to maximize publicly reported scores. Each is a violation only
   where the setting withholds that information — the second scenario in the source's own list is a
   domain-adaptation method, not a domain-generalization one, and the label is what decides.
 - **Test-set spoiling** — the loss of a test set's meaning as a generalization estimate caused by
@@ -129,7 +129,7 @@ restating it.
 
 ## 7. Decision or stop conditions
 
-- **Re-declare the setting** if target-domain labels or unlabelled target data were used: the project
+- **Re-declare the setting** if target-domain labels or unlabeled target data were used: the project
   is now a domain-adaptation, test-time-training or continual-learning one, and the
   domain-generalization comparison no longer applies. That ends the old comparison, not the work —
   report it under the new setting, against methods granted the same access.
@@ -147,7 +147,7 @@ restating it.
 
 ## 8. Common methodological failures
 
-- Using the test set as the validation set because "there is no other labelled data".
+- Using the test set as the validation set because "there is no other labeled data".
 - Selecting the feature-drop / augmentation / layer strategy by average left-out-domain accuracy —
   an ablation that is individually reasonable and collectively invalid.
 - Treating visual inspection of deployment data as harmless because no label was read. The source

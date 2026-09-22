@@ -156,6 +156,6 @@ Ensemble spread behavior with M and the accuracy confound: §4.11.5 (p. 275). Op
 with and without an explicit "I don't know" output: §4.1.3 (pp. 225-226). Unforeseen-class
 benchmark whose meaningful readout is confidence rather than top-1 accuracy: §2.6.1 (p. 43).
 Corruption benchmark as a family of severe perturbations: §2.6.1 (p. 42). Self-influence detection
-of mislabelled training items with `auroc`/AP and its stated assumptions: §3.12.2, Definition 3.16
+of mislabeled training items with `auroc`/AP and its stated assumptions: §3.12.2, Definition 3.16
 (pp. 216-217). TNR-at-fixed-TPR reporting appears in the source's own comparison tables
 (§4.12.1, p. 293). Target separation and the aggregation rules are repository conventions.

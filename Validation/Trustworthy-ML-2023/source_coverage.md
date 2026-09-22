@@ -98,7 +98,7 @@ Tags are assigned by methodological function, never copied from chapter names. T
 | `incorporate` | The heading carries a definition, protocol, metric, check, or failure mode that a reused procedure or benchmark must state. |
 | `supporting` | Background, motivation, method detail, or evidence that shapes design decisions but is not itself operationalized into a step. |
 | `redundant` | The heading restates material already audited elsewhere in the book; kept once, cross-linked. |
-| `out-of-scope` | Navigation, index, historical narrative, author research agenda, legal context, or specialised showcase that has no reusable evaluation procedure behind it. |
+| `out-of-scope` | Navigation, index, historical narrative, author research agenda, legal context, or specialized showcase that has no reusable evaluation procedure behind it. |
 | `needs-body-reading` | Left open deliberately; must be zero at Gate A. |
 
 Where a subsection inherits its section's disposition the tag list ends with `inherited`; the decision was taken per section after body reading, not per chapter position.
@@ -401,7 +401,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 - Information leakage (Def 2.24, p. 36) is defined as deployment-stage information reaching dev,
   and is enumerated in four concrete patterns: (1) hyper-parameters chosen from labeled target
   samples; (2) chosen by *visually inspecting* target data ("still information leakage, just in a
-  less automated way"); (3) training on target samples, labeled **or unlabelled** — which turns
+  less automated way"); (3) training on target samples, labeled **or unlabeled** — which turns
   domain generalization into domain adaptation; (4) tuning to maximize publicly visible scores on
   a benchmark built from the target domain. Remedy named for (4): publish only a *ranking*, e.g. a
   hidden server (footnote 7, p. 36).
@@ -446,7 +446,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   i.e. leakage.
 - Feasibility routes (2.8.3, p. 48): route 1 — a fraction ρ ∈ [0,1] of unbiased dev samples **plus
   bias/attribute labels** (Def 2.30); ρ is "part of the setting" and must be reported, task becomes
-  arbitrarily hard as ρ → 0 and impossible at ρ = 0. Route 2 — grant labeled (or unlabelled) target
+  arbitrarily hard as ρ → 0 and impossible at ρ = 0. Route 2 — grant labeled (or unlabeled) target
   samples plus per-sample domain identity, which *changes the setting* to domain adaptation or
   test-time training and therefore breaks comparability with prior DG work.
 - 2.7.1 (p. 44) names the first difficulty as *ill-defined behavior on novel domains*: "It works in
@@ -477,7 +477,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   loses average accuracy but wins **worst-group accuracy**, where ERM "usually breaks down
   completely" under notable imbalance.
 - DANN (2.12.2, p. 62-65): adversarial bias-head objective E = task loss − λ(bias loss on both
-  labeled and unlabelled points) with the saddle point over (θ_f, θ_y) vs θ_d; two label
+  labeled and unlabeled points) with the saddle point over (θ_f, θ_y) vs θ_d; two label
   encodings are given (bias attribute as domain, or biased-vs-unbiased as domain 1/2). The book's
   own reproduction of the source paper's tables is used to show *no significant difference* against
   NN/SVM on sentiment transfer, and large gains on the standard adaptation pairs.
@@ -528,7 +528,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   safe is not equivalent to no gradient-based algorithm being able to find an attack". The
   symptom to look for: naive PGD reports high robust accuracy because the gradient path is broken.
   The prescribed progression: attack the *joint* defense pipeline through differentiable
-  transforms, use a straight-through estimator for quantising transforms (Def 2.46), and average
+  transforms, use a straight-through estimator for quantizing transforms (Def 2.46), and average
   gradients over randomized transforms (expectation-over-transformation identity, p. 107) because
   single randomized gradients are "simply too noisy".
 - Defense cost ledger (2.15.11, p. 101-102): adversarial training needs T + 1 forward/backward
@@ -609,9 +609,9 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   debugging". HITL evaluation (Def 3.15) is therefore unavoidable.
 - Training-data attribution is evaluated by its **end goal**, not its proxy (3.12, p. 214-217):
   approximation-vs-retraining accuracy is one axis; the second is self-influence (Def 3.16) for
-  mislabelled-training-sample detection, scored with AUROC/AP — with the book's own caveat that the
+  mislabeled-training-sample detection, scored with AUROC/AP — with the book's own caveat that the
   benchmark is imperfectly aligned with the quantity the method approximates, so an approximate
-  method can beat the "exact" one, and that it assumes few mislabels and no systematic mislabelling.
+  method can beat the "exact" one, and that it assumes few mislabels and no systematic mislabeling.
 
 ### N6 — Uncertainty: quantities, formats, metrics (4.1-4.4, 4.5-4.10; direct unless noted)
 
@@ -745,7 +745,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
     re-evaluation paper; if none exists, either produce one, or trust it only because the task and
     its ingredients are simple, or stay sceptical.
   - Simple wins (5.2.2, pp. 339-341): fairly tuned ERM — "the simplest method — is not worse at all"
-    — and the untuned-baseline pathology, where an unoptimised default (learning rate 0.1, weight
+    — and the untuned-baseline pathology, where an unoptimized default (learning rate 0.1, weight
     decay 1e−4) is reported as the baseline; weight decay is singled out as routinely omitted and
     decisive.
   - 5.2.3 (pp. 341-342): the tuning protocol the book endorses is random search over per-parameter

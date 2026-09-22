@@ -44,7 +44,7 @@ set (swap the bias value while keeping the task cue intact), or remove the bias 
 Construct it by editing exactly one factor and verifying the others are unchanged.
 
 **Extended.**
-- *Cue-by-cue relabelling*: re-label the same off-diagonal set once per candidate cue and score the
+- *Cue-by-cue relabeling*: re-label the same off-diagonal set once per candidate cue and score the
   frozen predictions under each labeling; the learned cue shows high accuracy, the others near chance.
 - *Task-cue ablation*: mask or remove the task-relevant cue (segmentation + inpainting,
   silhouette-only, texture-only, or text-span deletion). A material drop shows sensitivity to the
@@ -120,7 +120,7 @@ model is an additional training run).
 
 ## 11. Validity limits
 
-- The benchmark can only test cues you named and labeled; an unmodelled third factor can carry the
+- The benchmark can only test cues you named and labeled; an unmodeled third factor can carry the
   dependence unnoticed.
 - Off-diagonal support is a hard precondition: without it the result is a statement about
   correlation, not about evidence.

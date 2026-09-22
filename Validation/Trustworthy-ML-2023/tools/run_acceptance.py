@@ -26,6 +26,7 @@ CHECKS = [
     ("metrics",     "metric register consistency",                    "check_metrics.py",    False),
     ("prose",       "vague phrasing, spelling variants",              "check_prose.py",      False),
     ("citations",   "page anchors vs the source's section structure",  "check_citations.py",  False),
+    ("gates",       "Revision 01 corrections still present",          "check_gates.py",      False),
 ]
 
 

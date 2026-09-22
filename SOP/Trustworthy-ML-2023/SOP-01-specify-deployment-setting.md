@@ -44,7 +44,7 @@ itself — but record that decision.
 - **Setting** — the triple (development resources, deployment environment, time). Resources
   include data, labels, extra supervision, inductive bias, tooling, and human expertise.
 - **Information rights** — the part of the setting that says what a method is allowed to look at:
-  labeled target-domain samples, unlabelled target-domain data, visual access to deployment data,
+  labeled target-domain samples, unlabeled target-domain data, visual access to deployment data,
   test-time statistics, post-deployment updates, few-shot target examples. A method may use only the
   rights its declared setting grants. Using more does not make the work invalid; it makes it a
   **different setting**, which then has its own comparison class and its own benchmark.
@@ -80,7 +80,7 @@ itself — but record that decision.
    leaving them implicit.
 5. Inventory supervision and declare the **information rights** you are claiming: task labels,
    group/attribute/domain labels, unbiased-sample fraction ρ, target-domain samples (labeled /
-   unlabelled / none), visual access to deployment material, test-time statistics, post-deployment
+   unlabeled / none), visual access to deployment material, test-time statistics, post-deployment
    updates, pretraining corpora, human review capacity. Name the setting these rights belong to — the
    source catalogues ID generalization (§2.4.2), domain adaptation (§2.4.4), domain generalization
    (§2.4.5), test-time training (§2.4.6), domain- and task-incremental continual learning (§2.4.7,
@@ -112,7 +112,7 @@ Run all of these; each is a stop-and-fix, not a warning.
       condition it was measured under. Several types in one project is normal; one number that blends
       them is not, unless the aggregation rule is stated and justified.
 - [ ] **Rights declaration**: every extra-resource ingredient the method consumes — target labels,
-      unlabelled target data, visual access, test-time statistics, target-informed calibration,
+      unlabeled target data, visual access, test-time statistics, target-informed calibration,
       post-deployment updates — appears in the setting block as granted by the declared setting. If it
       is not granted, either the setting changes or the ingredient goes.
 - [ ] **Cue whitelist is a partition**: every named factor of variation has a status; the
@@ -137,7 +137,7 @@ Run all of these; each is a stop-and-fix, not a warning.
   labels nor a nonzero ρ is available: with only a diagonal training set the deployment cue is
   unidentifiable, so the claim is not testable, only arguable.
 - **Re-declare the setting** as soon as the method consumes target-domain or deployment information
-  the declared setting does not grant — labeled or unlabelled, chosen by a script or by an eye
+  the declared setting does not grant — labeled or unlabeled, chosen by a script or by an eye
   inspecting the data. This records a change of problem, not a fault: the same work may be an entirely
   legitimate domain-adaptation, test-time-training or continual-learning project, and the source is
   explicit that once target-domain information is available "we cannot call it a domain generalization
@@ -153,7 +153,7 @@ Run all of these; each is a stop-and-fix, not a warning.
 - Reporting one accuracy for a mixture of cross-domain and cross-bias shifts.
 - Treating a benchmark name as a setting: same dataset, different supervision, incomparable result.
 - Keeping a domain-generalization label after using target-domain data. The source's own scenarios
-  call that a different setting — training on unlabelled target samples "is performing domain
+  call that a different setting — training on unlabeled target samples "is performing domain
   adaptation, not domain generalization" — so the fix is to rename the setting, not to hide the data.
 - Leaving "forbidden cues" implicit — nothing in standard training stops the model using them.
 - Counting engineer expertise and pretraining data as free, then comparing against methods that had

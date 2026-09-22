@@ -210,7 +210,7 @@ show" list and the sensitivity panel are repository conventions.
 
 Three statements in §4 go beyond the source wording and are labeled **synthesized**: carrying the
 random-detector value over to the error-positive task as `P(L = 0)` (the source gives the value for
-its success-positive task and defines AUPR-Error by relabelling the positive class, but states the
+its success-positive task and defines AUPR-Error by relabeling the positive class, but states the
 swap only for the curve, not the baseline); separating an oracle constant from a frozen deployable
 constant, including the one-bin identity `ece = |acc(test) − c_frozen|`; and the requirement that
 every ranking task name its positive class. The base-matching rule for perplexity is the source's

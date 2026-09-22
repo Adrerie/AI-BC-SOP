@@ -102,7 +102,7 @@ for re-computed numbers (implementation difference, seed, or both).
 | A conclusion requires target-domain information | setting mis-declared; reclassify and re-compare |
 | Trivial control matches or beats the claim on a metric | the metric is gameable at that claim; change metric or claim |
 | Second-version replication drops notably | accumulated benchmark overfitting, possibly field-wide |
-| Cost undisclosed but plausibly large | the comparison is incomplete, not favourable |
+| Cost undisclosed but plausibly large | the comparison is incomplete, not favorable |
 | Requirement list not applicable in part | state which, and why — silent omission is the failure this artifact exists to catch |
 
 ## 10. Computational reporting

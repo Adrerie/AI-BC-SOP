@@ -82,7 +82,7 @@ four contracts in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-expla
 - `hitl_delta` — human accuracy or behavior change with versus without the explanation; and, for the
   understanding goal, how well a human predicts the model's decision given the explanation.
 - `self_influence_auroc` — for training-sample attribution, retrieval quality on suspicious or
-  mislabelled items, with its assumption count stated.
+  mislabeled items, with its assumption count stated.
 - Cross-method agreement (how often two methods name the same top-k regions).
 - Cost per explanation (forward/backward passes, samples, human minutes).
 
@@ -103,7 +103,7 @@ alone.
 | Random-label model yields informative maps | the method encodes the input, not the learned dependence |
 | Good ordering only when occluding with a constant fill | the filling artifact is being measured |
 | Best ordering but worst planted-cue recovery | ranks importance without identifying the dependence |
-| Methods disagree on the same model | instrument uncertainty; report it rather than picking a favourite |
+| Methods disagree on the same model | instrument uncertainty; report it rather than picking a favorite |
 | Humans rate the explanation highly but do not predict or act better | plausible, not useful; the end-goal hypothesis fails |
 | Attribution "improves" after the model is changed | re-check that the comparison held the model fixed |
 
@@ -130,7 +130,7 @@ not usable at deployment scale.
 - Human-grounded results are study designs, not laws: the task, participants and outcome define what
   was shown.
 - A demonstrated debugging use is not established by an attribution map; the source records that no
-  specialised, successful explanation-based debugging tool is known.
+  specialized, successful explanation-based debugging tool is known.
 
 ## 12. Related SOPs
 
