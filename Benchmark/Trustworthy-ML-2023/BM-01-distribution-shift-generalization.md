@@ -74,7 +74,7 @@ Never construct a shift by peeking at the held-out domain's labels.
 - `acc_avg` over each held-out domain, and the mean across domains.
 - `acc_worstgroup` over the declared cells (domains, and severity or subpopulation levels) —
   the first-class number for deployment decisions.
-- Degradation relative to the ID cell: `acc_ID − acc_shift` per domain, which separates "the method
+- Degradation relative to the ID cell: `Acc(ID) − Acc(shifted domain)` per domain, which separates "the method
   is good" from "the method transfers".
 
 ## 7. Secondary / diagnostic metrics
