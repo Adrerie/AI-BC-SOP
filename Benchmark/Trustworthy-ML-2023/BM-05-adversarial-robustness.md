@@ -22,8 +22,13 @@ Two claim types are kept separate.
 - **Certified claim:** under threat model T and certificate assumptions C, certified accuracy is b,
   meaning the stated fraction of examples has a provable guarantee within that threat model.
 
-Any missing element of T makes either claim uninterpretable. Empirical advantage must additionally
-survive adaptive-attack and masking checks.
+Any missing element of T makes either claim uninterpretable. Where both rows share the same model,
+test set, threat model and valid implementations, they bracket the target in one direction:
+`certified_acc ≤ true_robust_acc ≤ empirical_attack_acc`. A certificate row is therefore a lower bound
+on the true robust accuracy, never an upper-bound row of the kind `SOP-02` defines, and an attacked
+accuracy is an observation, not a bound. The comparison is void when the two rows use different norm
+bounds, samples or definitions. Empirical advantage must additionally survive adaptive-attack and
+masking checks.
 
 ## 3. Required data and split assumptions
 

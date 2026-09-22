@@ -52,7 +52,7 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `aupr_success`, `aupr_error` | area under precision-recall, with the success class (`L = 1`) and the error class (`L = 0`) as the designated positive, respectively | ranking under imbalance, positive class named per task | random baseline = prevalence **of the designated positive**: `P(L = 1)` for `aupr_success`, `P(L = 0)` for `aupr_error` |
 | `risk_at_coverage` | error rate among the top-k fraction by confidence | abstention | undefined without the coverage stated |
 | `acc_under_eps` | accuracy under a named attack, **norm + ε + attack configuration attached** | adversarial claims | fake-safe when the defense masks gradients |
-| `certified_acc` | fraction of inputs with a proof of invariance inside the ball | architectures the bound admits | bound may be arbitrarily loose |
+| `certified_acc` | fraction of inputs with a proof of invariance inside the ball | architectures the bound admits | bound may be arbitrarily loose — it is a lower bound on true robust accuracy for its own threat model, not an upper-bound row |
 | `remove_classify_auc` | area under accuracy-vs-removed-feature-count curve, relative to random occlusion | ordering claims about attributions | measures the occlusion artifact as well as importance |
 | `sanity_rankcorr` | rank correlation between attributions of a true-label and a random-label model | explanation soundness | a necessary, not sufficient, condition |
 | `hitl_delta` | change in human task performance / behavior with vs without the explanation | trust and understanding goals | costly, design-sensitive |

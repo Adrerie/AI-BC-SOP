@@ -61,7 +61,7 @@ PRESENT = [
     ("P1-A staging architecture", "06", "README.md",
      ["provenance-bearing staging unit", "supersede", "merge"]),
     ("P1-B attribution", "06", "Validation/%s/SOURCE.md" % C.PACKAGE,
-     ["Mucsányi", "no book text is redistributed", "unverified"]),
+     ["Mucsányi", "trustworthyml.io", "2310.08215", "CC BY 4.0", "does not redistribute"]),
 ]
 
 # (issue, artifact, phrase that must NOT appear) -- pre-revision wording.

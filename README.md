@@ -80,9 +80,10 @@ This is an evolving knowledge and methodology repository. Existing documents may
 This repository is released under the MIT License. See [LICENSE](LICENSE) for details.
 
 That license covers what is written here: the procedures, protocols, scripts and notes. It does not
-grant rights in the sources those documents are derived from, and it is not a claim that a source's
-terminology or structure is ours to license. Each source package carries an attribution file — see
-[`Validation/Trustworthy-ML-2023/SOURCE.md`](Validation/Trustworthy-ML-2023/SOURCE.md) — recording the
-book's title, authors and edition, what was verified about its licensing, and the working rule that no
-source text is redistributed here. Where an attribution obligation and the MIT grant could interact,
-the obligation wins and the uncertainty is documented in that file rather than resolved by assertion.
+license the sources those documents are derived from. Each source package carries an attribution file —
+for the first package, [`Validation/Trustworthy-ML-2023/SOURCE.md`](Validation/Trustworthy-ML-2023/SOURCE.md)
+— recording the book's title, authors, official website and license. That book is distributed by its
+authors under **CC BY 4.0**, so adapting it requires attribution, a link to that license, and a note
+that changes were made; the package does all three, and the MIT grant applies to this repository's own
+original material on top of that. The source PDF and bulk extracted text are kept out of Git as an
+editorial choice, not because the license requires it.

@@ -41,10 +41,13 @@ reconstructed. The repository does not redistribute the source PDF or bulk extra
 
 | Source fact | Verified from |
 |---|---|
-| Official project website | `https://trustworthyml.io/` |
+| Official project website | [https://trustworthyml.io/](https://trustworthyml.io/) |
 | Citation | Mucsányi et al., *Trustworthy Machine Learning*, arXiv:2310.08215 (2023) |
-| Source license | CC BY 4.0, stated on the official project website |
+| Source license | CC BY 4.0, stated on the official project website: [creativecommons.org/licenses/by/4.0](https://creativecommons.org/licenses/by/4.0/) |
 | Repository relationship | reconstructed/adapted methodology artifacts, not a verbatim republication |
+
+The website and the arXiv record were both read on 2026-09-22 for this entry. A reader re-checking the
+license should re-read the official site rather than this file, and update the date if the two diverge.
 
 The audited local PDF itself does not expose the license in its metadata or front matter. That is a
 property of that PDF copy, not evidence that the work is unlicensed or all-rights-reserved. External
@@ -73,16 +76,23 @@ The practical source-handling rule remains conservative:
 ## Relationship to the repository license
 
 The repository as a whole is MIT-licensed (`LICENSE`). That license covers the repository's own
-material — the procedures, protocols, scripts and notes written here. It does not, and cannot, grant
-rights in the underlying book: quotation, adaptation and term ownership in the artifacts remain
-subject to the attribution obligations associated with that source, which this file records.
+material — the procedures, protocols, scripts and notes written here. It does not, and cannot, license
+the book, which is distributed by its authors under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-Where the two interact, the working rules are: no redistribution of source text; the source is named
-and cited by section and page wherever a claim depends on it; and anything that is our inference,
-calculation or convention is labeled as such rather than presented as the book's position. If a
-derivative-work question becomes material (for example, publishing these artifacts under a different
-license, or quoting at greater length), resolve the "Official source and license" gap above first —
-the uncertainty is documented here precisely so that it is not silently assumed away.
+The two are compatible, and the compatibility has one concrete requirement rather than a vague
+obligation: CC BY 4.0 asks an adapter to give attribution, link to the license, and indicate if
+changes were made. This package does all three — the authors and title are named above and in every
+group README, the license is linked here, and each file's traceability section marks what is
+`source-derived`, `synthesized`, or a `repository convention`. Nothing in the MIT grant conflicts with
+that, because the MIT grant applies to the original material written in this repository while the
+book's terms travel with the material adapted from it.
+
+The working rules that follow: no redistribution of the source PDF or bulk extracted text; the source
+is named and cited by section and page wherever a claim depends on it; and anything that is our
+inference, calculation or convention is labeled as such rather than presented as the book's position.
+Quotation is permitted under the license and is still kept short here as an editorial choice, so that
+the artifacts remain a reconstruction rather than a condensed edition.
 
 ## Re-running local source checks
 

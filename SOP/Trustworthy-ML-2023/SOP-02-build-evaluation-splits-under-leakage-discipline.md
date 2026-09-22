@@ -210,5 +210,7 @@ are repository conventions. Three rules here are **synthesized** and carry that 
 really are independent and identically distributed for the claim), since the source argues the grouped
 case without licensing either choice; the three permitted responses to a contaminated final test and
 the statement that rerunning cannot restore independence, which sharpens the spoiling spectrum
-(§2.3.3, p. 28; §2.5.3, pp. 39-40); and the four-level pretraining disclosure ladder, which turns the
-source's single "zero-shot needs re-thinking" remark (§2.5.1, p. 37) into a reporting rule.
+(§2.3.3, p. 28; §2.5.3, pp. 39-40); and the pretraining exposure disclosure rule, which turns the
+source's single "zero-shot needs re-thinking" remark (§2.5.1, p. 37) into a reporting rule: name the
+corpus, and report semantic/class exposure, duplicate exposure and benchmark-specific adaptation
+separately rather than collapsing them into one contamination label.

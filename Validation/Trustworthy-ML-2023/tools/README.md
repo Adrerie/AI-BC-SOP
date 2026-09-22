@@ -9,7 +9,9 @@ a judgement recorded as a judgement.
 
 - Python 3.8 or newer. Nothing else — no third-party packages, no network.
 - For one optional step only: [PyMuPDF](https://pymupdf.readthedocs.io/) (`pip install pymupdf`) and
-  your own legally obtained copy of the source book. See *Source-dependent checks* below.
+  a copy of the source book — the authors distribute it under CC BY 4.0 at
+  [trustworthyml.io](https://trustworthyml.io/), and [`../SOURCE.md`](../SOURCE.md) records the
+  attribution. See *Source-dependent checks* below.
 
 Run everything from this directory:
 

@@ -40,8 +40,14 @@ fooled into reporting one that does not exist.
 - **Worst-case framing** — the target quantity is model performance under the worst allowed
   perturbation inside the declared strategy space. An empirical attack only probes this quantity and
   may miss stronger failures; a valid certificate can provide a provable guarantee under its own
-  assumptions. The worst-case target may also be unrealistically pessimistic relative to the true
-  deployment distribution.
+  assumptions. The three line up in one direction, and only when the same model, test set, threat
+  model and a correctly implemented attack and bound are all in play:
+  `certified_acc ≤ true_robust_acc ≤ empirical_attack_acc`. Saying "this attack left 62 % unbroken"
+  therefore does not bound the worst case from below, and a certificate at 40 % does not say the true
+  worst case is 40 % — it says no failure exists below that figure inside its assumptions. The
+  ordering is meaningless across different threat models, samples or definitions, so never compare a
+  certificate under one norm bound with an attack under another. The worst-case target may also be
+  unrealistically pessimistic relative to the true deployment distribution.
 - **ε** — the radius bound of the strategy space, always norm-qualified (`ℓ∞`, `ℓ2`, or a total
   variation budget for flow-style transforms).
 - **Gradient masking (obfuscated gradients)** — a defense that breaks the gradient path, so a
