@@ -47,8 +47,13 @@ Construct it by editing exactly one factor and verifying the others are unchange
 - *Cue-by-cue relabelling*: re-label the same off-diagonal set once per candidate cue and score the
   frozen predictions under each labeling; the learned cue shows high accuracy, the others near chance.
 - *Task-cue ablation*: mask or remove the task-relevant cue (segmentation + inpainting,
-  silhouette-only, texture-only, or text-span deletion). No material drop ⇒ the model was not using it.
-- *Bias-cue ablation*: the symmetric construction, where a material drop identifies the bias.
+  silhouette-only, texture-only, or text-span deletion). A material drop shows sensitivity to the
+  edit. The absence of a drop does **not** establish that the cue was unused: the cue can survive the
+  edit in reduced form, be redundant with another factor, or the ablated inputs can simply be far
+  enough out of distribution that accuracy no longer measures the same thing.
+- *Bias-cue ablation*: the symmetric construction, where a material drop evidences dependence on the
+  factor that was edited. It identifies *which* cue only when the competing cues were edited under the
+  same intervention standard and the drop survives the artifact and shift checks above.
 - *Myopia probe*: train a deliberately handicapped model (few epochs, small receptive field, single
   modality) and check that it learns the same cue you call the bias.
 - *ρ ladder*: repeat at several unbiased fractions, including the regime where the method's
@@ -98,9 +103,9 @@ definitions.
 
 | Observation | Reading |
 |---|---|
-| Off-diagonal accuracy near chance, diagonal high | shortcut bias realized; the model used the bias cue |
-| Counterfactual task-cue edit causes no drop | the intended task cue is not what the model uses |
-| Bias-cue edit causes a large drop | dependence on the forbidden cue confirmed, and the cue identified |
+| Off-diagonal accuracy near chance, diagonal high | the model cannot predict where the cues disagree; that is a shortcut-bias result only if the bias cue was the designed alternative route to the label, otherwise it reports a coverage gap |
+| Counterfactual task-cue edit causes no drop | insensitivity to **this edit**; not evidence that the cue is unused |
+| Bias-cue edit causes a large drop | sensitivity to the edited factor; naming the cue as the cause needs the identification argument of §11 |
 | Mitigation raises worst cell and lowers average sharply | traded the wrong axis; revisit [`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md) |
 | Method collapses under role swap | its "easy cue first" assumption fails in this data |
 | Attribution disagrees with counterfactuals | instrument failure (see `BM-06`) or occlusion artifact |
@@ -124,6 +129,11 @@ model is an additional training run).
 - Human-judgement-based edits import the editor's expectations; treat them as hypotheses.
 - A clean result does not establish causal use of a cue — it establishes dependence under the tested
   counterfactuals.
+- A stronger causal reading ("cue C is what the model relies on", "C is not used") needs an
+  identification argument: the edit must isolate C, the competing cues must have been edited and
+  compared under the same standard, and non-use additionally requires that C could not have been
+  recovered from the edited inputs. A designed construction can supply this; an uncontrolled edit
+  series cannot, and the report should say which of the two it ran.
 - Compositional caveats: treating semantically independent input parts as independent can make
   spurious correlation impossible by construction, which is a property of the design, not of the
   model.

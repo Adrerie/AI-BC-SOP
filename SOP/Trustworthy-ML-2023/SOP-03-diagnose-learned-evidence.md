@@ -44,7 +44,11 @@ before deployment does.
 - **Cue-by-cue accuracy** — accuracy of the same fixed predictions computed under each alternative
   labeling of the evaluation set by cue.
 - **Counterfactual evaluation** — measure the model on edited inputs where exactly one cue was
-  altered, and read the *change* in performance as the evidence of dependence.
+  altered, and read the *change* in performance as evidence about that intervention. It licenses a
+  statement of the form "the model's behavior responds to this edit", which supports a dependence
+  claim only when the edit is a valid intervention on the cue it names. Absence of a change is weaker
+  still: redundant or compensatory cues, and cues the edit left recoverable, all preserve accuracy
+  without indicating non-use.
 
 ## 5. Procedure
 
@@ -59,15 +63,23 @@ before deployment does.
    near chance under the others.
 3. **Counterfactual — alter the task cue.** For every evaluation sample, remove or replace the
    task-relevant cue (mask + inpaint, silhouette-only, texture-only, text paraphrase that deletes
-   the task-bearing span). Decision: if performance does **not** drop materially, the model is not
-   using the cue you believed.
-4. **Counterfactual — alter the bias cue.** Same construction on the forbidden/tolerated cue.
-   Decision is reversed: a material drop means the model *is* dependent on the bias cue, and this
-   run also identifies which cue.
+   the task-bearing span). Decision: a material drop shows the model's predictions are **sensitive to
+   this edit**. A non-drop does *not* show the model never used the cue — the cue may be recoverable
+   from what remains, may be redundant with another factor, or the edit itself may have shifted the
+   inputs out of distribution. Record which of those you ruled out.
+4. **Counterfactual — alter the bias cue.** Same construction on the forbidden/tolerated cue, with the
+   reading reversed: a material drop is evidence of dependence on the factor you edited, provided the
+   edit isolated that factor. Naming *which* cue carries the prediction needs more than this one run —
+   the competing cues have to be edited and compared under the same intervention standard, and the
+   drop has to survive the check that it is not an editing artifact or a generic distribution shift.
 5. Report both diagnostics **per cell**, not averaged: average accuracy hides the off-diagonal
    failure that motivates the whole exercise.
-6. Write the verdict into the cue whitelist: `verified-uses`, `verified-independent`,
-   `undetermined-insufficient-support`.
+6. Write the verdict into the cue whitelist, phrased at the strength the design supports:
+   `edit-sensitive`, `no-sensitivity-detected-under-this-edit`, `undetermined-insufficient-support`.
+   A causal reading ("the model uses cue C", "the model ignores cue C") is an additional claim that
+   requires an identification argument — usually a controlled construction where C is the only route
+   to the label, as in a designed benchmark. State the argument or withhold the reading; the
+   `verified-*` labels are reserved for the cases where one exists.
 
 **Extended** — add for high-stakes use, or when the counterfactuals are inconclusive:
 
@@ -162,3 +174,17 @@ used as a diagnostic handle: §2.13, Definitions 2.31-2.33 (pp. 65-66, 74-75). C
 the localization-evaluation fallacy: §3.7.3 (pp. 179-181). Missingness bias in occlusion operators:
 §3.7.8 (pp. 187-188). Worst-group versus average reporting: §2.12.1 (pp. 59-61). Pre-declaring the
 materiality threshold and the output-file shapes are repository conventions.
+
+**Where this SOP reads the source more narrowly than the source reads itself.** The source states its
+decision rules causally: altering the task cue and finding no significant drop means "our model is
+biased towards an irrelevant cue, meaning our system is misspecified", and altering the bias cue with
+a significant drop means "we also know what our model is biased towards" (§2.10, pp. 55-56). Steps 3-4
+and 6 here keep the two alterations and their decision directions unchanged, but report the outcome as
+sensitivity to the edit rather than as proven cue use or non-use. The reason is internal to the same
+passage: both rules are listed with the ingredient *cue disentanglement* — "the ability to change cues
+in the input independently" — which is an identification condition, not a property of the editing
+software. Where that condition is met by construction, the source's stronger reading is available and
+step 6 says so; where it is merely asserted, a non-drop can also mean a redundant or recoverable cue,
+and a drop can also mean an out-of-distribution artifact. The two-recipe structure, the ingredients and
+the "different papers do it differently" caveat are source-derived; this calibration of the verdict
+language is **synthesized**.

@@ -39,6 +39,15 @@ before any conclusion drawn from it.
   samples, or model parameters.
 - **Soundness (faithfulness)** — the explanation identifies the true causes of the prediction, i.e.
   of *this model's* behavior.
+- **Four separate contracts**, none of which follows from passing the one before it:
+  (i) **model-dependence sanity** — the score responds when the model is randomised or its weights
+  changed; (ii) **attribution ordering** — the ranking tracks perturbation sensitivity under a named
+  occlusion operator and its artifacts; (iii) **end-goal usefulness** — a human, a debugging task, or
+  a data-attribution claim performs better with the explanation; (iv) **causal explanation** — the
+  cited feature is a cause of the outcome in the data-generating sense. This document measures
+  (i)-(iii). (iv) belongs to
+  [`SOP-03`](SOP-03-diagnose-learned-evidence.md) and needs an intervention design on the **data**;
+  an explanation instrument, however faithful to the model, does not supply it.
 - **Completeness / monotonicity axioms** — formal properties some attribution scores satisfy; useful
   as design constraints, not as proof that an explanation is sound or useful.
 - **The soundness–explainability trade-off** — a simplification cannot be both fully faithful and
@@ -109,6 +118,9 @@ before any conclusion drawn from it.
 - [ ] **Goal match**: the evaluation type (functional / human / application grounded) is the one the
       stated end goal requires; a functional evaluation may not be presented as evidence of
       human understanding.
+- [ ] **Contract boundary respected**: no claim moves from sanity, ordering or usefulness
+      (contracts (i)-(iii)) to causal feature use in the data (contract (iv)) without naming the
+      identification design in `SOP-03` that would license it.
 
 ## 7. Decision or stop conditions
 

@@ -13,15 +13,18 @@ plausibility against human expectations — confirmation bias — instead of the
 
 ## 2. Evaluation hypothesis
 
-- **H-sound** — the attribution changes when the model changes, and identifies the dependence that
-  counterfactual evaluation independently establishes.
+- **H-sound** — the attribution changes when the model changes, and tracks the dependence that a
+  counterfactual edit detects, under that edit's stated intervention assumptions.
 - **H-order** — features ranked most important really are the ones whose removal most changes the
   prediction, relative to a random and to a ground-truth ordering.
-- **H-goal** — a human or process performs measurably better on the stated task when given the
-  explanation.
+- **H-goal** — a human or process performs measurably better with the explanation.
 
-Each hypothesis is separate; satisfying H-order does not establish H-goal, and satisfying an
-axiom establishes neither.
+Each hypothesis is separate; satisfying H-order does not establish H-goal, and satisfying an axiom
+establishes neither. None of the three establishes **causal feature use in the data-generating sense**:
+that reading belongs to
+[`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md) and needs an
+identification design on the inputs, which an instrument fitted to the model cannot supply — see the
+four contracts in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md) §4.
 
 ## 3. Required data and split assumptions
 
