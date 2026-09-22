@@ -1,17 +1,39 @@
 # AI-BC-SOP
 
-A research-oriented repository for developing reproducible **Standard Operating Procedures (SOPs)** and **Benchmark protocols** for trustworthy and reliable machine learning evaluation.
+A living research repository for collecting, organizing, and refining **Standard Operating Procedures (SOPs)** and **Benchmarks** for AI and machine learning research.
+
+This repository is not tied to a single topic, textbook, or research direction. It is intended to grow continuously as new books, papers, courses, and research practices are studied. Useful methodological knowledge is gradually converted into reusable SOPs and benchmark specifications.
 
 ## Repository Structure
 
-- `SOP/` — standardized experimental and evaluation procedures.
-- `Benchmark/` — benchmark definitions, metrics, protocols, and evaluation suites.
+- `SOP/` — reusable research and experimental procedures.
+- `Benchmark/` — reusable benchmark designs, evaluation protocols, metrics, and test frameworks.
 
-## Scope
+## Development Principle
 
-The repository is intended to turn trustworthy machine learning principles into reusable research workflows. Initial topics include distribution shift, out-of-distribution generalization, uncertainty and calibration, selective prediction, robustness, failure analysis, and computational cost.
+The repository follows a reading-to-practice workflow:
 
-The project is under active development.
+```text
+Read
+↓
+Extract methodological principles
+↓
+Compare with existing research practice
+↓
+Convert into SOPs or Benchmarks
+↓
+Refine as new evidence and methods are learned
+```
+
+An SOP describes **how a research or evaluation process should be carried out**.
+
+A Benchmark describes **what should be tested, under which conditions, and with which metrics or comparison rules**.
+
+Topics may span trustworthy machine learning, computer vision, multimodal learning, efficient AI systems, model evaluation, robustness, uncertainty, generalization, experimental design, reproducibility, and other areas encountered during continued study.
+
+## Status
+
+This is an evolving knowledge and methodology repository. Existing documents may be revised, expanded, split, or replaced as the literature and our understanding develop.
 
 ## License
 
