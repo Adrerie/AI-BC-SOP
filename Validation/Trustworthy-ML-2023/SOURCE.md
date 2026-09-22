@@ -1,9 +1,10 @@
 # Source attribution — *Trustworthy Machine Learning* (2023)
 
-Everything in `SOP/Trustworthy-ML-2023/`, `Benchmark/Trustworthy-ML-2023/` and
-`Validation/Trustworthy-ML-2023/` is a **reconstructed and adapted methodology artifact** written
-against one source. This file records what that source is, what was verified about it, and what was
-not.
+The source-derived documentation in `SOP/Trustworthy-ML-2023/`,
+`Benchmark/Trustworthy-ML-2023/`, and the validation notes under
+`Validation/Trustworthy-ML-2023/` is reconstructed and adapted from one source. The executable
+validation tooling under `Validation/Trustworthy-ML-2023/tools/` is original repository code. This
+file records the source, attribution, and licensing relationship.
 
 ## The source
 
