@@ -57,6 +57,10 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `sanity_rankcorr` | rank correlation between attributions of a true-label and a random-label model | explanation soundness | a necessary, not sufficient, condition |
 | `hitl_delta` | change in human task performance / behaviour with vs without the explanation | trust and understanding goals | costly, design-sensitive |
 | `self_influence_auroc` | detection of suspicious training items by their self-influence score | training-data attribution | assumes few, non-systematic mislabels |
+| `tnr_at_high_tpr` | true-negative rate evaluated at a fixed high true-positive rate (state the rate) | false-alarm budgets matter more than averages | meaningless without the fixed TPR stated |
+| `audit_pass_rate` | applicable integrity requirements passed ÷ applicable requirements | protocol audits | inflates if inapplicable requirements are dropped silently |
+| `conclusion_flip_count` | number of headline conclusions that change sign or significance under a protocol perturbation | protocol audits | depends on which perturbations were run |
+| `disclosure_completeness` | fraction of this SOP's §6 checklist items present in the report | any report | measures documentation, not correctness |
 
 *Cost terms.* **Tuning budget** = search space and number of evaluations granted to every compared
 method. **Training overhead** = multiplier on passes/epochs/capacity. **Inference overhead** = added
