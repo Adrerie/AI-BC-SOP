@@ -42,7 +42,7 @@ fooled into reporting one that does not exist.
   may miss stronger failures; a valid certificate can provide a provable guarantee under its own
   assumptions. The three line up in one direction, and only when the same model, test set, threat
   model and a correctly implemented attack and bound are all in play:
-  `certified_acc ≤ true_robust_acc ≤ empirical_attack_acc`. Saying "this attack left 62 % unbroken"
+  **certified robust accuracy ≤ exact finite-sample robust accuracy ≤ empirical attacked accuracy under attack suite A**. Saying "this attack left 62 % unbroken"
   therefore does not bound the worst case from below, and a certificate at 40 % does not say the true
   worst case is 40 % — it says no failure exists below that figure inside its assumptions. The
   ordering is meaningless across different threat models, samples or definitions, so never compare a
