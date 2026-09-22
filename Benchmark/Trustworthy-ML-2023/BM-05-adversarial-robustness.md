@@ -52,7 +52,8 @@ claim transfers to attack configurations and ε values beyond the one reported.
 | Clean accuracy (no perturbation) | reference level |
 | Random guessing / base rate | floor |
 | Single-step attack | sensitivity check, explicitly not the strength reference |
-| Multi-step projected attack at the strongest affordable configuration | the reference white-box attack |
+| Multi-step projected attack at the strongest affordable configuration | a reference floor for gradient-following threat models — not a sufficient adversarial evaluation on its own |
+| An **adaptive** attack built against the specific defense under test | the row that decides whether the defense survives the mechanism it claims |
 | Attack run end-to-end through preprocessing | masking detector |
 | Expectation-averaged and straight-through variants | randomized/quantising defense breakers |
 | Black-box query-bounded attack | access-realistic reference |
@@ -111,8 +112,10 @@ resources is a documented failure mode of this literature.
 - A worst-case bound is valid **inside the declared strategy space only**, and may be unrealistically
   pessimistic relative to the deployment distribution.
 - Empirical robustness is "no attack found in configuration C", never "no attack exists"; only a
-  certificate supports the existential claim, and only under its assumptions (small networks,
-  simplified tasks, possibly loose).
+  certificate supports the existential claim, and only under the assumptions of the certificate
+  actually used. The source's own bound is demonstrated on a small network and a simplified task —
+  that describes the method it analyzes, not the reach of certified robustness as a field, and it
+  must not be quoted as a limit on what can be certified.
 - Adversarial robustness is not corruption robustness, not OOD generalization, and not reliability
   under distribution drift; each needs its own artifact (`BM-01`, `BM-04`).
 - Absence of gradient-following failure does not prove absence of failure: the model being safe is
@@ -120,7 +123,9 @@ resources is a documented failure mode of this literature.
 - Black-box results inherit the substitute model's assumptions about architecture, size and
   optimizer.
 - The source provides no default iteration count, step size or restart rule; those are choices this
-  benchmark requires you to state.
+  benchmark requires you to state. Stating them is not the same as defending them: attack adequacy is
+  an argument about the threat model and the defense, and a ladder that never broke a defense may
+  simply have been the wrong ladder — say which complementary attacks were run, and which were not.
 
 ## 12. Related SOPs
 
@@ -160,4 +165,8 @@ Anchors specific to this benchmark's measurements:
 - Hiding resources behind an accuracy-only comparison: §5.1.3 (pp. 335-338).
 
 Per-configuration reporting as an acceptance requirement, and the Core/Extended split between
-empirical and certified tracks, are repository conventions.
+empirical and certified tracks, are repository conventions. The scope limits in §2.15.15
+(pp. 111-113) describe the construction analyzed there; reading them as conditions on one certificate
+rather than as limits of the field, and requiring an adaptive attack per defense mechanism, are
+synthesized — see [`SOP-05`](../../SOP/Trustworthy-ML-2023/SOP-05-run-worst-case-stress-evaluation.md)
+§12.

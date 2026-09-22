@@ -58,10 +58,10 @@ silent failure.
    For every candidate record, in the admissibility table of §9, its required supervision, its
    assumption, the objective it optimizes, its compute/label/human cost, the trade-off it is expected
    to impose, and which benchmark evaluates the intended improvement.
-   - domain labels available → domain-adversarial alignment, off-diagonal up-weighting. Note that
-     *group* or *attribute* labels are not domain labels: a worst-group objective needs the groups to
-     be the units whose minimum risk you care about, while alignment needs them to index
-     distributions you expect to shift. If your labels are one kind, do not spend them as the other.
+   - domain labels available → domain-adversarial alignment, off-diagonal up-weighting. *Group* or
+     *attribute* labels are not domain labels: a worst-group objective needs the groups to be the
+     units whose minimum risk you care about, while alignment needs them to index distributions you
+     expect to shift. If your labels are one kind, do not spend them as the other.
    - group labels tied to a declared worst-cell objective → worst-group / distributionally-robust
      training, accepting the average-case cost the source documents.
    - essentially no unbiased supervision, with the "easy cue first" assumption testable in your data

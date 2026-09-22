@@ -758,7 +758,12 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
    prescribing numbers we would be inventing.
 3. **The certified-defense result is scope-limited.** The bound chain in §2.15.15 is demonstrated for
    binary classification with a two-layer network; the book itself says it is "theoretically
-   meaningful but not yet in practice".
+   meaningful but not yet in practice". That is a statement about *this construction*. The first
+   implementation of the package copied it upward into a limit on certification in general, which the
+   source does not say and the field does not support; Revision 01 Plan 4 scoped it back in
+   `SOP-05` §3/§5/§7 and `BM-05` §11, and required the family actually used to name its own
+   assumptions. The same reasoning scoped `BM-05`'s strongest-affordable-PGD row down to a reference
+   floor and made train-time transform exposure conditional on the defense's own definition.
 4. **`3.13` heading/content mismatch** (applications of attribution to *test* samples, body about
    training samples) — kept as printed, flagged in the table.
 5. **ECE bin count is not fixed by the source** (10 typical, 15 in the reproduced table); we record

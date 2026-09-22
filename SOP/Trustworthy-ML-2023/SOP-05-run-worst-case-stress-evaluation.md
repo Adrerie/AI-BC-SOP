@@ -27,8 +27,9 @@ fooled into reporting one that does not exist.
   [`SOP-08`](SOP-08-report-evidence-and-validity-boundaries.md) on shared metric code).
 - Compute allowance: adversarial evaluation multiplies forward/backward passes per sample; budget it
   before starting.
-- For the certification branch: a loss model and network architecture simple enough for the bound you
-  intend to compute.
+- For the certification branch: the inputs the *chosen* bound requires — the source's construction
+  needs a loss model and architecture its relaxation can carry, which is a condition of that method
+  rather than of certification in general.
 
 ## 4. Definitions needed for execution
 
@@ -81,10 +82,13 @@ fooled into reporting one that does not exist.
 
 **Extended** — add for publication-grade robustness claims or safety-relevant deployment:
 
-9. Add the certification branch only where the architecture and task admit it; report which
-   relaxation was used, what assumptions it needs, and how loose it may be. A post-hoc certificate
-   can be arbitrarily loose, and a loss trained with a plain classification objective can inflate the
-   quantity being bounded — if you certify, train for the bound.
+9. Add the certification branch where the *chosen* certificate's assumptions admit your model and
+   task; report which relaxation was used, what assumptions it needs, and how loose it may be. The
+   source demonstrates its bound on a shallow network and a binary task — record that as the scope of
+   the method described there, and state the scope of whichever method you actually used instead of
+   inheriting the first as a field limit. A post-hoc certificate can be arbitrarily loose, and a loss
+   trained with a plain classification objective can inflate the quantity being bounded — if you
+   certify, train for the bound.
 10. Add a semantic-stress branch for the non-adversarial case: corruptions and geometry/style
     transforms with the same reporting discipline (severity sweep, not a single point).
 11. Add a plausibility filter to the strategy space where the deployment only ever sees realistic
@@ -99,24 +103,41 @@ fooled into reporting one that does not exist.
       calls worst; if the goal is semantic and the space is a pixel ball, say so in the result line.
 - [ ] **Masking check**: robust accuracy that rises when the attack is *weakened* or when gradients
       are made unavailable is an artifact. Re-run the joint-pipeline attack (step 4) and compare.
+- [ ] **Attack adequacy argued, not counted**: the attack family matches the declared threat model
+      and the defense mechanism; against a defense, the attack is **adaptive** (it is run against the
+      full deployed pipeline, with the defense's own parameters known to it); complementary families
+      are run where one could be blind; and the strength claim is supported by the configuration —
+      restarts, step count, loss form, gradient handling — not by iteration count alone. Reporting the
+      strongest affordable PGD is a useful floor for one threat model, not a sufficient adversarial
+      evaluation in general.
 - [ ] **Strongest-attack check**: the reported attack configuration is at least as strong as the one
       used to establish the baseline being beaten; iteration count is not silently reduced.
 - [ ] **ε parity** across all methods, including prior work you quote.
 - [ ] **Query accounting** present for every black-box number.
 - [ ] **Guarantee wording discipline**: "no attack found within configuration C" is never written as
       "robust"; only a certificate supports the existential claim, and only inside its assumptions.
-- [ ] **Training-time/inference-time consistency** for transform-based defences: if transforms are
-      applied at inference, they must have been applied during training too.
+- [ ] **Transform-defense check, conditioned on the defense being claimed**: state the training-time
+      and inference-time transformations separately, then test whether the *definition* of the defense
+      requires train-time exposure — some do, several do not. What is mandatory is evaluating the full
+      deployed pipeline adaptively and checking for masking or broken-gradient effects, not having
+      trained with the transform.
 
 ## 7. Decision or stop conditions
 
 - **Stop and rebuild the evaluation** if masking is suspected (high apparent robustness plus a
   benign-looking PGD output on samples the model should fail on). The model being safe is not
   equivalent to no gradient-based attack being able to find a failure.
-- **Stop the certification branch** if the bound requires assumptions your model does not meet
-  (shallow network, binary task); report the empirical result and the absence of a guarantee.
+- **Drop that certificate** if the model violates an assumption of the specific relaxation you
+  planned to use. The source's construction is stated for a simple architecture and a binary task,
+  and that is a property of **that method**, not a limit on certified robustness as a field — so the
+  correct stop is "no guarantee from this bound", never "certification is impossible for my model".
+  Before writing either sentence, list the certificate families you considered and why each was
+  admitted or rejected; families outside this source may be used, but they must be cited as their own
+  methods with their own assumptions and marked as not source-derived here.
 - **Reclassify the claim** from adversarial robustness to corruption robustness if the strategy
-  space was changed to semantic transforms — different capability, different comparison class.
+  space was changed to semantic transforms — different capability, different comparison class. The
+  two may share a reporting table, never a headline number: a model can be robust to one and
+  defenseless against the other, and an ε-ball result says nothing about natural distribution shift.
 - **Accept a null result** where the only configurations that survive are ones the adversary cannot
   afford: state the cost asymmetry rather than the margin.
 
@@ -180,3 +201,11 @@ the joint training objective, and the two-layer/binary scope: §2.15.15, Definit
 (pp. 111-113). Reporting table conventions with norm-qualified distance columns and footnoted
 combined defenses: Table 2.8 (p. 103). The attack-ladder step numbering and the guarantee-wording
 rule are repository conventions built on the masking discussion above.
+
+**Scope correction.** The two-layer network and binary-task conditions in §2.15.15 belong to the
+construction analyzed there. This SOP reads them as conditions on *that* bound, which is why step 9,
+§6 and §7 require the family considered, its assumptions, and a statement that other certificates were
+or were not applicable. The corresponding requirements — argument-based attack adequacy, adaptive
+attacks against the mechanism, and train-time exposure only where the defense's definition needs it —
+are **synthesized**; the source supplies the masking progression, the attack ladder and the
+train-and-inference transform example, but no general rule of those forms.
