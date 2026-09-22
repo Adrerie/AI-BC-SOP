@@ -78,8 +78,10 @@ not be pooled.
 
 - `auroc` per detection target — the headline, because its random reference stays at 0.5 regardless
   of the base rate.
-- `aupr_success` and `aupr_error` reported together, each read against the prevalence of *its own*
-  positive class (`P(L = 1)` and `P(L = 0)`); a task that declares novelty positive takes `P(OOD)`.
+- `aupr` for each declared detection target, with positive class and score orientation stated and
+  the no-skill reference set to that positive class's prevalence. For H-error specifically, also
+  report the named specializations `aupr_success` and `aupr_error` when both correctness orientations
+  are useful. For H-ood use positive = OOD; for H-multiplicity use positive = multiple-answer.
 - `tnr_at_high_tpr` (true-negative rate at a fixed high true-positive rate, for example 95 %) —
   the operating-point form used when a false alarm budget rather than an average matters.
 
@@ -110,7 +112,7 @@ quality" number.
 | Distance score fires on ambiguous-but-familiar inputs | mechanism conflation, not epistemic detection |
 | Detector is strong on far-OOD, chance on near-OOD | sensitivity to style/density, not to support |
 | Ensemble disagreement grows with M only on OOD | expected; check the accuracy confound before claiming better uncertainty |
-| Good `aupr` on an imbalanced subset only | compare with the prevalence of that variant's designated positive; may be no skill |
+| Good `aupr` on an imbalanced subset only | compare with the prevalence of the declared positive class for that detection task; may be no skill |
 | Detector does not fire on adversarial examples | confidence and adversarial failure are separate axes |
 
 ## 10. Computational reporting
