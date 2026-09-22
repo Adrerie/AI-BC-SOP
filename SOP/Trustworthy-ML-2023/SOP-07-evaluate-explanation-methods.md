@@ -72,7 +72,7 @@ before any conclusion drawn from it.
 3. Verify model dependence before interpreting anything: compute the map for the randomly
    initialised control. The requirement is not that the map be informationless — a random network can
    still carry structure — but that the map change visibly when the model changes.
-4. Run the label-randomisation check: a model trained on randomized labels must not yield maps that
+4. Run the label-randomization check: a model trained on randomized labels must not yield maps that
    highlight the features discriminative for the original task. Score it quantitatively (rank
    correlation between the true-label and random-label maps), not by eye.
 5. Run an ordering check on a subset where the true dependence is known by construction: simulated
@@ -189,7 +189,7 @@ Why empirical evaluation is required: §3.7.1 (p. 178). Evaluation types and the
 §3.7.2 (pp. 178-179). Confirmation bias and the rejection of qualitative-only evidence: §3.7.3,
 Definition 3.13 (pp. 179-181); the localization fallacy and "we should not evaluate according to our
 expectations": §3.7.3 (p. 181). Necessary conditions and their relaxation: §3.7.4 (pp. 181-182).
-Sanity checks (cascading randomisation, label randomisation, rank correlation) and the explicit
+Sanity checks (cascading randomization, label randomization, rank correlation) and the explicit
 conflict with completeness axioms: §3.7.5 (pp. 182-185). Simulated inputs with controllable ground
 truth: §3.7.6 (pp. 185-186). Remove-and-classify and its variants: §3.7.7, Definition 3.14
 (pp. 186-187). Missingness bias and the occlusion-operator caveat: §3.7.8 (pp. 187-188). End goals

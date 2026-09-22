@@ -108,7 +108,7 @@ lost honestly.
       and its final-set ECE is the gap between the frozen value and final accuracy. If the trivial
       control matches the claim, the claim is empty.
 - [ ] **Quantity-to-instrument check**: an epistemic claim must not rest on proper scores alone —
-      the Bayes predictor maximises them with zero epistemic uncertainty.
+      the Bayes predictor maximizes them with zero epistemic uncertainty.
 - [ ] **Split-rights check**: no calibration parameter was fitted on a final-test subset.
 - [ ] **Bin disclosure**: bin count, and whether bins are equal-width or equal-mass, stated wherever
       ECE/MCE appears.

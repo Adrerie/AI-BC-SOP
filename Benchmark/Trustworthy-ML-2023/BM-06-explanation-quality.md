@@ -40,9 +40,9 @@ four contracts in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-expla
 
 ## 4. Shift or stress construction
 
-- **Model stress (cascading randomisation)**: randomize weights from the output layers backwards;
+- **Model stress (cascading randomization)**: randomize weights from the output layers backwards;
   a sound method's map must change visibly. Report the change quantitatively.
-- **Label stress (data randomisation)**: train on randomized labels; maps must stop highlighting the
+- **Label stress (data randomization)**: train on randomized labels; maps must stop highlighting the
   original task's discriminative regions. Score by rank correlation between the two maps.
 - **Planted-dependence stress**: build inputs where the correct attribution is known by
   construction — for example a secondary signal (caption, marker, watermark) whose agreement rate p
@@ -76,7 +76,7 @@ four contracts in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-expla
 
 ## 7. Secondary / diagnostic metrics
 
-- Change magnitude of the map under cascading randomisation (a curve over randomized layers).
+- Change magnitude of the map under cascading randomization (a curve over randomized layers).
 - Planted-cue recovery: fraction of attribution mass on the planted cue as a function of the noise
   level p.
 - `hitl_delta` — human accuracy or behavior change with versus without the explanation; and, for the
@@ -112,7 +112,7 @@ alone.
 Per method: passes or samples per explanation, whether it needs retraining or architecture access
 (which limits it to white-box settings), the cost of the inpainting or generation machinery behind
 the occlusion operator, and — for human-grounded tracks — participant hours. Report explanation cost
-alongside explanation quality, since a per-sample optimisation loop is often the reason a method is
+alongside explanation quality, since a per-sample optimization loop is often the reason a method is
 not usable at deployment scale.
 
 ## 11. Validity limits

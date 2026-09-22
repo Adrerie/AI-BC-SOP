@@ -8,7 +8,11 @@ comparison proving any of this is itself trustworthy.
 The suite was derived by reconstructing the source book's methodology rather than by transcribing its
 chapters; see [`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md)
 and the audited source universe in
-[`source_coverage.md`](../../Validation/Trustworthy-ML-2023/source_coverage.md).
+[`source_coverage.md`](../../Validation/Trustworthy-ML-2023/source_coverage.md). Source attribution and
+the licensing position of this package are recorded in
+[`SOURCE.md`](../../Validation/Trustworthy-ML-2023/SOURCE.md); like the SOP group, this is a
+provenance-bearing staging unit whose rules are meant to be extended, revised or merged by later
+sources.
 
 ## The eight components
 
@@ -19,7 +23,7 @@ and the audited source universe in
 | BM-03 | [Confidence truthfulness](BM-03-confidence-truthfulness.md) | probability, calibration, or ordering of `c(x)` | ID vs shifted, imbalance, ambiguity, binning | Core / Extended |
 | BM-04 | [Error and anomaly detection](BM-04-error-and-anomaly-detection.md) | detecting own errors, OOD inputs, multiple answers | OOD distance, ambiguity, adversarial, open-set | Core / Extended |
 | BM-05 | [Adversarial robustness](BM-05-adversarial-robustness.md) | worst case inside a declared strategy space | ε-ball, semantic transforms, black-box, certification | Core / Extended |
-| BM-06 | [Explanation quality](BM-06-explanation-quality.md) | soundness of attributions and their human usefulness | model/label randomisation, planted cue, occlusion, HITL | Core / Extended |
+| BM-06 | [Explanation quality](BM-06-explanation-quality.md) | soundness of attributions and their human usefulness | model/label randomization, planted cue, occlusion, HITL | Core / Extended |
 | BM-07 | [Selective prediction under cost](BM-07-selective-prediction-under-cost.md) | declining where the system should decline | coverage, cost ratio, drift, escalation | Core / Extended |
 | BM-08 | [Evaluation integrity audit](BM-08-evaluation-integrity-audit.md) | whether the comparison itself can be believed | protocol perturbations | Core / Extended |
 

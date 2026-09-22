@@ -388,10 +388,10 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 - The three splits are distinguished by *what is optimized*, not by size (2.3.2, p. 26-27):
   training set → parameters, update cadence O(ms-s); validation set → hyperparameters and design
   choices, O(min-d); test set → "the methodology and overall approach through the shift of the
-  field", O(months-y). For true OOD generalisation the validation set **must** come from the
+  field", O(months-y). For true OOD generalization the validation set **must** come from the
   training domain(s), otherwise the target domain is being tuned on.
 - 2.3.3 (p. 28) states the dilemma plainly: any decision taken from test results — including
-  reading other people's test numbers — destroys the test set's meaning as a generalisation
+  reading other people's test numbers — destroys the test set's meaning as a generalization
   estimate; benchmarks are still necessary, so the achievable standard is "spoil the test set
   less", never "do not spoil it".
 - Dev is modeled as a *closed system of information* (2.5, p. 35): dataset, annotation, inductive
@@ -410,8 +410,8 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   the book concedes zero-shotness may stop mattering at sufficient scale.
 - Case study (2.5.2, p. 38): a published paper selects its "Feature Drop Strategy"
   hyper-parameter by the *average left-out-domain accuracy* — a full leave-one-out ablation on the
-  test domains. Stated takeaway: ablation studies (Def 2.25) are safe for ID generalisation and
-  dangerous for OOD generalisation, and such choices also overfit the *specific benchmark* (PACS).
+  test domains. Stated takeaway: ablation studies (Def 2.25) are safe for ID generalization and
+  dangerous for OOD generalization, and such choices also overfit the *specific benchmark* (PACS).
 - Partial solutions (2.5.3, p. 39): make hyper-parameter selection part of the learning problem and
   *specify* it when proposing a method; tune on the other domains and use the held-out domain's
   test set once per project ("a good rule of thumb might be to use it once per paper"); refresh or
@@ -419,7 +419,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   frozen comparable test set; or noise the reported accuracy with a Laplace mechanism
   (differential-privacy evaluation).
 
-### N2 — Generalisation-type axes and the cue problem (1.4, 2.1.2, 2.4, 2.7-2.9; direct + delegated)
+### N2 — Generalization-type axes and the cue problem (1.4, 2.1.2, 2.4, 2.7-2.9; direct + delegated)
 
 - Def 2.8 *Generalization Types* (p. 18) is a 3-column axis table, not a list: ID (same
   distribution, different samples), Cross-Domain (same task, different domain), Cross-Bias
@@ -510,7 +510,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   prepare for the worst, which yields a lower bound **only inside the pre-set strategy space** and
   "can also lead to unrealistically pessimistic solutions".
 - Attack objectives: FGSM x + ε·sgn(∇_x L(θ,x,y)) with ε bounding the L∞ magnitude (p. 89); PGD as
-  constrained maximisation of the loss with projection onto the ε-ball, step size α, T iterations,
+  constrained maximization of the loss with projection onto the ε-ball, step size α, T iterations,
   convergence checked via ‖x_{t+1} − x_t‖₂ ≤ 1e−5 (pp. 90-91). Strength ordering FGSM < PGD is
   explicit, with the reason: a single gradient step "does not even find local optima in general",
   and PGD is non-convex so "no guarantee for the globally optimal solution, even within a small
@@ -582,8 +582,8 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
      (randomly initialised model ⇒ informationless map) is called "probably a way too strong
      necessary condition", the relaxed version being that attribution maps must change visibly when
      the model changes.
-  3. *Sanity checks* (3.7.5, pp. 182-185): cascading randomisation (randomize weights top-down and
-     watch the map change) and label randomisation (a model trained on random labels must not yield
+  3. *Sanity checks* (3.7.5, pp. 182-185): cascading randomization (randomize weights top-down and
+     watch the map change) and label randomization (a model trained on random labels must not yield
      informative maps), scored quantitatively by rank correlation between true- and random-label
      attributions. Book's verdicts: Guided Backprop and Guided Grad-CAM fail as edge detectors;
      Gradient⊙Input and Integrated Gradients are unconvincing; Grad-CAM and SmoothGrad pass.
@@ -638,7 +638,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   the multi-class Brier score with its analogous lower-bound claim (4.5.8, p. 251).
 - "Not all strictly proper scoring rules are equally good training objectives" (4.5.7, pp. 249-250) —
   demonstrated by a tuned comparison where the max-prob formulation reaches 54 % on CIFAR-10 against
-  67 % for NLL training, on a noisier loss surface. Numerical optimisation, not just the metric, is
+  67 % for NLL training, on a noisier loss surface. Numerical optimization, not just the metric, is
   part of the evaluation design.
 - Metric interpretation limits are stated for each family (4.5.9, p. 253-254): NLL/Brier have no
   knowable floor because the true aleatoric term is unknown; they mix accuracy and calibration
@@ -751,7 +751,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
   - 5.2.3 (pp. 341-342): the tuning protocol the book endorses is random search over per-parameter
     *sensible exponential ranges* with a **fixed sample budget shared by all compared methods**,
     justified because only a few hyper-parameters matter; stated preconditions are approximate
-    unimodality and independence, and the fallback for wiggly regions is Bayesian optimisation.
+    unimodality and independence, and the fallback for wiggly regions is Bayesian optimization.
   - Toy vs real trade-off (5.2, p. 338-340): toy datasets buy rich per-sample labels (task label plus
     domain/bias attributes), speed and controlled ablation; large-scale data costs days-to-weeks per
     validation and loses factor analysis, so scaled-up methods must be simple. This is the source of
@@ -807,7 +807,7 @@ paraphrase of a heading, and every claim that later reaches an artifact is trace
 | Aleatoric recovery (regression) | Heteroscedastic Gaussian NLL | `(1/2σ̂²)‖y−µ̂‖² + (d/2) log σ̂² + C` | 4.13.5 p. 307 |
 | Robustness to perturbation | Accuracy under attack at a norm-qualified ε; sweep over ε | `max_{‖δ‖_p ≤ ε, x+δ∈[0,1]} L(f(x+δ),y)` | 2.15.3 p. 90; Table 2.8 p. 103 |
 | Robustness, sound claim | Certified robust accuracy | bound chain `Ã(A(x)) ≤ Ã(x) + ε‖∇Ã‖₁ ≤ … ≤ Ã_SDP(x)` | 2.15.15 p. 111 |
-| Explanation dependence on the model | Sanity-check rank correlation (label & weight randomisation) | Kendall-type rank correlation of maps, true vs random labels | 3.7.5 pp. 182-185 |
+| Explanation dependence on the model | Sanity-check rank correlation (label & weight randomization) | Kendall-type rank correlation of maps, true vs random labels | 3.7.5 pp. 182-185 |
 | Explanation soundness (ordering) | Remove-and-Classify relative accuracy drop, AUC lower-better | iterative occlusion in attribution rank vs random erasing | Def 3.14, 3.7.7 p. 186 |
 | Explanation usefulness to humans | HITL / application-grounded task performance | human accuracy or behavior change with vs without the explanation | Def 3.15, 3.8.2 p. 189 |
 | Training-data attribution usefulness | Self-influence mislabel detection | AUROC / AP over self-influence scores | Def 3.16, 3.12.2 p. 216 |

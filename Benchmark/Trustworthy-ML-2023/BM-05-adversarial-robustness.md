@@ -147,7 +147,7 @@ pp. 87-88), the attack formulations and their strength ordering (§2.15.2-§2.15
 strategy spaces beyond pixel norms (§2.15.5-§2.15.7, Definition 2.41, pp. 92-97), access levels and
 query accounting (§2.15.8-§2.15.10, Definitions 2.42-2.43, pp. 93-100), adversarial training cost
 (§2.15.11, §2.15.13, pp. 101-107), gradient masking and its circumvention progression (§2.15.12,
-Definitions 2.44-2.46, pp. 102-107), transform defences at train and inference time (§2.15.14,
+Definitions 2.44-2.46, pp. 102-107), transform defenses at train and inference time (§2.15.14,
 pp. 108-110), and certification with its scope limits (§2.15.15, Definition 2.47, pp. 111-113).
 
 Anchors specific to this benchmark's measurements:

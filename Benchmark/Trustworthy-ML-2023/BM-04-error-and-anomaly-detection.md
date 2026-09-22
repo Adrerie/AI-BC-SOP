@@ -149,7 +149,7 @@ base-rate behavior and the AUROC recommendation: §4.9.2 (pp. 265-266), where th
 value is given for the success-positive task and AUPR-Error is defined by swapping which class is
 positive. Threshold filtering as the
 application that only needs ranking: §4.9.1 (pp. 263-264). Distance-score comparison against
-max-probability with detection metrics on multiple OOD pairs, and the cautions against generalising
+max-probability with detection metrics on multiple OOD pairs, and the cautions against generalizing
 one pair and against reading ambiguity as novelty: §4.12.1-§4.12.2 (pp. 291-297); the summary that
 both estimator families are evaluated through OOD detection *as a proxy task*: §4.12.3 (p. 297).
 Ensemble spread behavior with M and the accuracy confound: §4.11.5 (p. 275). Open-set recognition

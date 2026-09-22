@@ -27,7 +27,7 @@ when every executed check passes, so it can be wired into a commit hook or CI jo
 | `check_structure.py` | every SOP carries the same 12 numbered sections and every benchmark the same 13, in order; one H1 per file; no skipped heading levels; a document's title still matches its filename; every pipe table is rectangular | no |
 | `check_links.py` | every relative markdown link resolves; each SOP↔benchmark cross-reference is acknowledged by the document on the other end; flags artifacts sharing a verbatim 9-word run (the package links rather than copies) | no |
 | `check_metrics.py` | every metric token used in the group is registered in `SOP-08` §4, and each register row is complete (definition, validity, degeneracy) | no |
-| `check_prose.py` | placeholder phrasing ("various methods", "as appropriate", "etc.") and non-American spelling outside quoted source wording | no |
+| `check_prose.py` | placeholder phrasing ("various methods", "as appropriate", "etc.") and non-American spelling outside quoted source wording; the spelling list expands each root to its inflexions, so `randomise` also catches `randomisation` | no |
 | `check_citations.py` | every printed-page anchor agrees with the section, definition or caption it is attached to | no (uses the committed index) |
 | `build_citation_index.py` | regenerate or verify `citation_index.json` against a PDF you hold | yes |
 | `run_acceptance.py` | run the suite and report the gate table | no |
@@ -69,8 +69,9 @@ is recorded anywhere in the repository: the bibliographic description of the sou
 - `check_links broken=0 asymmetric=0` — links resolve; every relationship is acknowledged both ways.
   The `duplicate_pairs` count is informational.
 - `check_metrics unregistered=0 register_size=22` — the shared register covers every score used.
-- `check_prose vague=0 spelling_variants=0` — phrasing and spelling conform (quoted source wording
-  is exempt by design, since the book spells some terms British).
+- `check_prose vague=0 spelling_variants=0` — phrasing and spelling conform. Text inside typographic or
+  straight double quotes is exempt by design, because wording reproduced from the source must not be
+  restyled: the book is American-English apart from "towards", which it writes 37 times.
 - `check_citations bound=N drifting=0 unanchored=M` — `drifting` is the gate: an anchor whose pages
   contradict its own locator. `unanchored` counts page numbers stated without any locator in the same
   clause — permitted, and listed by `--verbose` so a human can confirm each is intentional.

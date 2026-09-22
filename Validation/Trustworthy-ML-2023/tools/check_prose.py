@@ -41,6 +41,33 @@ FORMS = {
 QUOTES = [re.compile(r"“[^”]*”"), re.compile(r'"[^"]*"')]   # a quoted source wording may wrap lines
 
 
+def _expand(forms):
+    """Add the regular inflexions of each listed variant, so `randomise` also catches `randomisation`.
+
+    The dictionary stays the source of truth for which roots are variants at all: expanding only from
+    listed stems is what keeps `advise`, `supervise`, `noise` and `otherwise` out of the results.
+    """
+    out = {k: list(v) for k, v in forms.items()}
+    for american, variants in forms.items():
+        for variant in list(variants):
+            generated = []
+            if variant.endswith("ise") and american.endswith("ize"):
+                stem_b, stem_a = variant[:-3], american[:-3]
+                generated = [(stem_b + s, stem_a + a) for s, a in
+                             (("ises", "izes"), ("ising", "izing"),
+                              ("isation", "ization"), ("isations", "izations"))]
+            elif variant.endswith("ce"):
+                generated = [(variant + "s", american + "s")]
+            for brit, amer in generated:
+                target = out.setdefault(amer, [])
+                if brit not in target:
+                    target.append(brit)
+    return out
+
+
+FORMS = _expand(FORMS)
+
+
 def _quoted_spans(text):
     spans = []
     for rx in QUOTES:

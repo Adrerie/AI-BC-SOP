@@ -10,6 +10,12 @@ source universe.
 
 A reader who has not read the book can execute any SOP here end to end.
 
+Source attribution, and what may and may not be inferred from it about licensing, is recorded in
+[`SOURCE.md`](../../Validation/Trustworthy-ML-2023/SOURCE.md). This group is a provenance-bearing
+staging unit: its rules carry their citations with them and are expected to be extended, revised,
+superseded or merged as later sources are read, rather than to stay in this package forever — see the
+root README.
+
 ## Workflow order
 
 ```text
