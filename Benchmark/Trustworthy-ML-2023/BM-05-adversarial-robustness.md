@@ -4,9 +4,10 @@
 
 ## 1. Target capability / failure mode
 
-**Capability.** Behavior of the model under the worst case inside an explicitly bounded strategy
-space — the adversarial branch of the generalization-type axis, where evaluation returns a bound
-rather than a sample average.
+**Capability.** Behavior of the model under the worst allowed perturbation inside an explicitly
+bounded strategy space. The target is a worst-case quantity. Empirical attacks probe it and can miss
+failures; certified evaluation may provide a provable guarantee or bound under the assumptions of a
+specific certificate.
 
 **Failure mode under test.** Two, and the second is the one that corrupts the literature: (a) the
 model fails on perturbed inputs; (b) the *evaluation* fails, reporting safety that comes from broken
@@ -14,10 +15,15 @@ gradients rather than from invariance.
 
 ## 2. Evaluation hypothesis
 
-*Inside threat model T (goal G, strategy space S with norm and radius, knowledge K), model M's
-accuracy is at least a.* Any missing element of T makes the hypothesis unformulated. Secondary
-hypotheses: that M's advantage is not an artifact of the attack used (masking check), and that the
-claim transfers to attack configurations and ε values beyond the one reported.
+Two claim types are kept separate.
+
+- **Empirical claim:** under threat model T and attack suite A, the measured attacked accuracy is a,
+  with the explicit limitation that A may fail to find existing adversarial examples.
+- **Certified claim:** under threat model T and certificate assumptions C, certified accuracy is b,
+  meaning the stated fraction of examples has a provable guarantee within that threat model.
+
+Any missing element of T makes either claim uninterpretable. Empirical advantage must additionally
+survive adaptive-attack and masking checks.
 
 ## 3. Required data and split assumptions
 
@@ -42,8 +48,10 @@ claim transfers to attack configurations and ε values beyond the one reported.
   access level recorded.
 - **Train/test condition matrix**: models trained under each condition evaluated under each other, to
   expose transferability gaps.
-- **Certification stress** (Extended): prove invariance inside the ball via a relaxation, on the
-  architectures the relaxation admits.
+- **Certification stress** (Extended): apply a certificate appropriate to the declared threat
+  model and model family, state its assumptions, and report certified accuracy or the corresponding
+  certified bound. The relaxation approach discussed by the source is one admissible family, not the
+  universal form of certification.
 
 ## 5. Required baselines
 
