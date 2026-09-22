@@ -47,7 +47,7 @@ def main(argv=None):
     ap.add_argument("--rebuild-index", action="store_true",
                     help="regenerate citation_index.json from --source before checking")
     ap.add_argument("--with-mutations", action="store_true",
-                    help="also run mutation_test.py, which provokes every gate detector on purpose")
+                    help="also run representative end-to-end gate mutations in mutation_test.py")
     args = ap.parse_args(argv)
 
     print(f"repository root: {C.ROOT}")
@@ -74,8 +74,8 @@ def main(argv=None):
     extra = 1 if (pdf or args.rebuild_index) else 0
     if args.with_mutations:
         rc, summary = run("mutation_test.py")
-        print(f"{'PASS' if rc == 0 else 'FAIL'}  {'mutations':<14}  every gate detector provoked "
-              f"on purpose  ->  {summary}")
+        print(f"{'PASS' if rc == 0 else 'FAIL'}  {'mutations':<14}  representative end-to-end gate mutations "
+              f"->  {summary}")
         extra += 1
         if rc:
             failures.append("mutations")
