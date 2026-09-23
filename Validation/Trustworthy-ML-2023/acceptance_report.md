@@ -1,5 +1,10 @@
 # Acceptance Report — Trustworthy ML (2023) package
 
+> **Status note:** Cycle 4 was accepted at `ddd1736`, then superseded by a post-review AUPR
+> definition/orientation patch. The current branch must complete Revision 04 before this report can
+> again be treated as the current acceptance record. Cycle 4 remains historical evidence below.
+
+
 > **Status note:** Cycle 4 is the current acceptance record. Cycle 3 was accepted at commit
 > `4f33897` and is superseded on the points Revision 03 touched — its counts and PASS statements
 > describe the historical Cycle 3 run, which is kept in full below because its corrections still stand.
@@ -80,8 +85,8 @@ and is not scanned changed in this revision.
 
 ### C4.2 What this cycle's run caught on its own
 
-The patch as delivered was not green. Four things the review did not name had to be repaired, and all
-four are validator-side rather than semantics-side — which is the honest signature of a patch that
+The patch as delivered was not green. Four validator-side regressions were repaired, and one small
+benchmark consistency edit (`P(multiple)` → `P(multiple-answer)`) was added during the same cycle — which is the honest signature of a patch that
 changed wording under a checker built to watch wording.
 
 - **A gate marker broke, and it broke for the reason Revision 02 warned about.** `check_gates` required
@@ -149,7 +154,7 @@ consistent across SOP-08, BM-03 and BM-04 with a generic name for declared detec
 code span cannot bypass the register check, no pseudo metric key survives as a registered-looking name
 in a normative artifact, the allowlist holds only schema fields and one formula-local symbol, and the
 mechanical suite is green both with and without the source. All four findings that opened the revision
-are closed above, and the six repairs this cycle made on its own initiative are listed rather than
+are closed above, and the five additional repairs/consistency edits made during that cycle are listed rather than
 quietly folded in. Nothing from Revision 01 or Revision 02 was weakened: 52 markers, 11 silent
 regression patterns, 6 invariants and 36 hygiene-scanned files behave as at Cycle 3.
 
