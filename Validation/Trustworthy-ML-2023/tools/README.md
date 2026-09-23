@@ -28,7 +28,7 @@ when every executed check passes, so it can be wired into a commit hook or CI jo
 |---|---|---|
 | `check_structure.py` | every SOP carries the same 12 numbered sections and every benchmark the same 13, in order; one H1 per file; no skipped heading levels; a document's title still matches its filename; every pipe table is rectangular | no |
 | `check_links.py` | every relative markdown link resolves; each SOP↔benchmark cross-reference is acknowledged by the document on the other end; flags artifacts sharing a verbatim 9-word run (the package links rather than copies) | no |
-| `check_metrics.py` | every metric token used in the group is registered in `SOP-08` §4, and each register row is complete (definition, validity, degeneracy) | no |
+| `check_metrics.py` | lower-case snake_case metric identifiers found inside inline-code spans in SOP/Benchmark artifacts are registered in `SOP-08` §4; register rows are complete; the AUPR/AP convention and correctness score orientations satisfy the package contract | no |
 | `check_prose.py` | placeholder phrasing ("various methods", "as appropriate", "etc.") and non-American spelling outside quoted source wording; the spelling list expands each root to its inflexions, so `randomise` also catches `randomisation` | no |
 | `check_citations.py` | every printed-page anchor agrees with the section, definition or caption it is attached to | no (uses the committed index) |
 | `check_gates.py` | three things: each Revision 01/02 correction is still worded where it was put; none of the known-bad wordings has come back anywhere in the normative files; and no tracked file holds a machine-local path or a bulk text dump | no |
@@ -72,7 +72,7 @@ is recorded anywhere in the repository: the bibliographic description of the sou
 - `check_structure findings=0` — schema and layout conform.
 - `check_links broken=0 asymmetric=0` — links resolve; every relationship is acknowledged both ways.
   The `duplicate_pairs` count is informational.
-- `check_metrics parser_findings=0 unregistered=0 register_size=23` — the compound-inline-code parser self-test passes and the shared register covers every score used.
+- `check_metrics parser_findings=0 unregistered=0 shape_findings=0 aupr_contract_findings=0 register_size=23` — the compound-inline-code parser self-test passes, no in-scope metric identifier is unregistered, register rows are structurally complete, and the AUPR/AP contract is intact. The checker does not claim coverage of prose-only metric names, short identifiers, or capitalized aliases.
 - `check_prose vague=0 spelling_variants=0` — phrasing and spelling conform. Text inside typographic or
   straight double quotes is exempt by design, because wording reproduced from the source must not be
   restyled: the book is American-English apart from "towards", which it writes 37 times.
