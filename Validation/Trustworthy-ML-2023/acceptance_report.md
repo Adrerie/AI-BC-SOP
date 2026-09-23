@@ -5,10 +5,6 @@
 > again be treated as the current acceptance record. Cycle 4 remains historical evidence below.
 
 
-> **Status note:** Cycle 4 is the current acceptance record. Cycle 3 was accepted at commit
-> `4f33897` and is superseded on the points Revision 03 touched — its counts and PASS statements
-> describe the historical Cycle 3 run, which is kept in full below because its corrections still stand.
-
 
 This package has been accepted four times.
 
@@ -17,7 +13,7 @@ This package has been accepted four times.
 | **1** | Plans `00`–`06` of `plans/Trustworthy-ML-2023/`: source audit, reconstruction, SOP group, Benchmark group, acceptance, wrap-up | 4 stage gates + 9 acceptance gates recorded as PASS | **Historical.** Superseded by external review; its checks were re-run from zero in Cycle 2 and its numbers appear below only where they were reproduced |
 | **2** | Revision 01, `plans/Trustworthy-ML-2023/revision-01/00`–`07`: metric, setting, evidence, robustness, reproducibility and architecture corrections | ACCEPTED, then superseded on two points | **Historical**, kept because it records the corrections that still stand. Its licensing limitation and its four-level disclosure ladder were both replaced by the direct corrections that opened Revision 02 |
 | **3** | Revision 02, `plans/Trustworthy-ML-2023/revision-02/00`–`03`: package-wide consistency sweep, validator hardening, final re-acceptance | ACCEPTED at `4f33897`, then superseded on metric semantics and validator wording | **Historical**, kept because its sweep and its hardened validators are the ones still in force. Its citation and duplication counts predate Revision 03 and are superseded in C4.5 |
-| **4** | Revision 03, `plans/Trustworthy-ML-2023/revision-03/00`–`01`: validate the direct metric/parser patch, repair only what the run reveals, re-accept | See "Cycle 4 result" | **Current record** |
+| **4** | Revision 03, `plans/Trustworthy-ML-2023/revision-03/00`–`01`: validate the direct metric/parser patch, repair only what the run reveals, re-accept | ACCEPTED at `ddd1736`, then superseded on AUPR numerical definition and score orientation | **Historical** pending Revision 04 / Cycle 5 |
 
 Every cycle here applies the same rule the last review handed down: a prior PASS is evidence about the
 past, not a result to copy forward. Each mechanical claim below is produced by a committed script that
