@@ -85,12 +85,12 @@ are not redefined locally; if a component needs a new one, it is added to that r
 
 ## Where each component comes from
 
-BM-01 through BM-08 reconstruct the book's evaluation methodology. BM-09 does not: it comes from the
-Spring 2026 official course session on privacy and data protection, and it is the only component whose
-traceability section cites a course session rather than a book section and page. That split is deliberate
-and is checked mechanically, because the same group name covering two sources is exactly where a
-post-book rule would start being quoted as though the book had said it. The audit trail for the decision,
-including the candidates that were examined and rejected, is
+BM-01 through BM-08 reconstruct the book's evaluation methodology and retain their book traceability.
+Selected post-book deltas added to those existing benchmarks are traced centrally in the official-update
+audit rather than copied into each source section. BM-09 is different: it is wholly new from the Spring
+2026 privacy and data-protection session, so its own traceability section cites that course session
+instead of a book section and page. The audit trail for all update decisions, including candidates that
+were examined and rejected, is
 [`../../Validation/Trustworthy-ML-Official-Updates-2024-2026/decision_log.md`](../../Validation/Trustworthy-ML-Official-Updates-2024-2026/decision_log.md).
 
 ## What this suite does not cover
