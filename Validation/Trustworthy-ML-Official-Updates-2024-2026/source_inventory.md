@@ -1,6 +1,6 @@
 # Source inventory — official post-book TML material, 2024/25 and 2026
 
-Plan `01_SOURCE_AUDIT.md` artifact. Read on 2026-09-23. Nothing in this file was inferred from a
+Source-audit record. Read on 2026-09-23. Nothing in this file was inferred from a
 title: every row states what was actually opened, and anything that could not be opened is marked
 `PARTIAL` or `NO` with the routes that were tried.
 
