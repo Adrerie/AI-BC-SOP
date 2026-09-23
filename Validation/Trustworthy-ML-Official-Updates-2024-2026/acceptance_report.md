@@ -1,10 +1,10 @@
 # Acceptance report — official TML course updates, 2024–2026
 
-Cycle result: **PASS**, all eight checks green on the current branch tip. The run below was made after
-the post-review BM-09 correction, so it covers the branch as it now stands rather than the first draft of
-the extension: `534d08f` on `plan/trustworthy-ml-official-updates`, with the source PDF configured so the
-source-dependent index check ran too. Nothing here is carried over from an earlier cycle: every number
-below was printed by the run recorded in §C.
+Cycle result: **PASS**. The substantive code/content state was tested at `534d08f` on
+`plan/trustworthy-ml-official-updates`, after the post-review BM-09 correction, with the source PDF
+configured so the source-dependent index check ran too. Later commits only cleaned plan/report references
+and acceptance metadata; they did not change SOPs, Benchmarks, or validation tools. Every numerical result
+below is the actual output of the run recorded in §C.
 
 Inputs: [`source_inventory.md`](source_inventory.md) (U1), [`delta_map.md`](delta_map.md) (U2),
 [`decision_log.md`](decision_log.md) (U3). Plan:
