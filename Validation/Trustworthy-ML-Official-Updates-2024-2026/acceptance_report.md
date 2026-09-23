@@ -1,5 +1,8 @@
 # Acceptance report — official TML course updates, 2024–2026
 
+> **Status note:** the PASS recorded below predates the post-review BM-09 content correction. Re-run
+> the existing acceptance command and update this report before treating the branch as merge-ready.
+
 Cycle result: **PASS**, gates U1–U6. Executed from the committed tree at `9df2b09` on branch
 `plan/trustworthy-ml-official-updates`, with the source PDF configured so the source-dependent index
 check ran too. Nothing here is carried over from an earlier cycle: every number below was printed by the
