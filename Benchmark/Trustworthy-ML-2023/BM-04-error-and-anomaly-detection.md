@@ -97,7 +97,8 @@ not against one half.
   = error with score `1 − c` (or an explicitly equivalent error-likelihood score). For H-ood use
   positive = OOD and an OOD-oriented score such as `1 − c`; for H-multiplicity use positive =
   multiple-answer and a multiplicity-oriented score such as `1 − c` when that interpretation is
-  justified.
+  justified. For H-sensitivity use positive = sensitive and the detector's sensitivity-oriented score;
+  its AP no-skill reference is `P(sensitive)` in the evaluated rephrasing families.
 - `tnr_at_high_tpr` (true-negative rate at a fixed high true-positive rate, for example 95 %) —
   the operating-point form used when a false alarm budget rather than an average matters.
 
