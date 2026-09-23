@@ -49,6 +49,14 @@ form of the methods it contains. When a rule from it is restated in a source-ind
 canonical copy will say which packages fed it, and the package copy stays as the attributed source of
 record.
 
+The same course lineage continued after the book, and its official 2024/25 and 2026 teaching material was
+audited as an **update layer** rather than as a second package: see
+[`Validation/Trustworthy-ML-Official-Updates-2024-2026/`](Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md).
+Most of what that material teaches was already covered, and most of what was not was rejected as a
+classroom practice rather than a research protocol; the deltas that survived are now inside the existing
+SOP and Benchmark files, each labeled `official-course-derived` in its traceability section, plus one new
+benchmark. No post-2023 rule is presented as book-derived, and no lecture became a file of its own.
+
 ## Development Principle
 
 The repository follows a reading-to-practice workflow:
