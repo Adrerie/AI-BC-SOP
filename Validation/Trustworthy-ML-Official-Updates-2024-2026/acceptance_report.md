@@ -1,12 +1,10 @@
 # Acceptance report — official TML course updates, 2024–2026
 
-> **Status note:** the PASS recorded below predates the post-review BM-09 content correction. Re-run
-> the existing acceptance command and update this report before treating the branch as merge-ready.
-
-Cycle result: **PASS**, gates U1–U6. Executed from the committed tree at `9df2b09` on branch
-`plan/trustworthy-ml-official-updates`, with the source PDF configured so the source-dependent index
-check ran too. Nothing here is carried over from an earlier cycle: every number below was printed by the
-run recorded in §C.
+Cycle result: **PASS**, all eight checks green on the current branch tip. The run below was made after
+the post-review BM-09 correction, so it covers the branch as it now stands rather than the first draft of
+the extension: `534d08f` on `plan/trustworthy-ml-official-updates`, with the source PDF configured so the
+source-dependent index check ran too. Nothing here is carried over from an earlier cycle: every number
+below was printed by the run recorded in §C.
 
 Inputs: [`source_inventory.md`](source_inventory.md) (U1), [`delta_map.md`](delta_map.md) (U2),
 [`decision_log.md`](decision_log.md) (U3). Plan:
@@ -29,8 +27,8 @@ position is recorded separately in [`../Trustworthy-ML-2023/SOURCE.md`](../Trust
 
 ## B. Delta gate, per accepted addition
 
-Four questions from plan 06 §B, answered for each accepted item. Anything that could not answer them was
-rejected in `decision_log.md`.
+Four questions from the acceptance step, answered for each accepted item. Anything that could not answer
+them was rejected in `decision_log.md`.
 
 | Delta | Absent before | Why not only an example | Why the destination is minimal | What omission would cost |
 |---|---|---|---|---|
@@ -47,7 +45,8 @@ rejected in `decision_log.md`.
 
 ## C. Regression gate
 
-`run_acceptance.py --with-mutations`, with `TRUSTWORTHY_ML_2023_PDF` set. Executed 8 checks, failed 0.
+`run_acceptance.py --with-mutations`, with `TRUSTWORTHY_ML_2023_PDF` set, executed on the committed tree
+at `534d08f`. Actual output: executed=8, failed=0.
 
 | Check | Result |
 |---|---|
@@ -136,6 +135,14 @@ Modified: `SOP-01`, `SOP-02`, `SOP-04`, `SOP-05`, `SOP-08`, both group READMEs, 
 `mutation_test.py`. Added: `BM-09-disclosure-of-training-data-and-context.md` and this directory's four
 audit documents. No file was renamed, moved or deleted, and the 2023 package kept its identifiers.
 
+The post-review correction round then revised BM-09 and BM-04 on the points a reader of the first draft
+could have acted on wrongly: the AUROC random-ranking reference and the AUPR no-skill reference are now
+separate rows rather than one "chance" baseline; surrogate contamination invalidates the ordinary result
+instead of being reportable as an upper bound; the sentence-versus-corpus observation is scoped to the
+setting that reported it rather than stated as the expected shape; H-emission has a primary measurement of
+its own; and the channel comparison requires both raw rates next to `disclosure_gap`, because the same
+zero gap is produced by two silent channels and by two leaky ones.
+
 ## H. Unresolved and limits of this cycle
 
 1. **Two of three exercises are unread.** Exercise 1 and 3 bodies are behind Kaggle's bot protection at
@@ -165,5 +172,5 @@ TRUSTWORTHY_ML_2023_PDF=/path/to/book.pdf \
   python Validation/Trustworthy-ML-2023/tools/run_acceptance.py --with-mutations
 ```
 
-Expected on a clean checkout: `executed=8 failed=0`, with `mutation_test cases=17`,
+Actual on a clean checkout of `534d08f`: `executed=8 failed=0`, with `mutation_test cases=17`,
 `register_size=24`, `regression_patterns=14`, `invariants=9`, `markers_total=29`.

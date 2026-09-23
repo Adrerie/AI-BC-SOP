@@ -63,9 +63,9 @@ the temptation is a canonical cross-source layer.
 
 Decision: **do not build one now.** The existing traceability sections already carry per-claim provenance
 labels, and the plan's own rule forbids a second source-silo copy. What is missing is only a statement in
-each touched group README that some text is post-2023 and where to find the audit. That is recorded in
-`07_FINALIZATION.md`'s README step. If a third source arrives, canonicalisation becomes a planned change
-rather than a side effect of this one.
+each touched group README that some text is post-2023 and where to find the audit; that statement now sits
+in both group READMEs and the root README. If a third source arrives, canonicalisation becomes a planned
+change rather than a side effect of this one.
 
 One structural consequence must be handled honestly: `check_citations.py` validates book page anchors, and
 BM-09 has none because its source is not the book. The citation checker's coverage claim therefore has to
