@@ -255,7 +255,7 @@ INVARIANTS = [
      ["disclosure_gap", "both channels can be silent"]),
     ("Benchmark README separates book-derived components from the update layer",
      "Benchmark/%s/README.md" % PACKAGE,
-     ["BM-09 does not", "book section and page"]),
+     ["BM-09 is different", "book section and page"]),
 ]
 
 # --------------------------------------------------------------------------------- repo hygiene
