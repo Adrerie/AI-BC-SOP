@@ -90,10 +90,10 @@ def check_aupr_contract():
             findings.append(f"aupr row missing contract phrase {phrase!r}")
     if "trapezoidal" not in generic:
         findings.append("aupr row does not exclude trapezoidal PR integration")
-    if "score `c`" not in success:
-        findings.append("aupr_success row does not bind score orientation to c")
-    if "score `1 − c`" not in error and "score `1 - c`" not in error:
-        findings.append("aupr_error row does not bind score orientation to 1-c")
+    if "positive = success" not in success or "confidence `c`" not in success:
+        findings.append("aupr_success row does not bind positive=success and score orientation=c")
+    if "positive = error" not in error or ("`1 − c`" not in error and "`1 - c`" not in error):
+        findings.append("aupr_error row does not bind positive=error and score orientation=1-c")
     return findings
 
 
