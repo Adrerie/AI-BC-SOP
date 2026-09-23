@@ -28,14 +28,10 @@ BM-09 now separates AUROC and AP baselines, treats surrogate leakage as invalid 
 sentence-vs-corpus observation to its source setting, gives H-emission a primary measurement, and
 requires both raw channel rates with `disclosure_gap`.
 
-## Remaining work
+## Status
 
-1. Read the files changed by the post-review patch once for obvious wording/consistency problems.
-2. Run the repository's existing acceptance command. If the local source PDF is available, run the
-   existing source-dependent check as well.
-3. Fix only actual failures found by that run.
-4. Update the official-updates acceptance report with the current commit and actual outputs, removing
-   its stale status note.
-5. Commit and push this branch. Do not merge `main`.
+The post-review closeout is complete. The existing acceptance suite passed with the source-dependent
+check enabled, and the acceptance report records the actual outputs.
 
-No additional gates, mutation cases, validation layers, or architecture work are requested.
+No further plan stage is pending. Do not add gates, mutation cases, validation layers, or architecture
+work unless a future change creates a concrete need. Do not merge `main` automatically.
