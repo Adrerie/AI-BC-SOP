@@ -62,9 +62,11 @@ lost honestly.
      invariant to a *common* base choice but not to mixing them.
    - **Calibration**: bin the confidences, compute per-bin accuracy and mean confidence, report ECE
      (bin-weighted mean absolute gap), MCE (worst-bin gap), and the reliability diagram.
-   - **Ranking**: AUROC and both AUPR variants of `c` against `L`, each naming its positive class —
-     Success (`L = 1` positive) and Error (`L = 0` positive) — and each read against its own no-skill
-     value.
+   - **Ranking**: AUROC plus both correctness AUPR specializations. For `aupr_success`, set
+     positive = `L = 1` and rank by confidence `c`; for `aupr_error`, set positive = `L = 0` and rank
+     by `1 − c` (or an explicitly equivalent score that increases with error likelihood). Both use
+     the package's non-interpolated Average Precision definition and are read against their own
+     positive-class prevalence.
 4. Run the **trivial-score controls** as first-class rows in the same table:
    (i) a constant confidence — the *deployable* form, whose value is frozen on the calibration split
    before final testing, plus the *oracle* form set equal to the measured correctness rate of the set
