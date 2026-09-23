@@ -221,14 +221,16 @@ Only items that are not plainly `covered` get a record. Fields follow plan 02 §
   reference, and the attack's access level; report an ROC-style discrimination against chance, a
   privacy-utility curve where a control is claimed, and a channel comparison where intermediate output is
   exposed.
-- **Candidate baselines.** Chance at the target prevalence; a shadow-model attack; a memorisation-exact
+- **Candidate baselines.** Random ranking (`auroc = 0.5`); member prevalence as the `aupr` no-skill
+  reference; a shadow-model attack built on disjoint surrogate data; a memorisation-exact
   match baseline; the uncontrolled model as the utility reference.
 - **Candidate metrics.** `auroc`, `aupr` with a declared positive, `tnr_at_high_tpr` for operating points,
   `acc_avg` for the utility axis. One new registered row is needed for the disclosure gap between an
   intermediate channel and the final answer, because no existing name means that.
 - **Aggregation.** Per unit of analysis; corpus-level and item-level results never pooled.
-- **Failure interpretation.** An item-level result at chance with a corpus-level result far above it is
-  the expected shape, not a contradiction.
+- **Failure interpretation.** If item-level inference is near chance while corpus-level inference is
+  substantially stronger, the membership signal is unit-dependent in that setting. The 2026 LLM example
+  motivates testing both units where meaningful; it is not a universal expected ordering.
 - **Validity boundary.** Results are model-revision-specific and repairable; a negative result is dated.
 - **Provenance class.** official-course-derived, with repository conventions for the reporting grid.
 - **Disposition recommendation.** D4 — a ninth benchmark. This is the only place in the whole audit where
