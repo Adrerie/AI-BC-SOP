@@ -88,9 +88,14 @@ masking checks.
 
 ## 6. Primary metrics
 
-- `acc_under_eps` — accuracy under the named attack, always printed with dataset, norm, ε, and the
-  attack configuration (iterations, step size, restarts).
+- `acc_under_eps` — accuracy under a named norm-bounded attack, always printed with dataset, norm, ε,
+  and the attack configuration (iterations, step size, restarts).
 - Robustness curve: `acc_under_eps` as a function of ε, per method.
+- For **discrete-append** and **channel** stress, do not reuse `acc_under_eps`: there is no ε. Report
+  the fraction of eligible trials in which the **predeclared adversarial goal is achieved**, together
+  with the corresponding clean/no-injection task performance. Define the success event before the run
+  (for example target-string elicitation, policy-violating action, or instruction-source confusion)
+  and attach the suffix length or channel/placement budget to the rate.
 
 ## 7. Secondary / diagnostic metrics
 
@@ -106,8 +111,9 @@ masking checks.
 
 ## 8. Aggregation and uncertainty reporting
 
-Report per ε and per attack configuration; do not average over configurations with different
-strengths. Seed variability for stochastic defenses and stochastic attacks must be given with the
+Report norm-bounded rows per ε and per attack configuration; do not average over configurations with
+different strengths. Report discrete-append rows per suffix budget and channel-stress rows per channel
+and placement; never pool either family with ε-ball rows into one robustness scalar. Seed variability for stochastic defenses and stochastic attacks must be given with the
 number of runs. Where several datasets are used, keep the rows separate and state the norm/ε used on
 each — a cross-dataset average of robust accuracies at different ε values is not a number with a
 meaning. Mark combined-defense rows (a defense plus adversarial training) as combined.
