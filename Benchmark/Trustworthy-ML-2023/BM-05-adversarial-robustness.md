@@ -53,6 +53,17 @@ masking checks.
   access level recorded.
 - **Train/test condition matrix**: models trained under each condition evaluated under each other, to
   expose transferability gaps.
+- **Discrete-append stress** (Extended): the perturbation is a token sequence appended to the model's
+  instruction, so there is no norm to bound and the budget is a suffix length. State the target output
+  the attack optimizes, the token budget, and whether the attack was re-run against the defense rather
+  than reused from its paper. Gradient-following on the embedding is an approximation of a discrete
+  search, not the search itself: say which candidate-selection rule was used, because a result obtained
+  by naive continuous descent on one-hot inputs is an artifact of the relaxation.
+- **Channel stress** (Extended): the adversary writes content the system *reads* — retrieved, supplied
+  or tool-returned text — rather than content it classifies. Declare the channel, whether injected
+  content is length- or position-bounded, and what a compliant reading of the task would have produced.
+  This row is not a distribution-shift row and not a norm-ball row: there is no input-edit budget to
+  report, and a plausibility argument borrowed from either would be about the wrong variable.
 - **Certification stress** (Extended): apply a certificate appropriate to the declared threat
   model and model family, state its assumptions, and report certified accuracy or the corresponding
   certified bound. The relaxation approach discussed by the source is one admissible family, not the
@@ -73,6 +84,7 @@ masking checks.
 | Adversarially trained model | the defense that must be compared at equal inference cost |
 | Certified result (where computed) | the only row that may support an existential claim |
 | Published defense rows re-evaluated under the above ladder | prevents inheriting a masked number |
+| Random-suffix and no-injection controls at matched budget (Extended) | the floor for the two discrete rows; without it a long suffix looks effective simply for being long |
 
 ## 6. Primary metrics
 
@@ -135,6 +147,10 @@ resources is a documented failure mode of this literature.
   not equivalent to no gradient-based algorithm being able to find an attack.
 - Black-box results inherit the substitute model's assumptions about architecture, size and
   optimizer.
+- The two Extended rows do not share an axis with the pixel rows. A suffix budget and a channel claim
+  have no ε, so they cannot be plotted on the same accuracy-versus-ε curve and cannot be averaged into
+  one robustness number with rows that do; report them as their own table, and read a discrete-append
+  result as a statement about the model revision and attack family named with it, since both move.
 - The source provides no default iteration count, step size or restart rule; those are choices this
   benchmark requires you to state. Stating them is not the same as defending them: attack adequacy is
   an argument about the threat model and the defense, and a ladder that never broke a defense may

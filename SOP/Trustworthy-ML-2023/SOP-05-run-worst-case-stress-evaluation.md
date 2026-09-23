@@ -167,6 +167,10 @@ fooled into reporting one that does not exist.
   looseness.
 - Ignoring the cost of the robustness you are claiming, or transferring it to inference time in the
   narrative.
+- Dating nothing. A robustness or safety figure is an observation about one model revision against one
+  attack family at one time; without the revision and the attack date the same claim can be true in the
+  report and false in the deployment, and a defense that was already broken when the measurement was
+  taken cannot be repaired by quoting it.
 
 ## 9. Required outputs
 
@@ -193,6 +197,9 @@ the distance column norm-qualified and must mark which rows combine adversarial 
   confidence score notices stressed inputs.
 - [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — audits ε
   parity, configuration reporting, and guarantee wording.
+- [`BM-09`](../../Benchmark/Trustworthy-ML-2023/BM-09-disclosure-of-training-data-and-context.md) —
+  reuses this SOP's access-level ladder and query accounting for a different adversary goal: disclosure
+  rather than misbehavior.
 
 ## 12. Source traceability
 

@@ -79,6 +79,36 @@ PRESENT = [
      ["certified robust accuracy ≤ exact finite-sample robust accuracy ≤ empirical attacked accuracy under attack suite A", "never an upper-bound row"]),
     ("R2 zero-shot by benchmark definition", "r2", "SOP/%s/SOP-01-specify-deployment-setting.md" % PACKAGE,
      ["does not impose a universal zero-shot definition", "Information-rights compliance"]),
+
+    # Official-course update cycle (plans/Trustworthy-ML-Official-Updates). Each phrase below is the
+    # load-bearing half of an accepted delta: drop the sentence and the rule it carries disappears.
+    ("U-17 test-batch right declared separately", "u1",
+     "SOP/%s/SOP-01-specify-deployment-setting.md" % PACKAGE,
+     ["Test-batch right", "one-hot answer"]),
+    ("U-09 interaction claims reported by position", "u1",
+     "SOP/%s/SOP-04-measure-confidence-truthfulness.md" % PACKAGE,
+     ["Stop and re-report by position"]),
+    ("U-02 robustness results dated", "u1",
+     "SOP/%s/SOP-05-run-worst-case-stress-evaluation.md" % PACKAGE,
+     ["Dating nothing"]),
+    ("U-02/U-03 BM-05 carries the discrete-append and channel rows", "u1",
+     "Benchmark/%s/BM-05-adversarial-robustness.md" % PACKAGE,
+     ["Discrete-append stress", "Channel stress", "suffix length"]),
+    ("U-05 BM-04 carries the sensitivity target", "u1",
+     "Benchmark/%s/BM-04-error-and-anomaly-detection.md" % PACKAGE,
+     ["H-sensitivity", "prevalence of sensitive items"]),
+    ("U-08 BM-03 carries the separability probe", "u1",
+     "Benchmark/%s/BM-03-confidence-truthfulness.md" % PACKAGE,
+     ["Separability probe", "one quantity reported twice"]),
+    ("U-16 BM-06 splits one-time from per-case cost", "u1",
+     "Benchmark/%s/BM-06-explanation-quality.md" % PACKAGE,
+     ["what is paid once and what is paid per case"]),
+    ("U-14 BM-08 gives the reproduction outcome vocabulary", "u1",
+     "Benchmark/%s/BM-08-evaluation-integrity-audit.md" % PACKAGE,
+     ["inapplicable, which is neither replication nor failure", "regime-specific"]),
+    ("U-10 BM-09 states its provenance in both directions", "u1",
+     "Benchmark/%s/BM-09-disclosure-of-training-data-and-context.md" % PACKAGE,
+     ["official-course-derived", "repository conventions"]),
 ]
 
 # Wording that was only ever true of a superseded position, kept as package-wide regression patterns
@@ -174,6 +204,27 @@ REGRESSIONS = [
      r"|every file including plans)",
      "The hygiene scan covers all tracked files in the repository, including plans.",
      "The hygiene scan covers tracked non-plan files; plans/ is excluded and stated here."),
+
+    # Official-course cycle. These three wordings are the failures the update layer is most likely to
+    # introduce: a post-2023 rule acquiring a book citation, a comparison being read as a truth, and a
+    # fourth detection target being folded back into the three it was separated from.
+    ("9 post-2023 disclosure material acquiring a book citation",
+     r"((?:the )?book[^.]{0,60}?(?:membership inference|data disclosure|contextual norm|privacy session)"
+     r"|(?:membership inference|disclosure_gap)[^.]{0,50}?(?:the book|§\d))",
+     "The book's privacy session already covered membership inference as an attack.",
+     "Nothing in this file is book-derived, and no book section or page is cited here for that reason."),
+
+    ("10 attribution agreement reported as correctness",
+     r"(agreement (?:between|across)[^.]{0,60}?(?:proves|establishes|confirms|is ground truth"
+     r"|shows the truth)|attribution agreement (?:proves|establishes|is correct))",
+     "Agreement between the two attribution families proves the explanation is correct.",
+     "Methods disagree on the same model -> instrument uncertainty"),
+
+    ("11 sensitivity target pooled into another detection target",
+     r"(h[- ]sensitivity[^.]{0,60}?(?:pooled? with|the same as|counts as (?:h[- ]ood|h[- ]error))"
+     r"|(?:pooled|merged) with (?:h[- ]ood|h[- ]error|h[- ]multiplicity))",
+     "H-sensitivity can be pooled with H-ood into one detection figure.",
+     "so this row may not be pooled with the three above"),
 ] + ABSENT_PATTERNS
 
 # ------------------------------------------------------------------------ semantic invariants (R2)
@@ -196,6 +247,15 @@ INVARIANTS = [
     ("Benchmark README rule 8 excludes certificates from upper-bound rows",
      "Benchmark/%s/README.md" % PACKAGE,
      ["is not an upper-bound row", "provable lower bound"]),
+    ("BM-09 names the course session it comes from",
+     "Benchmark/%s/BM-09-disclosure-of-training-data-and-context.md" % PACKAGE,
+     ["Privacy & Data Protection", "Spring 2026"]),
+    ("SOP-08 register carries the disclosure-gap row",
+     "SOP/%s/SOP-08-report-evidence-and-validity-boundaries.md" % PACKAGE,
+     ["disclosure_gap", "both channels can be silent"]),
+    ("Benchmark README separates book-derived components from the update layer",
+     "Benchmark/%s/README.md" % PACKAGE,
+     ["BM-09 does not", "book section and page"]),
 ]
 
 # --------------------------------------------------------------------------------- repo hygiene

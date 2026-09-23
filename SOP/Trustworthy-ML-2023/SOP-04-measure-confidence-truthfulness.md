@@ -134,6 +134,11 @@ lost honestly.
 - **Stop** if the confidence mechanism's assumptions cannot be stated (posterior family, prior,
   independence of the distance measure from ambiguity). An unstated assumption is an unbounded claim.
 - **Escalate to Extended** whenever a human or an automatic action consumes the score directly.
+- **Stop and re-report by position** if the inputs are turns of one interaction rather than draws from a
+  named distribution: the set of answers a turn can legitimately take narrows as the history grows, so a
+  calibration or ranking figure computed by pooling turns across a session is not a figure about any
+  single turn, and a score that samples the model several times per turn must state that count wherever
+  it is quoted.
 - **Accept and record a negative result** if no mechanism beats the trivial control at the stated
   coverage: the correct output is "we cannot yet quantify confidence here", not a weaker metric.
 

@@ -64,6 +64,9 @@ BM_SECTIONS = [
 METRIC_ALLOW = {
     "generalization_type", "resource_envelope", "time_behavior", "source_coverage",
     "concept_reconstruction", "acceptance_report", "build_citation_index", "run_acceptance",
+    # The 2024-2026 update audit is cited by file name inside link text, which the inline-code
+    # tokenizer reads the same way it reads a metric name. These are document names, not scores.
+    "source_inventory", "delta_map", "decision_log",
     "check_citations", "check_metrics", "check_prose", "check_schema", "check_structure",
     "check_tables", "citation_index", "source_index",
     "comparison_class", "cue_whitelist", "deployment_axes", "target_samples",

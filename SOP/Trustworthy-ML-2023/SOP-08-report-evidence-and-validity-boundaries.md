@@ -63,6 +63,7 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `audit_pass_rate` | applicable integrity requirements passed ÷ applicable requirements | protocol audits | inflates if inapplicable requirements are dropped silently |
 | `conclusion_flip_count` | number of headline conclusions that change sign or significance under a protocol perturbation | protocol audits | depends on which perturbations were run |
 | `disclosure_completeness` | fraction of this SOP's §6 checklist items present in the report | any report | measures documentation, not correctness |
+| `disclosure_gap` | disclosure-event rate on an exposed intermediate channel minus the rate on the final answer, over the same items under one labeling rule fixed before the run | systems with more than one readable output | zero is not compliance — both channels can be silent — and the difference is undefined if the two rates were labeled differently |
 
 *Baselines and positive classes.* Every `auroc` / `aupr` / `aupr_*` number belongs to a named binary task:
 state which class is positive and which way the score points. Package-wide, `aupr` means the
@@ -184,7 +185,8 @@ the counterpart of a report assembled here:
 [`BM-04`](../../Benchmark/Trustworthy-ML-2023/BM-04-error-and-anomaly-detection.md),
 [`BM-05`](../../Benchmark/Trustworthy-ML-2023/BM-05-adversarial-robustness.md),
 [`BM-06`](../../Benchmark/Trustworthy-ML-2023/BM-06-explanation-quality.md),
-[`BM-07`](../../Benchmark/Trustworthy-ML-2023/BM-07-selective-prediction-under-cost.md).
+[`BM-07`](../../Benchmark/Trustworthy-ML-2023/BM-07-selective-prediction-under-cost.md),
+[`BM-09`](../../Benchmark/Trustworthy-ML-2023/BM-09-disclosure-of-training-data-and-context.md).
 
 ## 12. Source traceability
 
@@ -222,3 +224,16 @@ trapezoidal PR integration; separating an oracle constant from a frozen deployab
 including the one-bin identity `ece = |acc(test) − c_frozen|`; and the requirement that every ranking
 task name its positive class and score orientation. The base-matching rule for perplexity is the source's
 own footnote turned into a register constraint.
+
+**Post-2023 material in this file.** Nothing in this document's §4 register came from after the book, and
+that boundary is deliberate: a register row is a package-wide definition, so it is not extended from
+teaching material that the book does not contain. What the official course did contribute here is
+external confirmation of §6 and §10 rather than a new rule — the Spring 2026 project rubric asks for
+"appropriate baselines", "tables, figures, error bars where applicable", limitation discussion and an
+interpretation that goes beyond one accuracy figure, which is the same demand this document already makes
+of a report. It is cited as an example of the requirement being enforced elsewhere, under
+`official-course-derived` in
+[`../../Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md`](../../Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md),
+and no wording of §6 or §10 was changed to match it. Where a later cycle does import a post-2023 rule, it
+carries a course locator and a provenance label and never a book section and page, because the course
+page states the same limit this file does: the book "won't cover new topics added to the course".

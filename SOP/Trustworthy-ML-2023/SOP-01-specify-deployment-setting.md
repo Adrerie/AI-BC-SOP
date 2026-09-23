@@ -48,6 +48,11 @@ itself — but record that decision.
   test-time statistics, post-deployment updates, few-shot target examples. A method may use only the
   rights its declared setting grants. Using more does not make the work invalid; it makes it a
   **different setting**, which then has its own comparison class and its own benchmark.
+- **Test-batch right** — permission to consume the unlabeled test set *as a batch*, which is what
+  adaptation against test statistics actually needs and is not the same grant as access to unlabeled
+  target data. Declare it separately, because it changes what a per-item claim can mean: the same
+  objective driven on one sample at a time collapses toward a one-hot answer, and it is undefined
+  wherever nothing distinguishes an unexpected input from an ordinary one.
 - **Generalization type** — pick which train→test difference you are claiming to survive:
   ID (same distribution, different samples), cross-domain (same task, different domain),
   cross-bias (different cue correlations), adversarial (worst-case samples). The list is not
@@ -112,8 +117,9 @@ Run all of these; each is a stop-and-fix, not a warning.
       condition it was measured under. Several types in one project is normal; one number that blends
       them is not, unless the aggregation rule is stated and justified.
 - [ ] **Rights declaration**: every extra-resource ingredient the method consumes — target labels,
-      unlabeled target data, visual access, test-time statistics, target-informed calibration,
-      post-deployment updates — appears in the setting block as granted by the declared setting. If it
+      unlabeled target data, batch-level test-time adaptation, visual access, test-time statistics,
+      target-informed calibration, post-deployment updates — appears in the setting block as granted by
+      the declared setting. If it
       is not granted, either the setting changes or the ingredient goes.
 - [ ] **Cue whitelist is a partition**: every named factor of variation has a status; the
       undecided list is empty or explicitly accepted.
@@ -190,6 +196,9 @@ comparison class did not have. If ρ appears, give its numeric value and its dir
   consumes the cost statement.
 - [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — audits the
   setting block itself.
+- [`BM-09`](../../Benchmark/Trustworthy-ML-2023/BM-09-disclosure-of-training-data-and-context.md) —
+  consumes the information-rights block: what an attack may query, and at which access level, is granted
+  here before that benchmark can be run.
 
 ## 12. Source traceability
 

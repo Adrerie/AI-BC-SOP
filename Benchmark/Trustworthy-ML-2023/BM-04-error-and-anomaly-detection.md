@@ -27,6 +27,13 @@ The benchmark's stated non-alignment is part of the hypothesis set: an OOD sampl
 confidently and correctly, and an ID sample may be answered unconfidently, so H-ood and H-error must
 not be pooled.
 
+**H-sensitivity** (Extended) adds a fourth target with its own label construction: an item is
+*sensitive* when rephrasing it along an axis the task does not define changes the answer. The event to
+flag is neither novelty nor ambiguity nor an error already made — an input can be squarely in
+distribution, unambiguous, and still flip on wording — so this row may not be pooled with the three
+above, and a detector for it is scored against the prevalence of sensitive items in the family used,
+not against one half.
+
 ## 3. Required data and split assumptions
 
 - A labeled ID evaluation set, and one or more OOD sets whose relation to the training distribution
@@ -60,6 +67,12 @@ not be pooled.
   score is the wrong readout and the confidence statistic is the right one.
 - Coverage sweep: detection quality as a function of accepted coverage, which is what
   [`BM-07`](BM-07-selective-prediction-under-cost.md) turns into a decision.
+- **Rephrasing family stress** (Extended, for H-sensitivity): build a family per item where the intended
+  answer is fixed by construction and only the wording moves, then ask the detector to flag the unstable
+  items using the family alone, with no reference answer at test time. Report the family size and the
+  number of forward passes per item with every detection figure: a detector that samples the model
+  several times per item is buying its score, and the same figure from a single-pass detector is not
+  comparable to it.
 
 ## 5. Required baselines
 
@@ -117,6 +130,8 @@ quality" number.
 | Ensemble disagreement grows with M only on OOD | expected; check the accuracy confound before claiming better uncertainty |
 | Good `aupr` on an imbalanced subset only | compare with the prevalence of the declared positive class for that detection task; may be no skill |
 | Detector does not fire on adversarial examples | confidence and adversarial failure are separate axes |
+| H-sensitivity detector fires exactly where confidence is low | it detected difficulty, not wording dependence; re-run against the H-multiplicity and H-ood rows before claiming the flag means sensitivity |
+| H-sensitivity label taken from items whose intended answer is not fixed by construction | the "sensitive" items are ambiguous items; the detector is measuring H-multiplicity under another name |
 
 ## 10. Computational reporting
 

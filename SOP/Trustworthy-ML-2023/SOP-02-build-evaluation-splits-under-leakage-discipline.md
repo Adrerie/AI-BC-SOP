@@ -189,6 +189,9 @@ your validation set.
   thresholds and defense parameters are selected on validation material only, under this manifest.
 - [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — audits this
   SOP's outputs directly.
+- [`BM-09`](../../Benchmark/Trustworthy-ML-2023/BM-09-disclosure-of-training-data-and-context.md) — its
+  member/non-member control sets and its shadow-model splits are built under this SOP's disjointness
+  rules; a control set chosen after seeing scores is not a control.
 
 ## 12. Source traceability
 

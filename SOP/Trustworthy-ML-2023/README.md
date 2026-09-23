@@ -34,14 +34,14 @@ group uses the same names.
 
 | ID | Procedure | Stage | Tier | Measured by |
 |---|---|---|---|---|
-| SOP-01 | [Specify the deployment setting before training](SOP-01-specify-deployment-setting.md) | define | Core + Extended | BM-08 |
-| SOP-02 | [Build evaluation splits under leakage discipline](SOP-02-build-evaluation-splits-under-leakage-discipline.md) | freeze | Core + Extended | BM-01, BM-02, BM-08 |
+| SOP-01 | [Specify the deployment setting before training](SOP-01-specify-deployment-setting.md) | define | Core + Extended | BM-08, BM-09 |
+| SOP-02 | [Build evaluation splits under leakage discipline](SOP-02-build-evaluation-splits-under-leakage-discipline.md) | freeze | Core + Extended | BM-01, BM-02, BM-08, BM-09 |
 | SOP-03 | [Diagnose which evidence the model actually uses](SOP-03-diagnose-learned-evidence.md) | diagnose | Core + Extended | BM-02, BM-06 |
 | SOP-04 | [Measure confidence truthfulness](SOP-04-measure-confidence-truthfulness.md) | measure | Core + Extended | BM-03, BM-04 |
-| SOP-05 | [Run worst-case stress evaluation](SOP-05-run-worst-case-stress-evaluation.md) | stress | Core + Extended | BM-05 |
+| SOP-05 | [Run worst-case stress evaluation](SOP-05-run-worst-case-stress-evaluation.md) | stress | Core + Extended | BM-05, BM-09 |
 | SOP-06 | [Choose a mitigation, or choose to abstain](SOP-06-choose-mitigation-or-abstain.md) | decide | Core + Extended | BM-01, BM-02, BM-03, BM-07 |
 | SOP-07 | [Evaluate an explanation method before using it as evidence](SOP-07-evaluate-explanation-methods.md) | explain | Core + Extended | BM-06 |
-| SOP-08 | [Report evidence and state validity boundaries](SOP-08-report-evidence-and-validity-boundaries.md) | report | Core + Extended | BM-08 |
+| SOP-08 | [Report evidence and state validity boundaries](SOP-08-report-evidence-and-validity-boundaries.md) | report | Core + Extended | BM-08, BM-09 |
 
 ## How to use this group with the benchmarks
 

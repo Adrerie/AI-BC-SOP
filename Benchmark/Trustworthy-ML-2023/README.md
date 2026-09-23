@@ -14,7 +14,7 @@ the licensing position of this package are recorded in
 provenance-bearing staging unit whose rules are meant to be extended, revised or merged by later
 sources.
 
-## The eight components
+## The nine components
 
 | ID | Component | Capability under test | Condition axis | Tiering |
 |---|---|---|---|---|
@@ -26,6 +26,7 @@ sources.
 | BM-06 | [Explanation quality](BM-06-explanation-quality.md) | soundness of attributions and their human usefulness | model/label randomization, planted cue, occlusion, HITL | Core / Extended |
 | BM-07 | [Selective prediction under cost](BM-07-selective-prediction-under-cost.md) | declining where the system should decline | coverage, cost ratio, drift, escalation | Core / Extended |
 | BM-08 | [Evaluation integrity audit](BM-08-evaluation-integrity-audit.md) | whether the comparison itself can be believed | protocol perturbations | Core / Extended |
+| BM-09 | [Disclosure of training data and context](BM-09-disclosure-of-training-data-and-context.md) | whether the model reveals what it was fitted on or shown | unit of analysis, access level, exposed channel | Core / Extended — **official-course-derived, not book-derived** |
 
 ## Standing integrity rules for this suite
 
@@ -70,9 +71,10 @@ inputs can be adversarially manipulated        -> BM-05
 explanations are offered as evidence           -> BM-06
 decisions have asymmetric costs                -> BM-07
 comparing methods or inheriting a leaderboard   -> BM-08 (always)
+the model must not reveal what it knows of a specific item or context -> BM-09
 ```
 
-BM-08 is mandatory whenever a comparison is used to choose a method; the other seven are selected by
+BM-08 is mandatory whenever a comparison is used to choose a method; the other eight are selected by
 the claim under test.
 
 ## Metric names
@@ -80,6 +82,16 @@ the claim under test.
 All components use the metric register in
 [`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md) §4. Names
 are not redefined locally; if a component needs a new one, it is added to that register first.
+
+## Where each component comes from
+
+BM-01 through BM-08 reconstruct the book's evaluation methodology. BM-09 does not: it comes from the
+Spring 2026 official course session on privacy and data protection, and it is the only component whose
+traceability section cites a course session rather than a book section and page. That split is deliberate
+and is checked mechanically, because the same group name covering two sources is exactly where a
+post-book rule would start being quoted as though the book had said it. The audit trail for the decision,
+including the candidates that were examined and rejected, is
+[`../../Validation/Trustworthy-ML-Official-Updates-2024-2026/decision_log.md`](../../Validation/Trustworthy-ML-Official-Updates-2024-2026/decision_log.md).
 
 ## What this suite does not cover
 

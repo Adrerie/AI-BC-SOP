@@ -102,6 +102,9 @@ for re-computed numbers (implementation difference, seed, or both).
 | A conclusion requires target-domain information | setting mis-declared; reclassify and re-compare |
 | Trivial control matches or beats the claim on a metric | the metric is gameable at that claim; change metric or claim |
 | Second-version replication drops notably | accumulated benchmark overfitting, possibly field-wide |
+| Re-run on a different model or dataset reproduces the direction but not the margin | the claim holds within a regime; report the regime, do not average the two runs into one verdict |
+| Re-run reverses the direction on a second model or dataset | the original claim was regime-specific and its generality, not its result, is what failed |
+| Re-run cannot apply: the new setting removes a precondition the claim needs | inapplicable, which is neither replication nor failure; say which precondition stopped it |
 | Cost undisclosed but plausibly large | the comparison is incomplete, not favorable |
 | Requirement list not applicable in part | state which, and why — silent omission is the failure this artifact exists to catch |
 

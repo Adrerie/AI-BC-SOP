@@ -111,7 +111,9 @@ alone.
 
 Per method: passes or samples per explanation, whether it needs retraining or architecture access
 (which limits it to white-box settings), the cost of the inpainting or generation machinery behind
-the occlusion operator, and — for human-grounded tracks — participant hours. Report explanation cost
+the occlusion operator, and — for human-grounded tracks — participant hours. Split each of those into
+what is paid once and what is paid per case, since two methods with the same total cost are not
+comparable when one amortizes it and the other repeats it on every prediction. Report explanation cost
 alongside explanation quality, since a per-sample optimization loop is often the reason a method is
 not usable at deployment scale.
 

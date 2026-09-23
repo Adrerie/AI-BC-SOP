@@ -39,6 +39,9 @@ to [`BM-04`](BM-04-error-and-anomaly-detection.md), not here.
   multiple answers are legitimate, since that is where aleatoric and epistemic claims separate.
 - Sample counts per confidence bin reported, because bin-weight noise dominates the metric at the
   high-confidence end.
+- If the scored items are turns of one interaction rather than independent draws, say so and record the
+  turn position with each item: the history is part of the input, so the "distribution" calibration is
+  claimed over is a distribution over sessions, and a pooled figure cannot be read as a per-turn figure.
 
 ## 4. Shift or stress construction
 
@@ -55,6 +58,10 @@ to [`BM-04`](BM-04-error-and-anomaly-detection.md), not here.
 - Overfitting stress: compare checkpoints by training epoch where available, since probabilistic
   overfitting can appear while classification error improves.
 - Binning stress (`ece` at several bin counts and both equal-width and equal-mass binning).
+- Interaction stress (Extended): the same battery evaluated at fixed turn positions of a session, with
+  the earlier turns held fixed across methods. A score that is calibrated at turn one and degrades by
+  turn five has not failed calibration as a single number; it has failed to be stable, and only the
+  per-position rows show which of the two happened.
 
 ## 5. Required baselines
 
@@ -94,6 +101,12 @@ that set's labels, so it can only appear as the diagnostic in §7, where its pur
   empirical squared-error bins.
 - Decomposition note: task accuracy next to every confidence metric, since proper scores mix accuracy
   and calibration and have no knowable floor (the irreducible aleatoric term is unknown).
+- Separability probe (Extended), where two scores are claimed as an epistemic and an aleatoric pair:
+  rank one against the other over the evaluation set and report the coefficient with the estimator pair
+  and dataset named, against a threshold declared before the run. Two estimators that predict each
+  other this directly are one quantity reported twice, whatever they are called; the probe says nothing
+  about whether either of them is right, and a high value on one dataset family is not evidence that
+  the split is unusable in general.
 
 ## 8. Aggregation and uncertainty reporting
 

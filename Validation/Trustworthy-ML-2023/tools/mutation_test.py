@@ -98,6 +98,30 @@ CASES = [
      "score = `1 " + MINUS + " c` or an explicitly equivalent score increasing with error likelihood",
      "score = confidence `c`",
      "AUPR CONTRACT", "check_metrics.py"),
+
+    # Official-course cycle: the three new regression patterns, and the register row that keeps BM-09's
+    # own metric name legal.
+    ("post-2023 disclosure rule given a book citation",
+     "Benchmark/%s/BM-09-disclosure-of-training-data-and-context.md" % G.PACKAGE,
+     "## 13. Source traceability",
+     "The book's privacy session already covered membership inference.\n\n## 13. Source traceability",
+     "REGRESSION"),
+    ("sensitivity target pooled back into the OOD target",
+     "Benchmark/%s/BM-04-error-and-anomaly-detection.md" % G.PACKAGE,
+     "## 5. Required baselines",
+     "H-sensitivity can be pooled with H-ood into one detection figure.\n\n## 5. Required baselines",
+     "REGRESSION"),
+    ("attribution agreement written as correctness",
+     "Benchmark/%s/BM-06-explanation-quality.md" % G.PACKAGE,
+     "## 6. Primary metrics",
+     "Agreement between the two attribution families proves the explanation is correct.\n\n"
+     "## 6. Primary metrics",
+     "REGRESSION"),
+    ("disclosure_gap removed from the register",
+     "SOP/%s/SOP-08-report-evidence-and-validity-boundaries.md" % G.PACKAGE,
+     "| `disclosure_gap` | disclosure-event rate",
+     "| gap | disclosure-event rate",
+     "UNREGISTERED", "check_metrics.py"),
 ]
 
 
