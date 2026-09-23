@@ -1,7 +1,6 @@
 # Delta map — official post-book material against the accepted 2023 package
 
-Plan `02_DELTA_RECONSTRUCTION.md` artifact. Input:
-[`source_inventory.md`](source_inventory.md) (Gate U1). Comparison reference: the accepted
+Delta reconstruction from [`source_inventory.md`](source_inventory.md). Comparison reference: the accepted
 `SOP/Trustworthy-ML-2023/SOP-01…08` and `Benchmark/Trustworthy-ML-2023/BM-01…08` as they stand on this
 branch, whose section-level content was inventoried before any status below was assigned.
 
@@ -9,7 +8,7 @@ Comparison is by **research function**: what question does the official material
 the package could not answer before. A topic name shared with an existing artifact is not evidence of
 coverage, and a new model family is not evidence of a new capability.
 
-Statuses are the eleven from plan 02 §1, one per item. `covered` means the package already requires the
+Each item receives one status from the audit taxonomy. `covered` means the package already requires the
 same test or makes the same validity claim; `covered but modern example` means only the exemplar
 changed; `covered but protocol extension` means the requirement exists but the official material adds a
 construction, target, reporting condition, constraint or caveat it does not currently state.
