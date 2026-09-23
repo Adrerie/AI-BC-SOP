@@ -1,7 +1,6 @@
 # Decision log — smallest correct change for each delta
 
-Plan `03_EXTENSION_DECISIONS.md` artifact. Input: [`delta_map.md`](delta_map.md) (Gate U2). Decision
-order D0–D5 is the plan's; exactly one is chosen per delta.
+Decision record built from [`delta_map.md`](delta_map.md). Each delta receives exactly one disposition; D0–D5 are retained here as compact historical labels.
 
 ## 1. Decisions
 
