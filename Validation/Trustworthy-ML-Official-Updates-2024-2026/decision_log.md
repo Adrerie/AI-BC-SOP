@@ -77,7 +77,7 @@ cannot — that post-2023 text carries a course locator and never a book locator
 
 | Requirement | Result |
 |---|---|
-| Every accepted extension has a minimal-change destination | **PASS** — six extensions, all into existing files; the table names the section. |
+| Every accepted non-D4 extension has a minimal-change destination | **PASS** — the accepted D1/D2/D3 items are routed to existing files; the table names each destination, while CD-10/11/12 are consolidated into the single D4 BM-09. |
 | Every proposed new file passes the D4 bar | **PASS** — one file, argued in §2 against the four conditions. |
 | The eight mandatory decision cases are decided explicitly | **PASS** — LLM attacks CD-02/CD-03; prompt sensitivity CD-05; RAG conflict CD-06; attribution agreement CD-07; confidence under shift/multi-turn CD-08/CD-09; privacy CD-10…CD-13; reproduction CD-14; rubric requirements CD-15. |
 | No source-silo duplication introduced | **PASS** — no second copy of any SOP or Benchmark; the 2023 package is not renamed or relocated. |
