@@ -46,7 +46,7 @@ the opposite — that packages should be dissolved as soon as a merged file exis
 
 `Trustworthy-ML-2023` remains the repository's first provenance-bearing lineage: the original
 book-derived contribution is still traceable, while selected files may be extended in place by later
-official material when their traceability sections distinguish the newer source explicitly. It is
+official material whose deltas are recorded in the corresponding update audit. It is
 **not** claimed to be the final canonical form of the methods it contains. When a rule is later restated
 in a source-independent artifact, the canonical copy will say which sources fed it, while this lineage
 retains the provenance record for both the book-derived core and any clearly labeled later additions.
@@ -55,9 +55,10 @@ The same course lineage continued after the book, and its official 2024/25 and 2
 audited as an **update layer** rather than as a second package: see
 [`Validation/Trustworthy-ML-Official-Updates-2024-2026/`](Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md).
 Most of what that material teaches was already covered, and most of what was not was rejected as a
-classroom practice rather than a research protocol; the deltas that survived are now inside the existing
-SOP and Benchmark files, each labeled `official-course-derived` in its traceability section, plus one new
-benchmark. No post-2023 rule is presented as book-derived, and no lecture became a file of its own.
+classroom practice rather than a research protocol. The surviving deltas extend selected existing SOP
+and Benchmark files and are traced in the update audit; BM-09 is the one wholly new benchmark and marks
+its course provenance locally. No post-2023 rule is presented as book-derived, and no lecture became a
+file of its own.
 
 ## Development Principle
 
