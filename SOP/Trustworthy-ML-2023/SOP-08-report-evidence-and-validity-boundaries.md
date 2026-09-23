@@ -50,7 +50,8 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `reliability` | per-bin acc and (conf − acc), plotted with the confidence histogram | diagnosis of over/under-confidence | does not reveal `ece` without bin weights |
 | `auroc` | probability that a randomly drawn **positive** example scores higher than a randomly drawn **negative** example, under a declared positive class and score orientation | ranking claims for any declared binary task | insensitive to the absolute scale; the number is meaningless until the positive class is named |
 | `aupr` | **non-interpolated Average Precision (AP)** for a declared binary task: `Σ_n (R_n − R_{n−1}) P_n` over score thresholds, with the positive class and a score that increases toward that positive class explicitly stated | binary ranking/detection under imbalance | no-skill reference is the prevalence of the designated positive; do not substitute trapezoidal PR-curve integration under the same name |
-| `aupr_success`, `aupr_error` | named specializations of `aupr` for prediction correctness: `aupr_success` uses positive `L = 1` with score `c`; `aupr_error` uses positive `L = 0` with score `1 − c` (or an explicitly equivalent score increasing with error likelihood) | error/correctness ranking where these two orientations are both useful | no-skill reference = `P(L = 1)` for `aupr_success`, `P(L = 0)` for `aupr_error`; using `c` directly for the error-positive variant reverses the intended ranking |
+| `aupr_success` | correctness-specialized `aupr`: positive = success (`L = 1`), score = confidence `c` | ranking correctness by confidence | no-skill reference = `P(L = 1)` |
+| `aupr_error` | error-specialized `aupr`: positive = error (`L = 0`), score = `1 − c` or an explicitly equivalent score increasing with error likelihood | ranking errors by an error-oriented score | no-skill reference = `P(L = 0)`; using `c` directly reverses the intended ranking |
 | `risk_at_coverage` | error rate among the top-k fraction by confidence | abstention | undefined without the coverage stated |
 | `acc_under_eps` | accuracy under a named attack, **norm + ε + attack configuration attached** | adversarial claims | fake-safe when the defense masks gradients |
 | `certified_acc` | fraction of inputs with a proof of invariance inside the ball | architectures the bound admits | bound may be arbitrarily loose — it is a lower bound on true robust accuracy for its own threat model, not an upper-bound row |
@@ -211,10 +212,13 @@ rank correlation §3.7.5 (pp. 182-185); HITL §3.8.2, Definition 3.15 (pp. 189-1
 family and recalibration status: §4.8.1-§4.8.3 (pp. 259-263). The register format, the "does not
 show" list and the sensitivity panel are repository conventions.
 
-Three statements in §4 go beyond the source wording and are labeled **synthesized**: carrying the
+Five statements in §4 go beyond the source wording or numerical convention and are labeled **synthesized / repository convention**: carrying the
 random-detector value over to the error-positive task as `P(L = 0)` (the source gives the value for
 its success-positive task and defines AUPR-Error by relabeling the positive class, but states the
-swap only for the curve, not the baseline); separating an oracle constant from a frozen deployable
-constant, including the one-bin identity `ece = |acc(test) − c_frozen|`; and the requirement that
-every ranking task name its positive class. The base-matching rule for perplexity is the source's
+swap only for the curve, not the baseline); orienting `aupr_success` with score `c` and `aupr_error`
+with score `1 − c` so larger scores always mean "more positive"; using **non-interpolated Average
+Precision** `Σ_n (R_n − R_{n−1})P_n` as the package-wide numerical meaning of `aupr` rather than
+trapezoidal PR integration; separating an oracle constant from a frozen deployable constant,
+including the one-bin identity `ece = |acc(test) − c_frozen|`; and the requirement that every ranking
+task name its positive class and score orientation. The base-matching rule for perplexity is the source's
 own footnote turned into a register constraint.
