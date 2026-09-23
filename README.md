@@ -26,7 +26,7 @@ record, and its provenance stay together. Currently:
   [plan](plans/Trustworthy-ML-2023/README.md). BM-01…08 reconstruct the 2023 book; BM-09 is a
   post-book extension from the official Spring 2026 course and is traced separately in the update audit.
 
-Packages cite the source by section and page; the source documents themselves are not included here.
+Book-derived material cites the source by section and page; post-book additions cite their own course or paper locators. The source documents themselves are not included here.
 
 A package is a **provenance-bearing staging unit**, not a permanent shelf. It exists so that a rule can
 be traced to the reading that produced it while that rule is still mostly one book's way of seeing the
@@ -44,11 +44,12 @@ rather than being deleted, so a later reader can see which source held which pos
 Nothing here implies each future source must live in its own forever-isolated silo, and nothing implies
 the opposite — that packages should be dissolved as soon as a merged file exists.
 
-`Trustworthy-ML-2023` is therefore kept as the repository's first source package: a traceability record
-and a stable snapshot of what this one book contributed. It is **not** claimed to be the final canonical
-form of the methods it contains. When a rule from it is restated in a source-independent artifact, the
-canonical copy will say which packages fed it, and the package copy stays as the attributed source of
-record.
+`Trustworthy-ML-2023` remains the repository's first provenance-bearing lineage: the original
+book-derived contribution is still traceable, while selected files may be extended in place by later
+official material when their traceability sections distinguish the newer source explicitly. It is
+**not** claimed to be the final canonical form of the methods it contains. When a rule is later restated
+in a source-independent artifact, the canonical copy will say which sources fed it, while this lineage
+retains the provenance record for both the book-derived core and any clearly labeled later additions.
 
 The same course lineage continued after the book, and its official 2024/25 and 2026 teaching material was
 audited as an **update layer** rather than as a second package: see
