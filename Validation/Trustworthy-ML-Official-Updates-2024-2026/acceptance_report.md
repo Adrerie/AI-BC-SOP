@@ -16,7 +16,7 @@ Inputs: [`source_inventory.md`](source_inventory.md) (U1), [`delta_map.md`](delt
 
 | Check | Result |
 |---|---|
-| Every accepted addition has an official source locator | **PASS** — each cites an inventory ID, and each ID carries a canonical URL; the five lecture decks read in full are reachable from the schedule tables that link them. |
+| Every accepted addition has an official source locator | **PASS** — each cites an inventory ID, and each ID carries a canonical URL; the seven lecture decks read in full are reachable from the schedule tables that link them. |
 | Partial and inaccessible materials labeled | **PASS** — 16 of 22 decks, all videos, and Exercises 0/1/3 are labeled `PARTIAL` or `NO` with the routes tried. Exercise 2 is `NO` for its notebook and `FULL` only for the tutor's public scaffold. |
 | Project-topic suggestions not misrepresented as standards | **PASS** — the five 2026 topics are used for exactly what they state (a detection ask, a models line, a datasets line, cited papers). Where a topic was the *only* evidence, the disposition was record-only: CD-06, CD-07. |
 | Post-2023 content never labeled book-derived | **PASS** — enforced mechanically, not by reading: see §D1. |
