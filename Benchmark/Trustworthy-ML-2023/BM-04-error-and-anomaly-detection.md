@@ -66,7 +66,7 @@ not be pooled.
 | Baseline | Role |
 |---|---|
 | Random score | `auroc` = 0.5 reference, base-rate-independent |
-| Base-rate predictor (constant score) | the `aupr` reference, which is the prevalence of the task's declared positive: `P(L = 1)` success-positive, `P(L = 0)` error-positive, `P(OOD)` novelty-positive, `P(multiple)` ambiguity-positive |
+| Base-rate predictor (constant score) | the `aupr` reference, which is the prevalence of the task's declared positive: `P(L = 1)` success-positive, `P(L = 0)` error-positive, `P(OOD)` novelty-positive, `P(multiple-answer)` ambiguity-positive |
 | Max-probability of the unmodified model | the default every mechanism is compared to |
 | Entropy / margin over the class distribution | the same logits, a different readout |
 | Feature-space distance score (class-conditional Gaussian, or kernel centroid) | a genuinely different mechanism |
@@ -78,10 +78,13 @@ not be pooled.
 
 - `auroc` per detection target — the headline, because its random reference stays at 0.5 regardless
   of the base rate.
-- `aupr` for each declared detection target, with positive class and score orientation stated and
-  the no-skill reference set to that positive class's prevalence. For H-error specifically, also
-  report the named specializations `aupr_success` and `aupr_error` when both correctness orientations
-  are useful. For H-ood use positive = OOD; for H-multiplicity use positive = multiple-answer.
+- `aupr` for each declared detection target using the package's non-interpolated Average Precision
+  convention, with positive class and a score that increases toward that class stated explicitly.
+  For H-error, `aupr_success` uses positive = correct with score `c`, while `aupr_error` uses positive
+  = error with score `1 − c` (or an explicitly equivalent error-likelihood score). For H-ood use
+  positive = OOD and an OOD-oriented score such as `1 − c`; for H-multiplicity use positive =
+  multiple-answer and a multiplicity-oriented score such as `1 − c` when that interpretation is
+  justified.
 - `tnr_at_high_tpr` (true-negative rate at a fixed high true-positive rate, for example 95 %) —
   the operating-point form used when a false alarm budget rather than an average matters.
 
