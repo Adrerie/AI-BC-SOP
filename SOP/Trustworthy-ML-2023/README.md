@@ -63,7 +63,7 @@ cross-link check used at acceptance.
 - Numbers quoted as examples come from the source and are labeled with their section and page. The
   source's numeric values are **experimental regimes**, not general thresholds: where a procedure
   repeats one, it says which experiment it came from, and no routing decision is made on it.
-- Every SOP ends with traceability so a later revision can re-check the claim against the book.
+- Every SOP retains book traceability for its book-derived rules. Later-source deltas are recorded in the relevant update audit rather than duplicated across every file.
 
 ## Scope note
 
