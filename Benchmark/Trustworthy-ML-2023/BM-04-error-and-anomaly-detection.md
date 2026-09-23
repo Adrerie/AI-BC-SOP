@@ -169,4 +169,7 @@ benchmark whose meaningful readout is confidence rather than top-1 accuracy: §2
 Corruption benchmark as a family of severe perturbations: §2.6.1 (p. 42). Self-influence detection
 of mislabeled training items with `auroc`/AP and its stated assumptions: §3.12.2, Definition 3.16
 (pp. 216-217). TNR-at-fixed-TPR reporting appears in the source's own comparison tables
-(§4.12.1, p. 293). Target separation and the aggregation rules are repository conventions.
+(§4.12.1, p. 293). Target separation, the aggregation rules, the requirement that every detector use
+a score increasing toward its declared positive class, and the package-wide use of non-interpolated
+Average Precision for `aupr` are synthesized/repository conventions rather than claims attributed to
+the source.
