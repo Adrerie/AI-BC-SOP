@@ -27,8 +27,8 @@ Do not skip a gate. A later stage may revise an earlier artifact when validation
 
 The active execution entry point is:
 
-- [revision-03/README.md](revision-03/README.md) — final metric/parser patch validation and Cycle 4
-  re-acceptance.
+- [revision-04/README.md](revision-04/README.md) — final AUPR numerical/orientation contract
+  validation and Cycle 5 re-acceptance.
 
-Revision 01 and Revision 02 remain historical context. Cycle 3 acceptance is superseded by the
-post-review patch and must not be treated as current until Revision 03 completes.
+Revisions 01–03 remain historical context. Cycle 4 acceptance at `ddd1736` is superseded by the
+post-review AUPR patch and must not be treated as current until Revision 04 completes.
