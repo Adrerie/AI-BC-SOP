@@ -75,8 +75,7 @@ Only items that are not plainly `covered` get a record. Fields follow plan 02 §
   output string, and whether the attack is adaptive to the defense.
 - **Candidate baselines.** Unaligned/unfiltered baseline; the same model under content filtering; a
   random-suffix control at matched token budget.
-- **Candidate metrics.** Existing `acc_under_eps` re-used with the token-budget qualifier stated, plus
-  `auroc` where the defense is a refusal detector. No new metric name.
+- **Candidate metrics.** Goal-specific attack-success rate under the declared suffix budget, paired with clean/no-suffix task performance; `auroc` may additionally be used where the defense itself is a refusal detector. Do not reuse `acc_under_eps`, because the discrete track has no ε. No new shared metric name is required.
 - **Aggregation.** Per attack family and per model revision, never pooled into one robustness scalar.
 - **Validity boundary.** A result is an observation about that model revision at that date; the deck's
   own cat-and-mouse statement ("Playing cat & mouse game is a dead end") is a decay claim, not a bound.
