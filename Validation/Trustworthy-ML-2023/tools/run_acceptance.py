@@ -8,7 +8,7 @@ Checks that only read committed markdown run anywhere. The citation check reads
 `citation_index.json`, which is committed; when a source PDF is configured -- through `--source` or
 the environment variable -- the suite also verifies that committed index against it (needs PyMuPDF).
 `--rebuild-index` regenerates the index instead of only comparing it, and `--with-mutations` adds the
-gate-provocation run, which needs `git` and takes a few seconds longer.
+gate and metric-contract provocation run, which needs `git` and takes a few seconds longer.
 
 Exit status is 0 only when every executed check passes, so this is usable as a gate.
 """
@@ -47,7 +47,7 @@ def main(argv=None):
     ap.add_argument("--rebuild-index", action="store_true",
                     help="regenerate citation_index.json from --source before checking")
     ap.add_argument("--with-mutations", action="store_true",
-                    help="also run representative end-to-end gate mutations in mutation_test.py")
+                    help="also run representative end-to-end gate and metric-contract mutations")
     args = ap.parse_args(argv)
 
     print(f"repository root: {C.ROOT}")
@@ -74,8 +74,8 @@ def main(argv=None):
     extra = 1 if (pdf or args.rebuild_index) else 0
     if args.with_mutations:
         rc, summary = run("mutation_test.py")
-        print(f"{'PASS' if rc == 0 else 'FAIL'}  {'mutations':<14}  representative end-to-end gate mutations "
-              f"->  {summary}")
+        print(f"{'PASS' if rc == 0 else 'FAIL'}  {'mutations':<14}  representative end-to-end gate and "
+              f"metric-contract mutations ->  {summary}")
         extra += 1
         if rc:
             failures.append("mutations")

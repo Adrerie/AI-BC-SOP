@@ -1,24 +1,166 @@
 # Acceptance Report — Trustworthy ML (2023) package
 
-> **Status note:** Cycle 4 was accepted at `ddd1736`, then superseded by a post-review AUPR
-> definition/orientation patch. The current branch must complete Revision 04 before this report can
-> again be treated as the current acceptance record. Cycle 4 remains historical evidence below.
+> **Status note:** Cycle 5 is the current acceptance record. Cycle 4 was accepted at `ddd1736` and is
+> superseded on the two metric-definition points Revision 04 closed; Cycles 1 to 4 below are historical
+> evidence, kept because their corrections still stand, and their counts describe the runs they recorded.
 
-
-
-This package has been accepted four times.
+This package has been accepted five times.
 
 | Cycle | What it was | Result | Where it stands |
 |---|---|---|---|
 | **1** | Plans `00`–`06` of `plans/Trustworthy-ML-2023/`: source audit, reconstruction, SOP group, Benchmark group, acceptance, wrap-up | 4 stage gates + 9 acceptance gates recorded as PASS | **Historical.** Superseded by external review; its checks were re-run from zero in Cycle 2 and its numbers appear below only where they were reproduced |
 | **2** | Revision 01, `plans/Trustworthy-ML-2023/revision-01/00`–`07`: metric, setting, evidence, robustness, reproducibility and architecture corrections | ACCEPTED, then superseded on two points | **Historical**, kept because it records the corrections that still stand. Its licensing limitation and its four-level disclosure ladder were both replaced by the direct corrections that opened Revision 02 |
-| **3** | Revision 02, `plans/Trustworthy-ML-2023/revision-02/00`–`03`: package-wide consistency sweep, validator hardening, final re-acceptance | ACCEPTED at `4f33897`, then superseded on metric semantics and validator wording | **Historical**, kept because its sweep and its hardened validators are the ones still in force. Its citation and duplication counts predate Revision 03 and are superseded in C4.5 |
-| **4** | Revision 03, `plans/Trustworthy-ML-2023/revision-03/00`–`01`: validate the direct metric/parser patch, repair only what the run reveals, re-accept | ACCEPTED at `ddd1736`, then superseded on AUPR numerical definition and score orientation | **Historical** pending Revision 04 / Cycle 5 |
+| **3** | Revision 02, `plans/Trustworthy-ML-2023/revision-02/00`–`03`: package-wide consistency sweep, validator hardening, final re-acceptance | ACCEPTED at `4f33897`, then superseded on metric semantics and validator wording | **Historical**, kept because its sweep and its hardened validators are the ones still in force. Its citation and duplication counts predate Revision 03 and are superseded in C4.4 |
+| **4** | Revision 03, `plans/Trustworthy-ML-2023/revision-03/00`–`01`: validate the direct metric/parser patch, repair only what the run reveals, re-accept | ACCEPTED at `ddd1736`, then superseded on the AUPR numerical definition and score orientation | **Historical**, kept because its parser hardening, allowlist discipline and coverage wording are still in force. Its mutation case count (10) is superseded by C5.3 |
+| **5** | Revision 04, `plans/Trustworthy-ML-2023/revision-04/00`–`01`: validate the final AUPR contract, prove the new guard fails on the known regressions, re-accept | See "Cycle 5 result" | **Current record** |
 
 Every cycle here applies the same rule the last review handed down: a prior PASS is evidence about the
 past, not a result to copy forward. Each mechanical claim below is produced by a committed script that
 was re-run in a clean checkout, and each claim that is not mechanical is labeled as a reading judgement
 and says what was read.
+
+---
+
+## Cycle 5 — Revision 04 final AUPR contract
+
+### What Revision 04 was for
+
+Two metric-definition findings survived Cycle 4. The package said `aupr` was an area under a
+precision-recall curve without saying *which* area, and trapezoidal integration of that polyline and
+Average Precision answer different questions on the same data; and it named the positive class of
+`aupr_error` without naming the score, so an implementation could rank errors by confidence and
+report the reverse of what it meant. Revision 04 fixes both by contract: package-wide `aupr` is
+**non-interpolated Average Precision**, `Σ_n (R_n − R_{n−1}) P_n` over score thresholds, and each
+correctness specialization carries an explicit orientation — success with `c`, error with `1 − c`.
+This cycle validated that patch, proved the new guard actually fails on the regressions it exists for,
+and writes the current record. Nothing was redesigned.
+
+### How to re-run this
+
+| Field | Value |
+|---|---|
+| Branch | `plan/trustworthy-ml-2023` |
+| Direct patch under test | `3bb0473`…`65035d6` (13 commits: definitions, provenance, the `check_metrics.py` guard, documentation, and the Revision 04 plan set) |
+| Acceptance commit | *(this commit)* — the tree the clean runs below were taken from |
+| Interpreter | Python 3.14.0, standard library only; PyMuPDF for the index-verify row alone |
+| Source PDF | unset for the first row, `TRUSTWORTHY_ML_2023_PDF` for the second |
+
+```
+python Validation/Trustworthy-ML-2023/tools/run_acceptance.py --with-mutations
+TRUSTWORTHY_ML_2023_PDF=/path/to/the-book.pdf \
+  python Validation/Trustworthy-ML-2023/tools/run_acceptance.py --with-mutations
+```
+
+Both were executed in a clean clone of the pushed branch at a different absolute path, with no local
+audit working area present:
+
+| Invocation | Checks executed | Result |
+|---|---|---|
+| clean checkout, no source | 7 | 7 PASS, 0 FAIL |
+| clean checkout, `TRUSTWORTHY_ML_2023_PDF` set | 8 | 8 PASS, 0 FAIL |
+
+Current output, so a reader can diff theirs against it:
+`structure findings=0` · `links broken=0 asymmetric=0 duplicate_pairs=8 docs=22` ·
+`metrics parser_findings=0 unregistered=0 shape_findings=0 aupr_contract_findings=0 register_size=23` ·
+`prose vague=0 spelling_variants=0` ·
+`citations bound=437 drifting=0 unanchored=30` ·
+`gates markers_found=52 markers_total=20 regression_patterns=11 regressions=0 invariants=6
+invariant_misses=0 normative_files=23 hygiene_scanned=36 hygiene_misses=0` ·
+`mutation_test cases=13 failures=0` · index verified at `headings=243 definitions=87 captions=231
+offset=2 diffs=0`.
+
+### C5.1 The contract, in one place
+
+| Name | Positive class | Score, larger means more positive | No-skill reference | Numerical convention |
+|---|---|---|---|---|
+| `aupr` | declared per task, stated at use | stated per task | prevalence of that positive | non-interpolated Average Precision; not trapezoidal PR integration |
+| `aupr_success` | success, `L = 1` | confidence `c` | `P(L = 1)` | as above |
+| `aupr_error` | error, `L = 0` | `1 − c`, or an explicitly equivalent error-likelihood score | `P(L = 0)` | as above |
+
+H-ood takes positive = OOD with an OOD-oriented score and reference `P(OOD)`; H-multiplicity takes
+positive = multiple-answer with a multiplicity-oriented score and reference
+`P(multiple-answer)`. Using confidence directly for the error-positive variant is named as a failure
+in the register itself, so the wrong implementation has a row to be checked against.
+
+### C5.2 The four findings, closed
+
+| # | Finding | Direct correction | Mechanical evidence | Reading judgement | Status |
+|---|---|---|---|---|---|
+| 1 | `aupr_error` score orientation was under-specified: positive class named, score not | SOP-08 splits the two specializations into their own rows with `c` and `1 − c` bound; SOP-04 step 3, BM-03 §6 and BM-04 §6 repeat the binding at the point of use | `aupr_contract_findings=0`, and the two orientation mutations below are caught by name | Read SOP-04 §4, BM-03 §6/§13, BM-04 §2/§5/§6/§9/§13 together: every correctness use now states both halves, and H-ood / H-multiplicity are given scores oriented toward their own positives | **PASS** |
+| 2 | Package-wide `aupr` did not distinguish AP from trapezoidal PR-AUC | The generic row defines AP as `Σ_n (R_n − R_{n−1}) P_n` and forbids substituting trapezoidal integration under the same name; the three users say which convention they apply | `aupr_contract_findings=0`, plus the trapezoidal mutation below; the register keeps 23 rows × 4 columns and `shape_findings=0` | Grepped the whole package for "trapezoid": four occurrences, all exclusions. No artifact calls trapezoidal PR-AUC `aupr` | **PASS** |
+| 3 | Cycle 4's repair count was internally inconsistent (its prose said four, its summary five, its commit table six) | C4.2, the Cycle 4 result and the Cycle 4 commit table now agree on five — four validator repairs plus one benchmark consistency edit — and the count is stated once | `check_structure findings=0` still holds after the edits; the residue is a wording fix, so nothing mechanical decides it | C4.2's bullet list was counted against the Cycle 4 commit's actual file list | **PASS** |
+| 4 | `check_metrics.py` documentation overclaimed its coverage ("every metric name used anywhere in the package") | The module docstring and `tools/README.md` now state the real scope, and C5.5 records it here | Not a runnable claim; verified by reading the checker's own predicate (`INLINE_CODE` then `IDENT`, `"_" in tok`) against the wording | The boundary is narrower than the old sentence and is now described identically in code, tool docs and this record | **PASS** |
+
+### C5.3 The three contract mutations, as committed tooling
+
+Plan 00 §3 asked for the guard to be provoked in an isolated worktree. That was done by hand first, and
+is now part of `mutation_test.py`, so a reader gets the same result from one command:
+
+| Mutation | Injected wording | Detector | Result |
+|---|---|---|---|
+| A — numerical convention | generic `aupr` row redefined as trapezoidal integration of the PR polyline | `AUPR CONTRACT aupr row missing contract phrase 'non-interpolated average precision'` | caught, tree green on restore |
+| B — success orientation | `aupr_success` scored by `1 − c` | `AUPR CONTRACT aupr_success row does not bind positive=success and score orientation=c` | caught, tree green on restore |
+| C — error orientation | `aupr_error` scored by confidence `c` | `AUPR CONTRACT aupr_error row does not bind positive=error and score orientation=1-c` | caught, tree green on restore |
+
+`mutation_test.py` grew from ten cases to thirteen and now runs two checkers, choosing per case which
+one owns the rule; the baseline requires both to be green before any case runs, and the final restore
+re-checks both. This changes a Cycle 4 number deliberately: the coverage claim stays representative
+(thirteen cases still do not cover every marker or invariant), and the wording in `tools/README.md`
+says so in the same breath as the count.
+
+### C5.4 Provenance of the two conventions
+
+Neither convention is credited to the source, and the traceability says so where each is used: SOP-08
+§12 lists the `c` / `1 − c` orientation and non-interpolated AP among five statements that go beyond
+the source's wording; BM-03 §13 records both as synthesized; BM-04 §13 records the
+score-toward-declared-positive requirement and the AP choice as synthesized / repository convention.
+What the book does supply is the positive-class definition behind AUPR-Error and the observation that a
+random detector's PR value equals the positive prevalence — the over-generalization of that second
+statement was the original P0-A finding, and it stays closed: the error-positive baseline is still
+`P(L = 0)` and the regression pattern for the old sentence is still armed.
+
+### C5.5 What `check_metrics.py` does and does not cover
+
+It reads the SOP-08 §4 register, then scans the SOP and Benchmark artifacts (not the validation notes)
+for **lower-case snake_case identifiers inside inline-code spans**, requiring each to be registered; it
+checks that every register row is rectangular and names a validity and a degeneracy condition; and it
+asserts the AUPR contract phrases against the register rows. It does **not** prove that a metric-like
+name written only in prose, capitalized, or shorter than four characters is registered — `x_y`,
+`Acc_shift` and a score named in running text are outside its reach. That boundary is stated in its
+docstring, in `tools/README.md`, and here, and no claim in this report is broader than it.
+
+### C5.6 Limitations that remain open
+
+C3.5 and C4.4 stay the standing list. The Cycle 5 deltas:
+
+1. **The AUPR guard is a wording guard.** It asserts that the register rows contain the contract
+   phrases, which is why the three mutations are caught and also why a fluent sentence that states the
+   convention and then violates it elsewhere would pass. The reading judgements in C5.2 are the cover
+   for that gap, and the book is the only arbiter of the underlying facts.
+2. **`register_size=23`, `bound=437`, `unanchored=30`, `duplicate_pairs=8`** are this run's values,
+   re-measured rather than carried forward; the largest shared run is still 9 grams, and the 30
+   unanchored page numbers remain a deliberate citation style in the validation notes.
+3. **Thirteen mutation cases is still not exhaustive coverage**, by design: the point is that the
+   detectors bite on the known regressions, not that every marker has its own injected case.
+4. **Claim grounding, numeric defaults, `ρ` direction, bounded sub-passes, printed folios, the
+   CV-centric example base, and second-version replication** are unchanged from C3.5 items 1, 6, 7, 8,
+   9, 10 and 11.
+
+### Cycle 5 result
+
+**ACCEPTED, and ready for review toward `main` — but not merged.** Gate R4-1 passes on all five of its
+conditions: the AUPR definitions agree across SOP-08, SOP-04, BM-03 and BM-04; all three contract
+mutations are detected by name and the restored tree returns green; the complete mechanical suite
+passes; the source-dependent citation-index verification passes against the local PDF; and nothing in
+Revision 01, 02 or 03 was weakened — 52 markers, 11 regression patterns, 6 invariants, 23 register
+rows and 36 hygiene-scanned files behave as before, now with a metric guard that can be provoked.
+
+| Revision 04 commit | Plan |
+|---|---|
+| `3bb0473`…`65035d6` | direct AUPR contract patch, provenance entries, checker scope wording, guard and documentation, plus the Revision 04 plan set |
+| *(this commit)* | 00–01 — validation, the three contract mutations committed into `mutation_test.py`, the Cycle 4 count repair, and this record |
+
+`main` was not touched: it remains at `ffdd0c0`, and the plan branch is the only thing pushed.
 
 ---
 
@@ -150,14 +292,14 @@ consistent across SOP-08, BM-03 and BM-04 with a generic name for declared detec
 code span cannot bypass the register check, no pseudo metric key survives as a registered-looking name
 in a normative artifact, the allowlist holds only schema fields and one formula-local symbol, and the
 mechanical suite is green both with and without the source. All four findings that opened the revision
-are closed above, and the five additional repairs/consistency edits made during that cycle are listed rather than
+are closed above, and the five repairs and consistency edits listed in C4.2 are recorded rather than
 quietly folded in. Nothing from Revision 01 or Revision 02 was weakened: 52 markers, 11 silent
 regression patterns, 6 invariants and 36 hygiene-scanned files behave as at Cycle 3.
 
 | Revision 03 commit | Plan |
 |---|---|
 | `879915d`…`c5f75d5` | direct metric/parser patch, documentation and attribution scope, plus the Revision 03 plan set |
-| *(this commit)* | 00–01 — validation of the patch, the six repairs in C4.2, and this record |
+| *(this commit)* | 00–01 — validation of the patch, the five repairs and consistency edits in C4.2, and this record |
 
 `main` was not touched: it remains at `ffdd0c0`, and the plan branch is the only thing pushed.
 
