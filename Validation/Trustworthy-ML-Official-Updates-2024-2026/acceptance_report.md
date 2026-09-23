@@ -2,8 +2,10 @@
 
 Cycle result: **PASS**. The substantive code/content state was tested at `534d08f` on
 `plan/trustworthy-ml-official-updates`, after the post-review BM-09 correction, with the source PDF
-configured so the source-dependent index check ran too. Later commits only cleaned plan/report references
-and acceptance metadata; they did not change SOPs, Benchmarks, or validation tools. Every numerical result
+configured so the source-dependent index check ran too. Later commits first cleaned plan/report references and acceptance metadata, then made small content-only
+review fixes: centralized provenance wording in the READMEs and a BM-05 clarification that the new
+suffix/channel tracks report goal-specific attack success rather than reusing `acc_under_eps`. No
+validation code, registered metric, file structure, or link target changed after the recorded run. Every numerical result
 below is the actual output of the run recorded in §C.
 
 Inputs: [`source_inventory.md`](source_inventory.md) (U1), [`delta_map.md`](delta_map.md) (U2),
