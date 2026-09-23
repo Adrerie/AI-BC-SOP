@@ -13,6 +13,7 @@ The substantive review fixes are already committed. Do not redesign the package.
 - BM-04 states H-sensitivity positive class, score orientation and AP baseline.
 - Root README says 8 SOPs + 9 Benchmarks and distinguishes BM-09 provenance.
 - `delta_map.md` / `decision_log.md` were synchronized with the corrected semantics.
+- Root lineage wording, the full-deck count, and the stale decision-count sentence were also corrected after review.
 
 ## Remaining work
 
