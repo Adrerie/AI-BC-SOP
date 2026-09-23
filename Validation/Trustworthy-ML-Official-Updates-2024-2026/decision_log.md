@@ -45,7 +45,8 @@ BM-09 is proposed for CD-10/CD-11/CD-12 because all four D4 conditions hold:
    certified-empirical ordering that does not apply. Inside BM-08 it would be read as an integrity audit
    of a comparison rather than a property of the deployed model.
 3. **Enough source detail.** The deck supplies the task definition, the shadow-model baseline, the
-   chance anchor, the unit-of-analysis rule, the memorisation scaling axes, the privacy-utility trade-off
+   membership-inference chance comparison, the unit-of-analysis example, the memorisation scaling axes,
+   the privacy-utility trade-off
    and an exposed-channel comparison. That is enough to write design, baselines, metrics, aggregation,
    failure interpretation and validity limits.
 4. **Reusable research value.** The same protocol applies to vision, language and multimodal models and
