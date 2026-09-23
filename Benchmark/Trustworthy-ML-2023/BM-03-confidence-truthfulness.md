@@ -75,9 +75,10 @@ that set's labels, so it can only appear as the diagnostic in §7, where its pur
 
 - `nll` and `brier` (multi-class variant where applicable) — proper scores.
 - `ece` with the binning disclosed; `mce` for worst-bin risk.
-- `auroc` as the ranking headline, with `aupr_success` / `aupr_error` reported alongside. Each area
-  names its positive class and is read against that class's prevalence; the two variants do not share
-  a no-skill value.
+- `auroc` as the ranking headline, with `aupr_success` / `aupr_error` reported alongside using the
+  package's non-interpolated Average Precision convention. `aupr_success` uses positive = correct and
+  score = `c`; `aupr_error` uses positive = error and score = `1 − c` (or an explicitly equivalent
+  error-likelihood score). Each is read against its own positive-class prevalence.
 
 ## 7. Secondary / diagnostic metrics
 
