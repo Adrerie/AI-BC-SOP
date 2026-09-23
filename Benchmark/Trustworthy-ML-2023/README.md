@@ -1,12 +1,11 @@
-# Benchmark group — Trustworthy ML evaluation suite (from *Trustworthy Machine Learning*, 2023)
+# Benchmark group — Trustworthy ML evaluation suite
 
 Reusable benchmark specifications for the claims a trustworthy-ML system makes about itself: that it
 generalizes across a change, relies on the right evidence, states usable confidence, notices its own
 errors, survives a bounded worst case, explains itself honestly, declines safely — and that the
 comparison proving any of this is itself trustworthy.
 
-The suite was derived by reconstructing the source book's methodology rather than by transcribing its
-chapters; see [`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md)
+BM-01 through BM-08 were derived by reconstructing the 2023 book's methodology rather than by transcribing its chapters; BM-09 and selected later extensions come from the official post-book course lineage. See [`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md)
 and the audited source universe in
 [`source_coverage.md`](../../Validation/Trustworthy-ML-2023/source_coverage.md). Source attribution and
 the licensing position of this package are recorded in
