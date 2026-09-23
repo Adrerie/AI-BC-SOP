@@ -1,8 +1,8 @@
-# SOP group — Trustworthy ML methods (from *Trustworthy Machine Learning*, 2023)
+# SOP group — Trustworthy ML methods
 
 Reusable standard operating procedures for building and evaluating ML systems whose claims
 (generalization, confidence, explanation, robustness) must survive contact with a changed
-environment. Derived from the book by concept reconstruction, not by chapter: see
+environment. The eight SOPs originate from a concept reconstruction of the 2023 book and now carry selected official-course updates where they extend the same workflow: see
 [`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md)
 for the model these eight documents implement, and
 [`source_coverage.md`](../../Validation/Trustworthy-ML-2023/source_coverage.md) for the audited
