@@ -1,9 +1,10 @@
 """Metric-register consistency.
 
-`SOP-08` §4 is the single definition site: every metric name used anywhere in the package must be
-registered there, and no document may quietly redefine one. Inline-code spans are tokenized
-internally, so an expression such as `metric_a > metric_b` cannot hide either identifier from the
-register check. This catches the failure mode where a
+`SOP-08` §4 is the single definition site for registered metric keys used in the SOP/Benchmark
+artifacts. This checker covers lower-case snake_case identifiers inside inline-code spans; it does
+not claim to detect metric-like names written only in prose, short identifiers such as `x_y`, or
+capitalized aliases. Inline-code spans are tokenized internally, so an expression such as
+`metric_a > metric_b` cannot hide either identifier from the register check. This catches the failure mode where a
 revision introduces a locally-defined score that a reader will meet elsewhere with a different
 meaning -- the same class of error that made the first implementation state one random baseline for
 two AUPR variants that have different positive classes.
@@ -28,10 +29,10 @@ def _row(line):
 
 
 def register():
-    """(names, rows, columns) parsed from the first table of SOP-08 §4."""
+    """(names, rows, columns, row_map) parsed from the first table of SOP-08 §4."""
     text = C.read(REGISTER_FILE)
     section = text.split("## 4.")[1].split("## 5.")[0]
-    names, rows, width = set(), 0, None
+    names, rows, width, row_map = set(), 0, None, {}
     for line in section.splitlines():
         if not line.startswith("| `"):
             continue
@@ -41,8 +42,11 @@ def register():
             width = len(cells)
         elif len(cells) != width:
             print(f"REGISTER ROW WIDTH {rows}: {len(cells)} cells, header had {width}")
-        names.update(re.findall(r"`([a-z][a-z0-9_]+)`", cells[0]))
-    return names, rows, width
+        row_names = re.findall(r"`([a-z][a-z0-9_]+)`", cells[0])
+        names.update(row_names)
+        for name in row_names:
+            row_map[name] = cells
+    return names, rows, width, row_map
 
 
 def inline_identifiers(text):
@@ -61,7 +65,7 @@ def parser_selftest():
 
 
 def check_unregistered():
-    reg, _, _ = register()
+    reg, _, _, _ = register()
     used = defaultdict(set)
     for rel, kind in C.artifacts():
         if kind == "val":
@@ -72,6 +76,25 @@ def check_unregistered():
                 continue
             used[tok].add(rel)
     return used
+
+
+def check_aupr_contract():
+    """Guard the package convention that AUPR means AP and that correctness orientations are explicit."""
+    findings = []
+    _, _, _, rows = register()
+    generic = " ".join(rows.get("aupr", [])).lower()
+    success = " ".join(rows.get("aupr_success", [])).lower()
+    error = " ".join(rows.get("aupr_error", [])).lower()
+    for phrase in ("non-interpolated average precision", "positive class", "score"):
+        if phrase not in generic:
+            findings.append(f"aupr row missing contract phrase {phrase!r}")
+    if "trapezoidal" not in generic:
+        findings.append("aupr row does not exclude trapezoidal PR integration")
+    if "score `c`" not in success:
+        findings.append("aupr_success row does not bind score orientation to c")
+    if "score `1 − c`" not in error and "score `1 - c`" not in error:
+        findings.append("aupr_error row does not bind score orientation to 1-c")
+    return findings
 
 
 def check_register_cites():
@@ -95,21 +118,25 @@ def check_register_cites():
 
 def main(argv):
     quiet = "--quiet" in argv
-    reg, rows, width = register()
+    reg, rows, width, _ = register()
     parser = parser_selftest()
     unreg = check_unregistered()
     shape = check_register_cites()
+    aupr_contract = check_aupr_contract()
     for f in parser:
         print("PARSER " + f)
     for tok, where in sorted(unreg.items()):
         print(f"UNREGISTERED `{tok}` in {sorted(where)}")
     for f in shape:
         print("REGISTER SHAPE " + f)
+    for f in aupr_contract:
+        print("AUPR CONTRACT " + f)
     if not quiet:
         print(f"register: {rows} rows x {width} columns, {len(reg)} metric names")
     print(f"check_metrics parser_findings={len(parser)} unregistered={len(unreg)} "
-          f"shape_findings={len(shape)} register_size={len(reg)}")
-    return 1 if (parser or unreg or shape) else 0
+          f"shape_findings={len(shape)} aupr_contract_findings={len(aupr_contract)} "
+          f"register_size={len(reg)}")
+    return 1 if (parser or unreg or shape or aupr_contract) else 0
 
 
 if __name__ == "__main__":
