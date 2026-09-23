@@ -104,8 +104,8 @@ risk-bearing decision:
 10. Write the comparison class: list the specific prior works whose claims you consider
     comparable, and for each, the setting line you checked it against. Anything with more
     resources than you declared is moved to a separate "stronger-setting" table.
-11. Pre-register the decision policy that will later be applied to test numbers (§6 step 5 of
-    SOP-02), so that "we only looked once" is verifiable rather than asserted.
+11. Pre-register the decision policy that will later be applied to test numbers (§5 step 2 and §7
+    of SOP-02), so that "we only looked once" is verifiable rather than asserted.
 
 ## 6. Mandatory checks
 
