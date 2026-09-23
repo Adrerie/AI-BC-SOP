@@ -18,12 +18,13 @@ Materials are grouped into **source-attributed packages**. A package collects th
 derived from one studied source under a single directory name, so the procedure text, its validation
 record, and its provenance stay together. Currently:
 
-- **Trustworthy ML (2023)** — 8 SOPs and 8 benchmarks for evaluation discipline on real
+- **Trustworthy ML lineage** — 8 SOPs and 9 benchmarks for evaluation discipline on real
   deployments: [SOP group](SOP/Trustworthy-ML-2023/README.md),
   [Benchmark group](Benchmark/Trustworthy-ML-2023/README.md),
   [validation record](Validation/Trustworthy-ML-2023/acceptance_report.md),
   [source attribution](Validation/Trustworthy-ML-2023/SOURCE.md),
-  [plan](plans/Trustworthy-ML-2023/README.md).
+  [plan](plans/Trustworthy-ML-2023/README.md). BM-01…08 reconstruct the 2023 book; BM-09 is a
+  post-book extension from the official Spring 2026 course and is traced separately in the update audit.
 
 Packages cite the source by section and page; the source documents themselves are not included here.
 
