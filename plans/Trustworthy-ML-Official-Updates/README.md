@@ -1,27 +1,41 @@
 # Trustworthy ML Official Updates — 2024–2026
 
-This plan audits the official post-book Trustworthy Machine Learning course materials and uses them
-only where they add genuinely new research capabilities, failure modes, evaluation protocols, or
-operational procedures beyond the accepted 2023 package.
+## Purpose
 
-The starting point is the accepted package already on `main`:
+Use official post-book Trustworthy ML course material to extend the existing SOP/Benchmark lineage
+only where it adds a genuinely new research capability, failure mode, evaluation protocol, or
+operational requirement.
 
-- `SOP/Trustworthy-ML-2023/`
-- `Benchmark/Trustworthy-ML-2023/`
-- `Validation/Trustworthy-ML-2023/`
+The source audit and delta analysis are already complete. The resulting evidence lives in:
 
-The goal is **not** to make a second summary of the course and not to replace the 2023 book package.
-The goal is to identify post-2023 deltas and integrate only the deltas that survive explicit gates.
+- `Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md`
+- `Validation/Trustworthy-ML-Official-Updates-2024-2026/delta_map.md`
+- `Validation/Trustworthy-ML-Official-Updates-2024-2026/decision_log.md`
 
-## Execution order
+## Working rules
 
-1. [00_MASTER_PLAN.md](00_MASTER_PLAN.md)
-2. [01_SOURCE_AUDIT.md](01_SOURCE_AUDIT.md)
-3. [02_DELTA_RECONSTRUCTION.md](02_DELTA_RECONSTRUCTION.md)
-4. [03_EXTENSION_DECISIONS.md](03_EXTENSION_DECISIONS.md)
-5. [04_SOP_EXTENSION.md](04_SOP_EXTENSION.md)
-6. [05_BENCHMARK_EXTENSION.md](05_BENCHMARK_EXTENSION.md)
-7. [06_VALIDATION_AND_ACCEPTANCE.md](06_VALIDATION_AND_ACCEPTANCE.md)
-8. [07_FINALIZATION.md](07_FINALIZATION.md)
+- Prefer a small extension to an existing SOP/Benchmark over a new file.
+- A new Benchmark is justified only for a genuinely distinct evaluable capability.
+- Do not create artifacts just because a newer model family or application appears.
+- Keep post-2023 material explicitly separate from book-derived provenance.
+- If a source cannot be read, mark it partial/unavailable rather than infer its contents.
+- Do not add new validation machinery unless an actual failure requires it.
 
-Do not merge `main` automatically.
+## Current state
+
+The official-update content and the post-review corrections are already committed. In particular,
+BM-09 now separates AUROC and AP baselines, treats surrogate leakage as invalid evaluation, limits the
+sentence-vs-corpus observation to its source setting, gives H-emission a primary measurement, and
+requires both raw channel rates with `disclosure_gap`.
+
+## Remaining work
+
+1. Read the files changed by the post-review patch once for obvious wording/consistency problems.
+2. Run the repository's existing acceptance command. If the local source PDF is available, run the
+   existing source-dependent check as well.
+3. Fix only actual failures found by that run.
+4. Update the official-updates acceptance report with the current commit and actual outputs, removing
+   its stale status note.
+5. Commit and push this branch. Do not merge `main`.
+
+No additional gates, mutation cases, validation layers, or architecture work are requested.
