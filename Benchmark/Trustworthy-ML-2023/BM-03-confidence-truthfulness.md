@@ -183,7 +183,10 @@ Anchors specific to this benchmark's measurements:
 - Score comparability across candidates rather than per sample: §4.1.3 (pp. 227-228).
 
 The three-hypothesis split, the control-row table, and the bin-sensitivity requirement are
-repository conventions. Two items are **synthesized** rather than quoted: separating the oracle
-constant from a frozen deployable constant, and carrying the source's success-positive random value
-over to the error-positive variant as `P(L = 0)` — both are recorded with their reasoning in
+repository conventions. Four items are **synthesized / repository conventions** rather than quoted: separating the oracle
+constant from a frozen deployable constant; carrying the source's success-positive random value over
+to the error-positive variant as `P(L = 0)`; orienting the error-positive specialization with `1 − c`
+so larger scores mean greater error likelihood; and fixing non-interpolated Average Precision as the
+package-wide `aupr` numerical convention rather than trapezoidal PR integration. These are recorded
+with their reasoning in
 [`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md) §12.
