@@ -225,10 +225,11 @@ including the one-bin identity `ece = |acc(test) − c_frozen|`; and the require
 task name its positive class and score orientation. The base-matching rule for perplexity is the source's
 own footnote turned into a register constraint.
 
-**Post-2023 material in this file.** Nothing in this document's §4 register came from after the book, and
-that boundary is deliberate: a register row is a package-wide definition, so it is not extended from
-teaching material that the book does not contain. What the official course did contribute here is
-external confirmation of §6 and §10 rather than a new rule — the Spring 2026 project rubric asks for
+**Post-2023 material in this file.** The pre-existing §4 register entries are book-derived or earlier
+repository conventions. `disclosure_gap` is the first post-book register addition: it operationalizes
+TML26-L13's comparison between an exposed intermediate channel and the final answer, with the exact
+formula and degeneracy wording treated as a repository convention. Separately, the Spring 2026 project
+rubric provides external confirmation of §6 and §10 rather than a new reporting rule — it asks for
 "appropriate baselines", "tables, figures, error bars where applicable", limitation discussion and an
 interpretation that goes beyond one accuracy figure, which is the same demand this document already makes
 of a report. It is cited as an example of the requirement being enforced elsewhere, under
