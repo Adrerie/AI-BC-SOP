@@ -1,126 +1,44 @@
-# Deep Learning (Goodfellow, Bengio & Courville, 2016) — source-package cleanup
+# Deep Learning (2016) — source-package cleanup
 
 ## Goal
 
-Finish the 2016 source package before any modern update is added.
+Clean the extracted 2016 package before review. Do not add new SOPs/BCs, post-2016 material, validators,
+gates, mutation tests, acceptance cycles, or extra plan files.
 
-The package is already extracted. This pass is only for correcting over-strong claims and reducing
-overgrown artifacts. Do not add new SOPs, new BCs, new validators, new gates, or post-2016 material.
+## Required changes
 
-## 1. Correct the BCs
+### BCs
 
-### BC-DL-03 — regularization
+- **BC-DL-03:** do not classify regularization by whether training error happened to decrease. Report
+  training/generalization error separately; if both improve, note possible optimization/capacity effects.
+- **BC-DL-04:** remove as an active BC. Keep adversarial linearity / FGSM only as a 2016 historical
+  observation in `concept_reconstruction.md` and, if useful, brief SOP context. Remove links/index entry.
+- **BC-DL-05:** keep the useful probes but reframe as an **optimization diagnostic probe suite**. Probes may
+  support or rule out diagnoses; they do not uniquely classify pathology from traces. Rename if needed.
+- **BC-DL-12:** restrict PCA to linear/undercomplete-autoencoder and directly related comparisons. Other
+  representation claims use their own appropriate controls.
 
-Keep the benchmark, but fix the interpretation of the book's definition.
+### SOPs
 
-Do not say that a method stops being regularization merely because training error also decreases.
-Instead:
+Shorten `SOP-DL-03`, `SOP-DL-04`, `SOP-DL-08`, and `SOP-DL-09`.
 
-- report training and generalization error separately;
-- if both improve, note that optimization/capacity may also have changed;
-- keep the classification based on the intended role and the actual experimental mechanism, not on one
-  observed training-error direction.
+Keep the executable decision path; compress or move catalog-style method inventories, historical menus,
+long derivations and era-specific recipes into compact notes or `concept_reconstruction.md`.
 
-### BC-DL-04 — adversarial linearity
+For `SOP-DL-04`, center the flow on:
 
-Remove this as an active reusable BC.
+`verify objective → inspect symptom → probe → minimal repair → rerun → report`
 
-The 2016 adversarial-linearity explanation and FGSM-era experiment should remain as a historical
-source-era observation in `concept_reconstruction.md` and, where useful, as context in the regularization
-SOP. Do not present "excessive linearity" as a current causal benchmark hypothesis.
+Keep essential failure modes, source traceability and historical boundaries.
 
-Delete the BC file and remove its index/cross-links.
+## Synchronize
 
-### BC-DL-05 — optimization pathology
+Update `concept_reconstruction.md`, package READMEs, indexes and cross-links affected by the BC removal/
+rename or SOP reductions.
 
-Keep the useful diagnostic experiments, but remove the strong "separability/classify the pathology from
-the trace" claim.
+Keep the distinction between book-derived principle, 2016 historical observation, and repository
+operationalization clear.
 
-Reframe it as an **optimization diagnostic probe suite**:
+## Finish
 
-- each probe tests one symptom/repair relation;
-- a probe can rule out or support a diagnosis;
-- the suite does not promise unique identification from traces;
-- remedies are evaluated against the quantity they are meant to change.
-
-Rename the file/title if needed and update links.
-
-### BC-DL-12 — representation quality
-
-Keep the benchmark, but narrow PCA to the claims it actually supports.
-
-PCA is a required matched-dimension control for the linear/undercomplete-autoencoder and related
-downstream comparisons. It is not the universal baseline for every representation claim.
-
-Use local controls for manifold sensitivity, contractiveness, one-hot similarity, sparse coding and
-distributed-representation arguments.
-
-## 2. Reduce overgrown SOPs
-
-Keep the current nine-SOP architecture unless a deletion becomes obviously necessary.
-
-Shorten these four:
-
-- `SOP-DL-03`
-- `SOP-DL-04`
-- `SOP-DL-08`
-- `SOP-DL-09`
-
-The main procedure should contain only the decision path a researcher follows.
-
-Move or compress long catalog-style material — optimizer inventories, historical method menus, model
-family surveys, detailed derivations and era-specific recipes — into compact tables or
-`concept_reconstruction.md`.
-
-In particular, `SOP-DL-04` should read approximately as:
-
-`verify objective → inspect symptom → run the relevant probe → apply the smallest repair → re-run → report`
-
-It should not function as a rewritten optimization textbook.
-
-Do not shorten by deleting source boundaries, important failure modes, or the historical caveat.
-
-## 3. Synchronize the package
-
-Update:
-
-- `Validation/Deep-Learning-2016/concept_reconstruction.md`
-- SOP/BC READMEs and cross-links
-- root/SOP/Benchmark indexes if IDs or filenames changed
-
-The reconstruction should clearly distinguish:
-
-- book-derived principle;
-- historical 2016 observation/example;
-- repository operationalization.
-
-## 4. Finish
-
-Do one concise content pass only:
-
-- no chapter-shaped duplication;
-- no historical explanation promoted to a current universal claim;
-- no broken links after BC-DL-04 removal / BC-DL-05 rename;
-- no obvious inconsistency between reconstruction and artifact indexes.
-
-Do not create an acceptance framework or another revision plan.
-
-Commit and push `plan/deep-learning-2016`. Do not merge `main`.
-
-## Next phase — not part of this run
-
-After this source package is reviewed and merged, create a separate modern-update branch from the then
-current `main`.
-
-That future update should compare the 2016 workflows against modern sources and add only structural
-deltas such as:
-
-- model/data/compute scaling;
-- Transformer/modern sequence and vision inductive biases;
-- modern pretraining, transfer and representation learning;
-- diffusion / flow-based generative modeling;
-- modern optimization/training stability where it changes the workflow;
-- resource-normalized adaptation/efficiency;
-- test-time compute and post-training/reasoning.
-
-Do not add those topics during this cleanup.
+Do one final content/link pass, commit and push `plan/deep-learning-2016`. Do not merge `main`.
