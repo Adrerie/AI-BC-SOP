@@ -21,3 +21,6 @@ SOPs are grouped by the source they were reconstructed from, one directory per p
 
 - [`Trustworthy-ML-2023/`](Trustworthy-ML-2023/README.md) — 8 SOPs covering the evaluation workflow
   from declaring a deployment setting to reporting evidence and its validity boundaries.
+- [`Deep-Learning-2016/`](Deep-Learning-2016/README.md) — 9 SOPs covering task/output specification,
+  fitting-regime diagnosis, regularization, optimization diagnosis, model selection, experiment debugging,
+  inductive-bias choice, sharing/transfer decisions, and generative-model comparison.

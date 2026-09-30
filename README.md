@@ -26,6 +26,14 @@ record, and its provenance stay together. Currently:
   [plan](plans/Trustworthy-ML-2023/README.md). BM-01…08 reconstruct the 2023 book; BM-09 is a
   post-book extension from the official Spring 2026 course and is traced separately in the update audit.
 
+- **Deep Learning 2016** — 9 SOPs and 11 active benchmark checks reconstructed by research function from
+  Goodfellow, Bengio & Courville's *Deep Learning* (2016): [SOP group](SOP/Deep-Learning-2016/README.md),
+  [Benchmark group](Benchmark/Deep-Learning-2016/README.md),
+  [source record](Validation/Deep-Learning-2016/SOURCE.md),
+  [reconstruction record](Validation/Deep-Learning-2016/concept_reconstruction.md), and
+  [plan](plans/Deep-Learning-2016/README.md). The package preserves 2016-era implementation advice as
+  historical where appropriate instead of presenting it as current best practice.
+
 Book-derived material cites the source by section and page; post-book additions cite their own course or paper locators. The source documents themselves are not included here.
 
 A package is a **provenance-bearing staging unit**, not a permanent shelf. It exists so that a rule can

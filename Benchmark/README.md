@@ -19,6 +19,10 @@ The directory is not restricted to a single research area. New benchmarks should
 
 Benchmarks are grouped by the source they were reconstructed from, one directory per package:
 
-- [`Trustworthy-ML-2023/`](Trustworthy-ML-2023/README.md) — 8 benchmarks for shift generalization,
-  cue dependence, confidence truthfulness, error detection, adversarial robustness, explanation
-  quality, selective prediction, and evaluation integrity.
+- [`Trustworthy-ML-2023/`](Trustworthy-ML-2023/README.md) — 9 benchmarks covering shift generalization,
+  cue dependence, confidence truthfulness, error detection, adversarial robustness, explanation quality,
+  selective prediction, evaluation integrity, and disclosure/privacy.
+- [`Deep-Learning-2016/`](Deep-Learning-2016/README.md) — 11 active benchmark checks for output/loss coupling,
+  capacity/data curves, regularization mechanisms, optimization diagnostic probes, long-range dependency,
+  implementation health, inductive-bias assumptions, search resolvability, sharing/transfer gains,
+  generative-evaluation integrity, and representation quality.
