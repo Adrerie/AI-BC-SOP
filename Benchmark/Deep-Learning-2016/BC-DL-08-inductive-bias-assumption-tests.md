@@ -48,6 +48,34 @@ attaches to violating them.
 - **i**: a padding sweep between valid and same convolution.
 - **j**: several activation functions, including at least one unconventional choice, compared on the same task.
 
+> **Modern update (2017–2026) — one added comparison condition on arms a/b, and no new arm.** Arms a–j are
+> the 2016 book's own tests and are unchanged. Arms a and b test whether a network has translation
+> equivariance and whether other group equivariances must be learned by replicating detectors and pooling
+> across channels. The modern material makes a distinction those arms can now be run with, using the same
+> metric and the same baseline:
+>
+> - **a/b, added condition: given versus learned.** A convolutional layer is equivariant to spatial
+>   translation at every layer and takes the 2D structure of the image into account by construction; in an
+>   attention-based network that equivariance "**must be learned**". Run the existing equivariance-error
+>   metric (metric 1) on both a model that has the prior built in and one that must acquire it, **at matched
+>   data**, and report the data budget at which the comparison was made. The two are not comparable without
+>   that budget, because the modern account is explicit about what closes the gap: the strong convolutional
+>   inductive bias "can only be superseded by employing extremely large amounts of training data". The
+>   primary vision source for this states the same condition from the other side — pre-trained on large data
+>   and transferred to mid-sized or small benchmarks the low-bias architecture does very well at
+>   substantially lower training cost, while trained only on ImageNet-scale data it self-reports accuracies
+>   below comparable convolutional networks.
+> - **Why this is a condition and not an arm.** It changes nothing about what is measured, what the baseline
+>   is, or what counts as failure; it adds the second subject the equivariance claim is now made about. The
+>   arm structure, the baseline set in §3 and the metrics in §4 are untouched.
+> - **No architecture is specified.** Consistent with the plan governing this lineage and with the 2016
+>   package's rule that a model family is not a benchmark, no transformer or vision-transformer entry is
+>   created here. What is tested is the *prior* — whether equivariance is given or learned — which is exactly
+>   the quantity arms a and b already measure.
+>
+> *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §2.3. Sources: `UDL`
+> §12.10 fol. 229–230; `VIT` (abstract, introduction, conclusion).*
+
 ## 3. Baselines
 
 - Arm a/b: the identity transform (δ = 0) and, for b, a translation-only control.
@@ -102,6 +130,36 @@ threshold; those are evaluator choices.
 - **Arm j: an unconventional activation matches the default** ⇒ consistent with the book's publication-bias
   warning; a new unit matters only if it demonstrably improves (§6.3, pp. 220–221).
 
+> **Modern update (2017–2026) — two interpretation rules, no change to any arm.** The bullets above stand.
+> Two readings are added, both about how a result is *reported* rather than what is measured.
+>
+> - **Arms a/b, given-versus-learned condition.** Where the added condition in §2 was run, a large
+>   equivariance error in the model that must **learn** the equivariance is not a failure of that model and is
+>   not comparable to the same measurement on a model that has it built in — unless the data budget is
+>   reported with it. The modern account states the gap closes only with extremely large amounts of training
+>   data, so the informative quantity is *equivariance error as a function of data budget*, not either
+>   endpoint alone. Report the budget at which the two were compared and say whether it is plausibly in the
+>   regime where the gap should have closed.
+> - **Arm g, the depth claim is contested in both directions.** Arm g's existing caveat — that we cannot
+>   guarantee the target function class has the property the expressivity results require — is necessary but no
+>   longer sufficient. The modern anchor's own verdict is that "the balance of evidence suggests that depth is
+>   critical; even the shallowest networks with good image classification performance require >10 layers.
+>   However, there is no definitive explanation for why", and it records substantial counter-evidence:
+>   wider-shallower residual networks matching deeper ones; a 12-layer parallel-channel network; and the
+>   finding that predominantly **shorter** paths of 5–17 layers drive performance in residual networks. The
+>   depth-separation results are qualified by the finding that some cannot easily be fit in practice and that
+>   there is "little evidence that the real-world functions that we are approximating have these pathological
+>   properties". The direction that does support depth is distillation: shallow students could not replicate a
+>   deeper teacher, and student performance increased with depth at a **constant parameter budget** — which is
+>   arm g's own matched-parameter design, so it is the closest modern analogue this benchmark has.
+>
+>   Read an arm-g result as evidence about *this* task, *this* optimizer and *this* parameter ladder. Do not
+>   report it as settling depth against width: the 2016 package already declined to make that a benchmark
+>   claim, and the modern evidence does not overturn that decision — it confirms the question is open.
+>
+> *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §2.3, §2.5. Sources:
+> `UDL` §12.10 fol. 229–230, §20.6 fol. 418–419, §20.6.1–§20.6.2; `VIT`.*
+
 ## 6. Validity limits and source traceability
 
 - Arm a's exactness holds for pure convolution; any stride, padding or pooling changes the statement.
@@ -132,10 +190,26 @@ threshold; those are evaluator choices.
 | Hidden units: absence of guiding theory; publication-bias warning; admissibility split between feedforward and recurrent/probabilistic models | §6.3, pp. 216–222 |
 | Architecture rankings unstable; no architecture-selection advice given | §9 intro, p. 350 |
 
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Two
+modern-update blocks were added: the given-versus-learned comparison condition on arms a/b in §2, and the two
+interpretation rules in §5. They are sourced outside the 2016 book and recorded in
+[`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§2.3 and §2.5, with source keys defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §12.10 fol. 229–230 and
+§20.6 fol. 418–419; `VIT`. The claim under test, the arm list, the baselines in §3 and the metrics in §4 are
+unchanged: no arm was added, and no metric was introduced that a source does not name.
+
 **Historical boundary.** The 20M/60M observation comes from address-photo digit transcription work cited by
 the book; the named component menus (Leaky ReLU, PReLU, maxout, softplus, hard tanh, RBF; locally connected,
 tiled, grouped and strided convolution; valid/same/full padding as MATLAB terminology) and the deployment
 examples (AT&T check reading, Microsoft OCR and handwriting) are book-era. The 2016 verdict that most
 convolutional networks are by then trained in a purely supervised way, after unsupervised or patch-wise feature
-learning was popular roughly 2007–2013, is recorded as a period statement (§9.9, p. 383). No post-2016
-architecture is introduced.
+learning was popular roughly 2007–2013, is recorded as a period statement (§9.9, p. 383).
+
+The closing sentence of this note was amended by the modern update. It previously stated that no post-2016
+architecture is introduced. That remains true in substance and is now stated precisely: **no architecture is
+introduced**, post-2016 or otherwise. What §2's added condition and §5's added rules introduce is a *prior*
+and its acquisition cost — whether translation equivariance is given at every layer or must be learned, and
+what data budget that difference requires. Consistent with the plan governing this lineage, and with the
+standing rule in this package's README that a model family is not a benchmark, no architecture entry, variant
+catalogue or family ranking is created here.

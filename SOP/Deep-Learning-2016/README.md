@@ -69,9 +69,11 @@ rule.
 3. **Historical means historical.** Era defaults — the §11.2 baseline recipe, greedy layer-wise
    pretraining, specific dropout retentions and initialization scales, §12.1 systems practice — are
    labeled as such with their source, and are never promoted to current best practice.
-4. **No post-2016 material.** Nothing in this package introduces Transformers, modern optimizers or
-   schedules, scaling laws, or later evaluation metrics. See
-   `concept_reconstruction.md` §5.4.
+4. **No post-2016 material in the 2016 procedure.** Nothing in the 2016 text of these SOPs introduces
+   Transformers, modern optimizers or schedules, scaling laws, or later evaluation metrics. See
+   `concept_reconstruction.md` §5.4. Modern material enters **only** inside blocks explicitly marked
+   *Modern update (2017–2026)*, each carrying its own source line and a pointer to the delta record —
+   see rule 7.
 5. **Function-shaped, not chapter-shaped.** If a chapter produced no reusable decision procedure it
    is recorded as theory-only in `concept_reconstruction.md` §4 and has no SOP.
 6. **Decision path in the SOP, inventory in the reconstruction record.** An SOP keeps the executable
@@ -79,9 +81,31 @@ rule.
    menus, long derivations and era-specific recipes live in
    `concept_reconstruction.md` §4.1 — (a) optimization, (b) regularization, (c) sharing and
    representation, (d) generative evaluation — and the SOP points at them instead of restating them.
+7. **Modern updates are marked, sourced and additive.** *(added by the 2017–2026 update lineage)* A
+   modern block is a blockquote opened by **Modern update (2017–2026)** and closed by a source line naming
+   its `delta_map.md` row and its source keys. It **annotates** 2016 text; it never rewrites it, and no
+   2016 citation was altered to accommodate one. Three further limits apply: no modern block may supply a
+   threshold its source does not state (rule 2 applies unchanged); no modern block may create an
+   architecture entry, a variant catalogue or a family ranking; and where a capability is already owned by
+   the Trustworthy-ML package, the block cross-links instead of restating a procedure. Method-specific,
+   weakly supported or unsettled material is **not** imported at all — it stays in `delta_map.md`.
+
+Seven SOPs carry modern-update blocks: `SOP-DL-02` (compute as a third axis; the U-curve's right branch;
+the capacity-to-data ratio), `SOP-DL-03` (L2 versus decoupled weight decay under adaptive optimizers),
+`SOP-DL-04` (the learning-rate-sensitivity assumption behind the repair ordering), `SOP-DL-05`
+(conditional hyperparameters), `SOP-DL-07` (the attention prior and the pretraining-scale precondition on
+model-class routing), `SOP-DL-08` (self-supervised pretraining; low-rank adaptation; zero-shot transfer)
+and `SOP-DL-09` (family exactness status; flow matching; likelihood versus sample quality;
+conditional-generation uses).
 
 ## Related
 
 - Benchmark checks executed by these SOPs:
   [`Benchmark/Deep-Learning-2016/`](../../Benchmark/Deep-Learning-2016/README.md)
 - Plan for this package: [`plans/Deep-Learning-2016/README.md`](../../plans/Deep-Learning-2016/README.md)
+- Modern-update lineage — source record, delta judgements and the reasons items were declined:
+  [`Validation/Deep-Learning-Modern-2017-2026/`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md)
+  and [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md); plan at
+  [`plans/Deep-Learning-Modern-2017-2026/README.md`](../../plans/Deep-Learning-Modern-2017-2026/README.md)
+- Capabilities cross-linked rather than duplicated:
+  [`SOP/Trustworthy-ML-2023/`](../Trustworthy-ML-2023/README.md)

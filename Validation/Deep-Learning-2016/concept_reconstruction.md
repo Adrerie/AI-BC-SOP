@@ -518,6 +518,31 @@ than written as a current default. Each entry names where it appears so the boun
   chapter's scope (§7.13, p. 293) and are not evaluated anywhere in this package. Later attack
   families and later robustness metrics are not introduced.
 
+  > **Modern update (2017–2026) — the named *cause* has been superseded; this entry is otherwise
+  > unchanged.** The 2016 account above is retained verbatim as a period statement, and the withdrawal of
+  > `BC-DL-04` is unaffected by what follows. The modern anchor textbook records a different explanation as
+  > the current best one: adversarial examples "aren't due to a lack of robustness to data from outside the
+  > training data manifold. Instead, they are exploiting a source of information that is in the training
+  > distribution but which has a small norm and is imperceptible to humans" (attributing the result to
+  > Ilyas et al., 2019).
+  >
+  > Why this matters for the historical entry rather than for a benchmark: the 2016 cause and the 2016
+  > remedy are linked. Excessive linearity implies that pushing a network toward locally constant behaviour
+  > — which is what training on perturbed samples does — addresses the mechanism. Under the modern account
+  > the exploited information is *inside* the training distribution, so the remedy is not aimed at the cause
+  > in the way the 2016 text implies. That is a further reason the 2016 prescription cannot simply be
+  > reinstated as an active claim, and it is recorded here so the historical entry is not read as a
+  > currently valid causal account.
+  >
+  > **No adversarial artifact is created in the modern-update lineage, and none is created here.**
+  > Adversarial robustness evaluated under a declared threat model is a capability the Trustworthy-ML
+  > package already owns: see
+  > [`BM-05`](../../Benchmark/Trustworthy-ML-2023/BM-05-adversarial-robustness.md). This entry points there
+  > rather than restating any procedure, per the plan governing that lineage.
+  >
+  > *Delta: [`delta_map.md`](../Deep-Learning-Modern-2017-2026/delta_map.md) §7.1. Source: `UDL` §20.4,
+  > fol. 415.*
+
 ### 5.2 Numeric constants and observations that are era-specific
 
 The 20M→60M parameter observation attached to the depth/width trade-off (§6.4.2, Fig. 6.7); the
@@ -542,13 +567,50 @@ properties, not benchmark results).
 
 ### 5.4 What was deliberately not imported
 
-Nothing post-2016 was added anywhere in this package: no Transformer or attention mechanisms, no
+Nothing post-2016 was added to the **2016 text** of this package: no Transformer or attention mechanisms, no
 AdamW or modern optimizer defaults, no learning-rate warmup/cosine schedules, no batch-size–LR
 scaling rules, no scaling laws, no FID / Inception Score / perplexity-as-standard, no modern
 leaderboards, no diffusion models, no large-pretrained-model or foundation-model transfer, no
 current best practices for mixed precision or distributed training. Where a 2016 statement is now
 known to be incomplete, the artifact marks it **historical** and stops there rather than updating
 the source. A future source-update cycle may add later material; this cycle may not.
+
+> **Modern update (2017–2026) — that future cycle has now run, and this section is scoped accordingly.**
+> The paragraph above remains an accurate description of the 2016 procedure and of every 2016 citation in
+> this package, none of which was altered. It is no longer an accurate description of the files as they now
+> stand, because the sanctioned update lineage has added later material — inside blocks explicitly marked
+> *Modern update (2017–2026)*, each carrying its own source line and a pointer to the delta record.
+>
+> The lineage's own records are the authority on what was and was not imported:
+> [`sources.md`](../Deep-Learning-Modern-2017-2026/sources.md) for source identity, access and version, and
+> [`delta_map.md`](../Deep-Learning-Modern-2017-2026/delta_map.md) for every candidate delta with its
+> `2016 baseline → modern delta → source → destination → boundary` record and its status.
+>
+> Three of this section's exclusions were **not** lifted, and remain in force:
+>
+> - **No modern leaderboard and no family ranking.** Optimizer leaderboards are still rejected, and the
+>   changed learning-rate-sensitivity assumption is recorded without producing a ranking (`SOP-DL-04` §3.4
+>   step 6). Generative families are still not ranked; the one modern family-ranking statement carried is
+>   carried *because* its source states it in terms of a single named metric (`BC-DL-11` §5).
+> - **No architecture encyclopaedia.** No Transformer, vision-transformer or diffusion architecture entry,
+>   variant catalogue or model-family BC was created. What entered is a *prior* in `SOP-DL-07`'s existing
+>   bias register and a *precondition* on its model-class routing.
+> - **No unsettled number.** Contested quantities — above all the compute-allocation exponents, where the
+>   two sources in the lineage's own list disagree — are recorded in `delta_map.md` and imported nowhere.
+>
+> Two exclusions were **scoped rather than lifted**. Perplexity is still not used anywhere, because no
+> source in either lineage names it as a generative-model metric. And the post-2016-metric exclusion now
+> applies to the 2016 text and to `BC-DL-11` metrics 1–9 only: §4.M of that BC admits three later scores,
+> each named by the anchor textbook and each carrying that source's stated failure modes, under the standing
+> rules that every metric is a quantity a source names and that no threshold is invented.
+>
+> One item the 2016 package withdrew has been given a further reason to stay withdrawn. `BC-DL-04`'s
+> adversarial-linearity claim was withdrawn because the book supplies no perturbation budget, norm
+> convention or effect size. The modern account also supersedes the *cause* the 2016 remedy was aimed at,
+> which is recorded at §5.1 above; robustness under a declared threat model is owned by Trustworthy-ML
+> [`BM-05`](../../Benchmark/Trustworthy-ML-2023/BM-05-adversarial-robustness.md) and is not duplicated here.
+>
+> *Delta: `delta_map.md` §4.4, §6, §7.1, §7.2. Sources: as recorded per item in `delta_map.md`.*
 
 **Terminology boundary.** This local copy is Simplified Chinese only, so no verbatim English
 quotations are possible and translated terminology is used throughout. One drift is worth flagging

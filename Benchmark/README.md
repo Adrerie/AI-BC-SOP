@@ -21,8 +21,14 @@ Benchmarks are grouped by the source they were reconstructed from, one directory
 
 - [`Trustworthy-ML-2023/`](Trustworthy-ML-2023/README.md) — 9 benchmarks covering shift generalization,
   cue dependence, confidence truthfulness, error detection, adversarial robustness, explanation quality,
-  selective prediction, evaluation integrity, and disclosure/privacy.
+  selective prediction, evaluation integrity, and disclosure/privacy. `BM-09` is a post-book extension
+  traced in [`Validation/Trustworthy-ML-Official-Updates-2024-2026/`](../Validation/Trustworthy-ML-Official-Updates-2024-2026/decision_log.md).
 - [`Deep-Learning-2016/`](Deep-Learning-2016/README.md) — 11 active benchmark checks for output/loss coupling,
   capacity/data curves, regularization mechanisms, optimization diagnostic probes, long-range dependency,
   implementation health, inductive-bias assumptions, search resolvability, sharing/transfer gains,
-  generative-evaluation integrity, and representation quality.
+  generative-evaluation integrity, and representation quality. Four of the eleven carry clearly marked
+  *Modern update (2017–2026)* blocks — an added comparison condition on an existing arm, added
+  interpretation rules, added validity limits, and one metric block whose entries each carry the failure
+  modes their own source states. No arm was added, no claim under test was changed and no new benchmark was
+  created; the judgements behind that are recorded per delta in
+  [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../Validation/Deep-Learning-Modern-2017-2026/delta_map.md).

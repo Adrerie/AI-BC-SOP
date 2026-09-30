@@ -86,6 +86,33 @@ catalogues are in `concept_reconstruction.md` §4.1(b).
   directions of high Hessian curvature while low-curvature components decay toward zero. **Produces no
   sparsity.** Exact in linear regression, where it adds α to the covariance diagonal so high-variance features
   with low covariance to the target are shrunk. Isotropic Gaussian prior (§7.1.1–7.1.2, pp. 255–261).
+
+  > **Modern update (2017–2026) — under an adaptive optimizer these are two different levers, and the table
+  > row above conflates them.** L2 regularization and weight decay are equivalent for standard SGD when
+  > rescaled by the learning rate, but **not** for adaptive gradient algorithms. The mechanism: with L2 the
+  > λ·w term is added to the loss gradient and both are then normalized by their typical summed magnitudes, so
+  > weights with large historic parameter and gradient magnitudes are **regularized less** than they would be
+  > under weight decay. Decoupled weight decay instead regularizes all weights at the same rate λ, and —
+  > separately useful — decouples the optimal decay setting from the learning-rate setting, whereas under L2
+  > the best λ is tightly coupled to α. The anchor textbook states the same delta in one sentence: for Adam
+  > the learning rate differs per parameter, so L2 regularization and weight decay differ, and AdamW modifies
+  > Adam to implement weight decay correctly.
+  >
+  > What this changes in practice is **which knob you are turning and what it is coupled to**. Before
+  > configuring this lever, record which of the two the implementation actually performs — adding λ·w to the
+  > gradient, or shrinking θ by a factor at each step — because under an adaptive optimizer they are not
+  > interchangeable and a swept λ means different things in each. If a learning-rate schedule is used with
+  > decoupled decay, also record how the decay is scheduled relative to the learning rate; the source
+  > supplies a schedule-multiplier mechanism for exactly this and a batch-budget normalization that it
+  > itself describes as "merely one possibility informed by few experiments."
+  >
+  > **No λ value is supplied here.** The published λ_norm values are batch-budget-normalized results from
+  > that source's own experiments and are not transferable defaults. The Bayesian-filtering justification
+  > offered for decoupling is explicitly theoretical and, in its source's own words, "does not directly apply
+  > to practical adaptive gradient algorithms", so it is not carried as a mechanism claim.
+  >
+  > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §3.1. Sources:
+  > `ADAMW` (abstract, §2, Algorithm 2); `UDL` §9.1, fol. 156.*
 - **L1.** Constant-magnitude subgradient via sign(w) — a shift, not a scaling — driving coordinates to **exactly
   zero** once α is large enough, which is why it selects features. **Assumes a diagonal Hessian**, so
   decorrelate inputs first (e.g. by PCA). Isotropic Laplace prior (§7.1.2, pp. 259–261).
@@ -242,6 +269,10 @@ learning and because it has an explicit algorithm.
   number includes averaging.
 - The quantities the book leaves open and that must therefore be declared: α per mechanism, n and p for early
   stopping, the number of ensemble members, the sparsity target, and the tangent set.
+- **Modern update (2017–2026):** when the optimizer is adaptive and a shrinkage penalty is in use, declare **which** of
+  the two was implemented — an L2 term added to the gradient, or decoupled weight decay applied to the
+  parameters — and, if decoupled, how the decay is scheduled relative to the learning rate. See the
+  modern-update block in §3.3.
 
 ## 6. Source traceability
 
@@ -263,6 +294,14 @@ learning and because it has an explicit algorithm.
 | Adversarial examples as a 2016 observation: sign-of-gradient perturbation, GoogLeNet/ImageNet demonstration, excessive linearity as the cause, adversarial training improves i.i.d. test error, virtual adversarial examples and its manifold assumption | §7.13, pp. 292–294 |
 | Tangent propagation, manifold tangent classifier, infinitesimal-only resistance, ReLU incompatibility, augmentation and adversarial training as non-infinitesimal forms | §7.14, pp. 294–296 |
 | Multi-task gain conditional on the shared-factor assumption | §7.7, pp. 268–270 |
+
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. One modern-update
+block was added, inside §3.3's L2 / weight-decay entry, plus the matching §5 reporting line. It is sourced
+outside the 2016 book and recorded in
+[`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§3.1, with source keys defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `ADAMW` (abstract, §2,
+Algorithm 2) and `UDL` §9.1, fol. 156.
 
 **Historical boundary.** Reported as book-era rather than current defaults: the typical dropout inclusion
 probabilities (0.8 input / 0.5 hidden); the 5–10 network ensembling ceiling with the ILSVRC six-model example;

@@ -43,6 +43,41 @@ Out of scope: output units and cost (`SOP-DL-01`), capacity sizing (`SOP-DL-02`)
    connected feedforward network; input with a known topology (images) ⇒ convolutional network; sequence
    input or output ⇒ gated recurrent network. This routing is a book-era default and is recorded as such.
 
+> **Modern update (2017–2026) — two of the three routing arrows are now conditional.** The 2016 routing is
+> retained above as the era default it is. Two structural changes apply to it, and neither adds a model
+> family to this SOP:
+>
+> - **Sequence input or output no longer implies recurrence.** A self-attention layer connects all positions
+>   with a constant number of sequentially executed operations, dispensing with recurrence and convolutions
+>   entirely; self-attention layers are faster than recurrent layers when the sequence length is smaller than
+>   the representation dimensionality; and shorter paths between any combination of positions make
+>   long-range dependencies easier to learn. The register gains an entry for this prior (§3.2 below), and the
+>   *cost* side of that entry is a quadratic dependence on sequence length, which bounds usable length in a
+>   different way than the recurrent gradient path did.
+> - **Known topology no longer implies convolution unconditionally.** Convolutional layers are equivariant to
+>   spatial translation and take the 2D structure of the image into account at every layer; in an
+>   attention-based network that equivariance "must be learned" instead of being built in. The modern account
+>   is explicit that the strong convolutional inductive bias "can only be superseded by employing extremely
+>   large amounts of training data", and the primary vision source for this states the same condition from
+>   the other side: pre-trained on large data and transferred to mid-sized or small benchmarks the
+>   low-bias architecture attains excellent results with substantially fewer computational resources, while
+>   trained only on ImageNet-scale data it self-reports accuracies **below** comparable convolutional
+>   networks.
+>
+> The routing question therefore gains a precondition to check before either arrow is followed: **is there
+> a large-scale pretraining source available for this input type?** If yes, a low-bias architecture is a
+> live option and its cost is compute. If no, the 2016 arrows hold and their bias is what buys the
+> data-efficiency.
+>
+> No architecture is specified, endorsed or ranked here, and no transformer or vision-transformer entry is
+> created — the plan governing this lineage forbids an architecture encyclopaedia, and the 2016 package's
+> rule that a model family is not a benchmark is carried forward. What enters is the *prior* and the
+> *condition* under which it can be given up.
+>
+> *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §2.1, §2.3, §2.6.
+> Sources: `ATTN` (abstract, §4); `VIT` (abstract, introduction, conclusion); `UDL` §12.1–12.2 fol.
+> 207–209, §12.9 fol. 227–228, §12.10 fol. 229–230.*
+
 ### 3.2 Fill in the bias register
 
 For each bias under consideration, complete the four columns. The entries below are the book's own
@@ -204,6 +239,44 @@ mappings.
   capacity, is the bottleneck. Integer addressing is hard to optimize, soft (softmax) addressing keeps the
   model differentiable, and stochastic hard addressing is harder to train.
 
+> **Modern update (2017–2026) — one added register row.** The entries above are the 2016 book's own
+> mappings and are unchanged. The modern anchor states the motivating conditions for content-based
+> connection in exactly this register's four-column shape, so one row is added in that shape and nothing
+> else in the register is rewritten.
+>
+> **Content-based all-to-all connection (attention)** — *modern row, not a 2016-book entry*
+> - Assumes: very many input variables; **similar statistics at every position**; a variable sequence length
+>   that cannot simply be resized to a fixed input; and connections between distant positions whose relevance
+>   is **content-dependent** rather than fixed by the architecture.
+> - Buys: a path between any two positions with a constant number of sequentially executed operations, which
+>   is what makes long-range dependencies easier to learn; self-attention layers are faster than recurrent
+>   layers when the sequence length is smaller than the representation dimensionality; and the model is more
+>   parallelizable, requiring significantly less time to train.
+> - Breaks: cost grows **quadratically** with sequence length, which bounds the usable length — a different
+>   bound on the same axis the recurrent entries above treat, not the absence of one. Sparsifying the
+>   connection pattern is the named category of response; no specific scheme is endorsed here. And the prior
+>   is *low*-bias in the spatial case: translation equivariance that convolution has at every layer must be
+>   learned, which is why it can only be superseded by employing extremely large amounts of training data.
+> - Measure: the same two instruments the recurrent entries already define — the **maximum learnable
+>   dependency span**, and per-position error — now read against the quadratic cost at the length actually
+>   used. Add the equivariance test the **Equivariance** row above already specifies (shift the input by δ,
+>   verify the output shifts by δ) as a *learned*-versus-*given* contrast: run it on a model that must learn
+>   the equivariance and on one that has it built in, at matched data, and report which regime the data
+>   budget puts you in.
+>
+> The depth-versus-width row above is **not** amended. The modern evidence on depth is genuinely contested —
+> wider-shallower residual networks, a 12-layer parallel-channel network, and the finding that predominantly
+> shorter paths of 5–17 layers drive performance in residual networks all run against a simple depth story,
+> while distillation experiments run for it (student performance increased with depth at constant parameter
+> budget), and the modern anchor's own verdict is that "the balance of evidence suggests that depth is
+> critical; even the shallowest networks with good image classification performance require >10 layers.
+> However, there is no definitive explanation for why." The 2016 package already declined to make
+> depth-versus-width a benchmark, and that decision stands; the counter-evidence is recorded in
+> `delta_map.md` §2.5 so that a depth result is interpreted against it rather than as a settled hierarchy.
+>
+> *Delta: `delta_map.md` §2.2, §2.4, §2.5. Sources: `ATTN` (abstract, §4); `UDL` §12.1–12.2 fol. 207–209,
+> §12.9 fol. 227–228, §12.10 fol. 229–230, §20.6 fol. 418–419, ch. 11 summary fol. 186.*
+
 ### 3.3 Test before trusting
 
 2. For every bias adopted, run the paired comparison the book defines and report **which assumption** it
@@ -259,6 +332,15 @@ mappings.
 - Anything left to `SOP-DL-05` because it is a hyperparameter rather than a structural choice (padding
   amount, number of maxout pieces, hidden sizes per block).
 
+Modern-update additions to the report (`delta_map.md` §2.2, §2.3):
+
+- The **pretraining-scale precondition** checked at §3.1 step 1: whether a large-scale pretraining source
+  exists for this input type, and therefore whether a low-bias architecture was a live option at all.
+- In the register, the modern row is marked as such, so that a reader can tell the 2016 book's own mappings
+  from the added one.
+- For any equivariance claim, whether the equivariance was **built in or learned**, and the data budget
+  under which the comparison was run — the two are not comparable without it.
+
 ## 6. Source traceability
 
 | Claim or step | Locator |
@@ -284,6 +366,17 @@ mappings.
 | Zero padding optimum between valid and same | §9.5, p. 371 |
 | Architecture rankings unstable; no architecture-selection advice given | §9 intro, p. 350 |
 
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Two
+modern-update blocks were added: the conditional routing note at §3.1 step 1, and one added register row
+(*Content-based all-to-all connection*) at the end of §3.2, plus the matching §5 reporting lines. They are
+sourced outside the 2016 book and recorded in
+[`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§2.1–§2.5, with source keys defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `ATTN` (abstract, §4);
+`VIT` (abstract, introduction, conclusion); `UDL` §12.1–12.2 fol. 207–209, §12.9 fol. 227–228, §12.10
+fol. 229–230, §20.6 fol. 418–419, ch. 11 summary fol. 186. The added register row is labelled *modern row,
+not a 2016-book entry* in place so it cannot be mistaken for the book's own mapping.
+
 **Historical boundary.** Treated as book-era and labelled wherever used: the §11.2 model-class routing and
 unit menu; the verdict that gated RNNs were the most effective sequence models in practice at the time of
 writing, with LSTM then GRU (§10.10, pp. 425, 428); explicit memory and neural Turing machines as the
@@ -301,4 +394,10 @@ retained: the book's verdict that core ideas were unchanged since the 1980s, wit
 to larger datasets and networks, and only two algorithmic changes credited — cross-entropy replacing MSE,
 which greatly improved models with sigmoid and softmax outputs, and piecewise-linear units replacing sigmoid
 (§6.6, pp. 249–251); and the observation that designing a model that is easy to optimize is usually easier
-than designing a more powerful optimizer (§10.11, pp. 429–430). No post-2016 architecture is introduced.
+than designing a more powerful optimizer (§10.11, pp. 429–430).
+
+No post-2016 architecture is described in the 2016 procedure. The modern update adds **one prior and one
+precondition**, not an architecture: the content-based all-to-all connection prior in the §3.2 register, and
+the pretraining-scale precondition on §3.1's routing. Both are marked in place, and neither comes with a
+model specification, a variant catalogue or a ranking — the governing plan for this lineage forbids an
+architecture encyclopaedia, and the 2016 rule that a model family is not a benchmark is carried forward.

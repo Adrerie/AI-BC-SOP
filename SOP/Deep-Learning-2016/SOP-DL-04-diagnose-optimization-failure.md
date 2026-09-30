@@ -135,6 +135,24 @@ cost and risk:
    interactions can be exponentially large.
 6. **Change the optimizer family** only after 1–5. There is **no consensus**, and the book states the choice
    depends mainly on practitioner familiarity (§8.5.4, p. 332). Record it as a familiarity decision.
+
+   > **Modern update (2017–2026) — the assumption behind the ordering, not the ordering itself.** The 2016
+   > menu puts the learning rate first and the optimizer family sixth, and its stated reason is that no
+   > consensus exists. That reason stands and the ordering is **not** changed here. What has changed is one
+   > assumption the ordering rests on: the modern anchor reports that Adam-family methods are **less
+   > sensitive to the initial learning rate** and do not need complex learning-rate schedules, that SGD is a
+   > special case of Adam (β = 0, γ → 1), that a *searched* Adam matches SGD and converges faster, and that
+   > one named method switches from Adam to SGD partway through training.
+   >
+   > The operational consequence is narrow: when the surviving symptom is learning-rate sensitivity or a
+   > stalling schedule rather than a pathology, an adaptive optimizer is a legitimate early move, and the
+   > "learning rate first" step costs less to satisfy under one. **No ranking is produced and none is
+   > implied** — the choice remains problem-dependent, and the 2016 package's rejection of an optimizer
+   > leaderboard is reaffirmed rather than reversed. Repair-ladder order is unchanged; only the note attached
+   > to step 6 is new.
+   >
+   > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §3.2. Source:
+   > `UDL` §6.4, fol. 88–90.*
 7. **Change the model to make it easier to optimize** (§8.7.5, pp. 347–348) — the book's strongest meta-rule:
    most gains over thirty years came from changing model families, not optimizers, and 1980s momentum SGD is
    still a frontier algorithm. Levers: almost-everywhere-differentiable activations with nonzero gradient over
@@ -316,9 +334,17 @@ Era-specific examples: the Fig. 8.1 object-detection gradient trace; the remark 
 visualized around 2012, before SGD trained very large models; the Bengio et al. (1994b) span result; the
 11-layer-to-19-layer growth example; the 1000-layer feedforward result; Theano's automatic stabilization of
 unstable expressions; delta-bar-delta being full-batch only; shuffle-once-and-reuse as standard practice for
-very large datasets. Nothing post-2016 is introduced — no AdamW, no warmup schedule, no scaling-law
-argument — and where the book states no numeric value (the clipping threshold v, the patience in
-initialization sweeps) none is invented here.
+very large datasets. Nothing post-2016 is introduced into the 2016 procedure — no warmup schedule, no
+scaling-law argument, and no AdamW mechanics — and where the book states no numeric value (the clipping
+threshold v, the patience in initialization sweeps) none is invented here.
+
+**Modern-update provenance.** One annotated exception was added by the modern update: the block attached to
+§3.4 step 6, which records that the learning-rate-sensitivity assumption behind the repair ordering no longer
+holds as stated. It changes no step and produces no ranking. It is sourced outside the 2016 book and recorded
+in [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§3.2, with the source key `UDL` §6.4, fol. 88–90 defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1. The 2016 text of step 6 and
+of the repair-menu row it belongs to is unchanged.
 
 **Formula caveat.** Display equations are images in this copy (see `SOURCE.md`), so the exact normalized
 initialization range, the exact clipping inequality, the exact learning-rate schedule and the exact

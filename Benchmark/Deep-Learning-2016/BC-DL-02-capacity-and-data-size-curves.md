@@ -135,6 +135,35 @@ be reported.
   averaging, and the book's conclusion is to characterize the distributions that matter rather than to
   abandon method choice (§5.2.1, pp. 147–148).
 
+> **Modern update (2017–2026) — a rising right branch is no longer a confirmation by itself.** The first
+> bullet above reads a monotone test error as evidence the ladder did not span the transition, and the claim
+> under test reads a U as confirmation. Both remain correct for the 2016 account, and neither is withdrawn.
+> What is added is a third reading, required before either conclusion is reported:
+>
+> - **A U that turns back down is not a failed replication.** The modern account distinguishes three regimes
+>   and reports a **second descent** beyond the interpolation threshold. If the capacity ladder spans that
+>   threshold and test error falls again, the correct report is *which* regime boundary was crossed, not that
+>   the U-curve was falsified. Extend the ladder past the first rise before concluding anything — the same
+>   instruction the first bullet already gives for the opposite outcome.
+> - **Whether a second descent appears must be measured on the data actually in use.** The source is explicit
+>   that the phenomenon is dataset-dependent: present on MNIST with the original labels, but emerging or
+>   becoming prominent under label noise and on MNIST-1D and CIFAR-100. It is therefore a property of this
+>   benchmark's data construction, not a constant to import — and a synthetic construction with no label noise
+>   is a legitimate place for it to be absent.
+> - **No mechanism is asserted and no interpolation threshold is computed.** The modern source states its own
+>   explanation as putative, and the threshold's location is a property of the run. This benchmark supplies
+>   neither.
+> - **A flat or absent right branch is not evidence about parameter count.** Separately from the curve's
+>   shape, the modern evidence is that state-of-the-art performance on complex datasets almost never comes
+>   from models with significantly fewer parameters than training data points, that pruned networks remain
+>   over-parameterized after pruning, and that distillation has not provided convincing evidence that
+>   under-parameterized models perform well — with the question left open whether small models fundamentally
+>   cannot perform or training merely cannot find good solutions for them. Read a capacity-ladder result as a
+>   statement about *this* ladder and *this* optimizer, not about how many parameters the problem needs.
+>
+> *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §1.4, §1.5. Sources:
+> `UDL` §8.4 fol. 127–132, §8.5 fol. 132, §20.5 fol. 415–418.*
+
 ## 6. Validity limits and source traceability
 
 - The closed-form arms are **linear/polynomial regression**: the curves are demonstrated where the optimum
@@ -154,6 +183,18 @@ be reported.
   and extrapolate, reasoning on a log scale and doubling the sample count between experiments — is a
   procedure, and adding a small fraction of the current total is expected to change little (§11.3, p. 441).
 
+**Modern update (2017–2026) — one further validity limit (`delta_map.md` §1.3).** The capacity axis and the data-size
+axis are each treated here as a single countable quantity, which is what makes a curve plottable. Under a
+modern construction that assumption can fail: once augmentation or tokenization enters, "number of data
+points" is a choice rather than a measurement. The worked case in the modern anchor is that a 60M-parameter
+network trained on ~1M examples had each example augmented with 2048 transformations, while a 175B-parameter
+network was trained on 300B tokens — and its conclusion is that "there is not a clear-cut case that either
+model was overparameterized." This benchmark's arms are unaffected, because its synthetic constructions fix
+the training-set size directly and apply no augmentation. But any transfer of these curve shapes to a real
+dataset must state **what was counted as a data point** — raw examples, augmented views, or tokens — and must
+not switch definitions between the capacity arm and the data-size arm. A curve whose two axes use different
+counting conventions is not a curve.
+
 | Claim | Locator |
 | --- | --- |
 | Training error, generalization error, the two success factors, underfitting/overfitting definitions | §5.2, pp. 141–142 |
@@ -170,9 +211,23 @@ be reported.
 | Effective capacity's three limits; discrete/bounded knobs sample few points | §11.4.1, pp. 442–443 |
 | Log-scale data-size reasoning and doubling | §11.3, p. 441 |
 
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. The
+modern-update block in §5 and the added validity limit in §6 are sourced outside the 2016 book and recorded
+in [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§1.3, §1.4, §1.5, with source keys defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §8.4 fol. 127–132,
+§8.5 fol. 132, §20.1.1 fol. 403, §20.5 fol. 415–418. No new claim, arm, metric or threshold was added to
+the benchmark: the claim under test, the comparison conditions, the baselines and the metrics are unchanged.
+
 **Historical boundary.** Figures 5.2–5.5 are the book's own synthetic illustrations; their constructions
 (polynomial degrees, 40 replications, 95% intervals, closed-form fitting) are reproduced here as the
 cheapest testbed, not as a claim that this is how deep models should be evaluated. Nothing in this
 benchmark depends on 2016-era datasets, architectures or benchmark scores. The nearest-neighbour
 regression arm is the book's example of a practical non-parametric model whose complexity tracks the
 training set (§5.2, p. 146).
+
+The **U-shape itself** is now partly era-scoped, and this sentence was added by the modern update: the
+curve's left branch and the underfitting/optimal/overfitting regime definitions are general, but the
+expectation that generalization error rises monotonically past the optimum is a 2016 default — see the
+modern-update block in §5. The benchmark still tests the shape the 2016 account predicts; what changed is
+that a different shape is no longer automatically a falsification.

@@ -91,6 +91,56 @@ Two further integrity conditions are tested as part of the protocol:
 The book gives no numeric thresholds here — no perplexity target, no nearest-neighbour distance bound, no
 acceptable ELBO gap. None is invented; every threshold used must be declared by the evaluator.
 
+> ### 4.M Modern-update metric block (2017–2026)
+>
+> Metrics 1–9 above are quantities the 2016 book names, and none was altered. This package's standing rule 5
+> excludes post-2016 metrics from the 2016 text, and that exclusion still governs metrics 1–9. The rule is
+> **scoped** here rather than broken: three later metrics now have an anchor-textbook source that states each
+> one's failure modes, so they can be admitted on the same terms as the 2016 quantities — named by a source,
+> with no invented threshold — provided they are never a bare ranking axis, which is what the rule was
+> protecting against.
+>
+> Each entry below carries the failure modes its own source states. They are not optional commentary: a metric
+> from this block reported without its failure modes is out of specification for this benchmark.
+>
+> 10. **Inception score** *(modern)* — a sample-quality score computed from a pretrained classifier's outputs
+>     on generated samples. Its source states three failure modes, all of which must be reported alongside any
+>     value: it is "only sensible for" datasets with the label structure of the ImageNet database; it is
+>     "sensitive to the particular classification model; retraining this model can give quite different
+>     numerical results"; and it "does not reward diversity within an object class; it returns a high value if
+>     the model only generates one realistic example of each class". The third is a reward-hacking path of
+>     exactly the kind metric 5 exists to expose, so the two must be read together.
+> 11. **Fréchet inception distance** *(modern)* — a distance between the feature distributions of generated and
+>     real samples. It is computed on the **deepest activations** of a pretrained classifier, so the comparison
+>     is semantic and "any information discarded by the network does not contribute to the result". Report
+>     which network and which layer produced the features: the number is indexed to that choice, and a
+>     different classifier gives a different quantity.
+> 12. **Manifold precision and recall** *(modern)* — a two-number decomposition obtained by approximating each
+>     distribution's manifold with k-nearest-neighbour hyperspheres in classifier feature space. Its source
+>     states the reason it exists: the Fréchet inception distance "is sensitive both to the realism of the
+>     samples and their diversity but does not distinguish between these factors". Where a single distance is
+>     used to make a claim about *either* realism or diversity, this pair is the instrument that separates
+>     them, and the k used must be declared.
+>
+> Three rules govern this block, and they are what keep it inside the package's standing rules rather than
+> around them:
+>
+> - **Every metric is a quantity a source names.** The anchor textbook defines all three and states each one's
+>   limitations. Nothing here is introduced to fill a template field, which is the test standing rule 2 of this
+>   package's README applies to the 2016 metrics.
+> - **No threshold is invented.** As with metrics 1–9, the source supplies no acceptable value for any of the
+>   three. Comparisons are **orderings**, and the absolute value comes from the run.
+> - **Never a bare axis.** Metric 10's classifier sensitivity and metric 11's layer dependence make both
+>   numbers indexed to a measurement setup, so a value reported without that setup is not a measurement. Where
+>   the exact likelihood is available — the modern anchor notes that of the four families it discusses,
+>   normalizing flows are the **only** one that computes it — metric 2 remains the primary quantity and this
+>   block supplements it.
+>
+> *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §4.4. Source: `UDL`
+> §14.3, fol. 272–275 (citing Kynkäänniemi et al. 2019 for manifold precision and recall). The token `FID`
+> does not occur in the chapters read; the metric is named there in full as "Fréchet inception distance", and
+> that is the name used here (`sources.md` §2.5).*
+
 ## 5. How to interpret failure
 
 - **Arm a produces a ranking** ⇒ the ranking is invalid unless the bound's looseness is known; report the two
@@ -116,6 +166,42 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
   that objective: the book states pseudolikelihood usually performs poorly for tasks needing the full joint,
   which includes sampling, while it can beat maximum likelihood for conditional-only tasks such as filling in
   a few missing values (§18.3, p. 618).
+
+> **Modern update (2017–2026) — three interpretation rules, no change to any arm.** The bullets above stand,
+> and no arm, baseline or comparison condition was added.
+>
+> - **Arm e's outcome now has a documented instance in the opposite direction.** Arm e tests the book's claim
+>   that a very poor probability model may produce very good-looking samples. The modern literature supplies the
+>   mirror case, from the first widely cited diffusion-model paper: state-of-the-art sample-quality scores
+>   alongside the concession that "despite their sample quality, our models do not have competitive log
+>   likelihoods compared to other likelihood-based models", explained by a coding argument — "more than half of
+>   the lossless codelength describes imperceptible distortions". Its own numbers make the disagreement
+>   concrete on one test set: a strong likelihood-based autoregressive baseline at 3.03 bits/dim, the diffusion
+>   model's full variational bound at ≤3.70, and the simplified objective that produced the best sample-quality
+>   score at ≤3.75 — the objective that *deviates from the bound* is the one that wins on samples. So a
+>   likelihood/sample-quality disagreement is **not by itself** evidence that either instrument failed. Arm e's
+>   reading still requires the nearest-neighbour check and the dropped-mode caveat; the modern instance adds a
+>   third possibility to distinguish — that the model is spending description length on detail no observer can
+>   see, which is a property of the metric rather than a defect in the model.
+> - **Which kind of disagreement is in play must be named.** Arm f's variance collapse is a defect: the
+>   likelihood is earned dishonestly by assigning arbitrarily low variance to never-changing pixels. The
+>   imperceptible-detail case is not a defect. Both produce a good likelihood-related number alongside a poor
+>   sample judgement, or the reverse, and they are distinguishable only by running arm f's per-dimension
+>   variance check. Report which was found.
+> - **A family ranking taken from metric 10 or 11 is metric-indexed.** The modern anchor records that diffusion
+>   models were shown to be quantitatively superior to GANs, and states the result **in terms of the Fréchet
+>   inception distance**. That is the correct way to state it, and it is the worked modern instance of the
+>   failure mode `SOP-DL-09` §4 already names — treating a metric disagreement as a model disagreement. A
+>   ranking reported without its metric is not a result, and this benchmark does not rank families.
+> - **A bound beating an exact value is not an error.** Of the four families the modern anchor discusses,
+>   normalizing flows are the only one computing the exact log-likelihood, and its own footnote records that a
+>   diffusion model's likelihood **lower bound** can exceed a flow's exact computation while its generation is
+>   much slower. Where arm a's estimate-versus-bound comparison crosses families, report the generation-cost
+>   asymmetry next to it; without that, the comparison reads as a quality verdict it cannot support.
+>
+> *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §4.1, §4.3, §4.6.
+> Sources: `DDPM` (verbatim quotes in `sources.md` §2.3); `UDL` §16.5.1 fol. 319 and fn. 2, ch. 18 Notes fol.
+> 369. The `DDPM` results-table index is unverified and is not cited (`sources.md` §2.4).*
 
 ## 6. Validity limits and source traceability
 
@@ -157,6 +243,17 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
 | Gap at the learned θ certifies nothing about θ*; Dirac q makes the bound infinitely loose | §19.4.4, pp. 651–652; §19.3–19.4, pp. 637–638 |
 | Importance-weighted autoencoder objective is a lower bound that tightens with more samples | §20.10.3, pp. 697–698 |
 
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Three
+modern-update blocks were added: the metric block §4.M (metrics 10–12 with their source-stated failure modes),
+the interpretation rules in §5, and the scoped statement of this package's standing rule 5 in
+[`Benchmark/Deep-Learning-2016/README.md`](README.md). They are sourced outside the 2016 book and recorded in
+[`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§4.1, §4.3, §4.4, §4.6, with source keys defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §14.3 fol. 272–275,
+§16.5.1 fol. 319 and fn. 2, ch. 18 Notes fol. 369; `DDPM`. The claim under test, the arms, the comparison
+conditions and the baselines are unchanged; **no arm was added**, and every threshold remains an evaluator
+declaration.
+
 **Historical boundary.** MNIST as the dominant generative benchmark, the practice of sharing binarized MNIST
 files, ~100 parallel chains matched to minibatch size, and AIS as the standard partition-function estimator
 since the cited 2008 work are book-era practices. The 2016 verdicts on specific families — variational
@@ -164,4 +261,13 @@ autoencoders as among the state of the art but producing somewhat blurry samples
 Laplacian-pyramid adversarial models on a bedroom/church dataset fooling human subjects 40% of the time,
 moment-matching networks' disappointing samples without autoencoder composition, NADE described as recently
 very successful — are recorded as period statements. No numeric likelihood or perplexity values are stated in
-these sections, so none is invented here, and no post-2016 evaluation metric is introduced.
+these sections, so none is invented here.
+
+The closing clause of this note was amended by the modern update. It previously stated that no post-2016
+evaluation metric is introduced; §4.M now introduces three, each named by the anchor textbook and each carrying
+the failure modes that source states. The exclusion remains in force for the **2016 text and for metrics 1–9**,
+and the two properties that made the rule necessary are preserved: every metric is a quantity a source names,
+and no threshold is invented. What the rule was protecting against — a score introduced to fill a template
+field, or a bare ranking axis — is still prohibited, now by §4.M's three governing rules rather than by
+exclusion. Perplexity is still not used anywhere in this package, because no source in either lineage names it
+as a generative-model metric.

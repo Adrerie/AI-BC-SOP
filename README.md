@@ -68,6 +68,21 @@ and Benchmark files and are traced in the update audit; BM-09 is the one wholly 
 its course provenance locally. No post-2023 rule is presented as book-derived, and no lecture became a
 file of its own.
 
+The Deep Learning 2016 package was likewise extended by an **update layer** rather than by a second
+package, covering 2017–2026 work that changes a reusable research workflow or an evaluable claim: see
+[`Validation/Deep-Learning-Modern-2017-2026/sources.md`](Validation/Deep-Learning-Modern-2017-2026/sources.md)
+for the source record and
+[`delta_map.md`](Validation/Deep-Learning-Modern-2017-2026/delta_map.md) for every candidate delta with its
+`2016 baseline → modern delta → source → destination → boundary` record and its status. Two modern textbooks
+were named as anchors; one was inaccessible, which is recorded in `sources.md` §1.2 together with a standing
+prohibition on sourcing any delta to it, so the layer rests on the readable anchor plus the small set of
+landmark papers its plan names. Seven existing SOPs and four existing benchmark checks carry clearly marked
+*Modern update (2017–2026)* blocks, and **no new SOP or benchmark was created**: the 2016 text and every
+2016 citation are unchanged, and where a capability is already owned by the Trustworthy ML lineage the block
+cross-links instead of restating it. Contested quantities — notably the compute-allocation exponents, where
+the layer's own two sources disagree — and single-source frontier results were left in the delta map rather
+than imported. No architecture encyclopaedia, leaderboard, validator or acceptance gate was added.
+
 ## Development Principle
 
 The repository follows a reading-to-practice workflow:
@@ -106,3 +121,16 @@ authors under **CC BY 4.0**, so adapting it requires attribution, a link to that
 that changes were made; the package does all three, and the MIT grant applies to this repository's own
 original material on top of that. The source PDF and bulk extracted text are kept out of Git as an
 editorial choice, not because the license requires it.
+
+The Deep Learning packages record their sources the same way:
+[`Validation/Deep-Learning-2016/SOURCE.md`](Validation/Deep-Learning-2016/SOURCE.md) for the 2016 monograph,
+and [`Validation/Deep-Learning-Modern-2017-2026/sources.md`](Validation/Deep-Learning-Modern-2017-2026/sources.md)
+for the modern layer. One note on that layer, because its license differs materially from CC BY 4.0: the
+readable modern anchor is distributed by its author under **CC BY-NC-ND**, which permits redistribution with
+attribution but not commercial use or derivative works. This repository reproduces only short quoted
+passages from it, attributed in place, for the purpose of recording what a source does and does not
+support; the procedures, benchmarks and delta judgements written around those quotations are this
+repository's own original material and are the part the MIT grant covers. The book PDF and its bulk
+extracted text are kept out of Git. Neither the quotations nor this repository's material should be read as
+a derivative of, or a substitute for, that book. The second named anchor could not be accessed at all, and
+`sources.md` §1.2 records that no delta anywhere in the layer is sourced to it.

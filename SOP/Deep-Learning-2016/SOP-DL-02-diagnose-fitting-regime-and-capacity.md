@@ -126,6 +126,35 @@ knobs at once (`SOP-DL-05`), and verifying that the errors are measured correctl
     book observes that for many problems optimization does not turn out to be a significant obstacle,
     provided a suitable model was chosen (§11.4.1, pp. 445–446).
 
+> **Modern update (2017–2026) — the right branch of the U-curve is era-scoped.** Steps 13–16 remain the
+> procedure, but the assumption that generalization error keeps rising once capacity passes the optimum no
+> longer holds in general. The modern account distinguishes three regimes and reports a **second descent**
+> beyond the interpolation threshold, and it is explicit that the explanation is putative rather than
+> settled. It is also explicit that the phenomenon is **dataset-dependent**: it appears on MNIST with the
+> original labels, but emerges or becomes prominent under label noise and on MNIST-1D and CIFAR-100. The
+> operational consequence is stated directly — "in the modern regime, there is no way to tell how much
+> capacity should be added before the test error stops improving."
+>
+> Two changes to how this section is used follow, and no change to steps 13–16 themselves:
+>
+> - A rising test error at high capacity is **not** by itself evidence that the optimum has been passed. If
+>   capacity is still affordable, sample one more point before concluding. Whether a second descent appears
+>   is a property of the data in use, so it must be measured on that data rather than assumed from either
+>   era.
+> - Separately, the modern evidence runs *against* treating excess capacity as the thing to regularize
+>   away: there are almost no examples of state-of-the-art test performance on complex datasets where the
+>   model has significantly fewer parameters than training data points; pruned networks remain
+>   over-parameterized after pruning; and distillation "has not yet provided convincing evidence that
+>   under-parameterized models can perform well". The current reading is that overparameterization is needed
+>   for generalization at present dataset sizes and complexities, with the question left open whether small
+>   models fundamentally cannot perform or training merely cannot find good solutions for them. One
+>   quantitative sharpening: in D dimensions, smooth interpolation requires D times more parameters than
+>   mere interpolation.
+>
+> No mechanism and no threshold for the interpolation point is supplied here, because the sources settle
+> neither. *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §1.4,
+> §1.5. Sources: `UDL` §8.4 fol. 127–132 and §8.5 fol. 132; `UDL` §20.5 fol. 415–418.*
+
 ### 3.5 Decide whether to collect more data (§11.3, pp. 440–442)
 
 17. First ask whether **training-set** performance is acceptable. If the learning algorithm cannot
@@ -152,6 +181,37 @@ knobs at once (`SOP-DL-05`), and verifying that the errors are measured correctl
 20. If more data is infeasible, the only remaining route to lower generalization error is improving the
     learning algorithm itself, which the book classifies as research rather than advice for application
     practitioners (§11.3, p. 442).
+
+> **Modern update (2017–2026) — compute is a third axis, and the data question becomes an allocation
+> question.** Steps 17–20 weigh more data against a smaller or better-regularized model. When a **compute
+> budget** is the binding constraint rather than data availability, that weighing is incomplete: parameters
+> and training examples are then two ways of spending the same budget, and the split between them is a
+> declared decision, not an outcome.
+>
+> Add one step to §3.5's reasoning:
+>
+> 20a. If compute is the binding constraint, **declare the allocation and the rule it came from.** Record
+>      the budget, the parameter count and the data/token count actually chosen, and which allocation
+>      assumption was made. The assumption must be recorded with the conditions under which its source
+>      fitted it — power-law fits of this kind hold only under stated conditions (converged training on
+>      sufficiently large datasets for the model-size law; large models with limited data and early
+>      stopping for the data law; an optimally sized model, sufficiently large dataset and sufficiently
+>      small batch size for the compute law).
+>
+> **Do not adopt an exponent.** The two anchor sources for this area disagree on the split: one fits model
+> size growing substantially faster than data with compute, the other fits them growing in **equal
+> proportions** and attributes the discrepancy to the first's use of a fixed token count and learning-rate
+> schedule across all its models. Both self-report extrapolation uncertainty, and the earlier of the two
+> states plainly that it has no solid theoretical understanding and that its trends must eventually level
+> off. Because the quantity is contested, this SOP requires the assumption to be *declared* and never
+> supplies a number to declare.
+>
+> Reporting discipline for the budget, hardware and allocation is owned elsewhere: see Trustworthy-ML
+> [`SOP-08`](../Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md) — this SOP decides
+> what to assume, that one governs how it is reported.
+>
+> *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §1.1, §1.2, §1.6.
+> Sources: `SCALE`; `CHINCHILLA`.*
 
 ### 3.6 Interpret without over-claiming (§5.2, pp. 144–148)
 
@@ -193,6 +253,27 @@ knobs at once (`SOP-DL-05`), and verifying that the errors are measured correctl
     a sufficiently complex hypothesis is still required to achieve low training error (§5.2,
     pp. 144–145). Regularization is the general way to express such a preference — see `SOP-DL-03`.
 
+> **Modern update (2017–2026) — the capacity-to-data ratio is not a well-defined quantity.** Steps 21–26
+> stand. What changes is a precondition several of them silently assume: that "model capacity" and "dataset
+> size" are each a single number whose ratio can be read off.
+>
+> Once augmentation and tokenization enter, the denominator is a choice. The modern worked case: AlexNet
+> had roughly 60 million parameters and was trained on roughly 1 million data points, but each training
+> example was augmented with 2048 transformations; GPT-3 had 175 billion parameters and was trained on 300
+> billion tokens. The source's conclusion is that "there is not a clear-cut case that either model was
+> overparameterized."
+>
+> Apply this as an interpretation constraint, not as a new step:
+>
+> - Whenever a capacity-to-data comparison is reported, **state what was counted as a data point** — raw
+>   examples, augmented views, or tokens — and say which the ratio uses.
+> - Do not move between those definitions inside one argument. A regime classification (step 17 onward) that
+>   silently switches from raw examples to augmented views is not comparable to one that does not.
+> - Treat "the model has more parameters than data points" as a description of a counting convention, never
+>   as evidence about the fitting regime.
+>
+> *Delta: `delta_map.md` §1.3. Source: `UDL` §20.1.1, fol. 403.*
+
 ## 4. Important failure modes
 
 - **Reading a mis-measured test error as overfitting.** A save/reload bug or a preprocessing mismatch
@@ -214,6 +295,21 @@ knobs at once (`SOP-DL-05`), and verifying that the errors are measured correctl
 - **Starting from an exotic baseline**, which makes every later number uninterpretable because there is
   no reference point (§11.2, p. 439).
 
+Modern-update failure modes (provenance in §3.4–§3.6 above):
+
+- **Reading a rising test error at high capacity as proof the optimum was passed**, and stopping there
+  instead of sampling one more capacity point — the right branch of the U-curve is not monotone in
+  general (`delta_map.md` §1.4).
+- **Assuming double descent either is or is not present** without measuring it. It is dataset-dependent
+  and prominent under label noise, so it must be observed on the data in use, not imported from either
+  era's textbook example (`delta_map.md` §1.4).
+- **Comparing two capacity/data configurations at unmatched compute**, which makes the comparison an
+  allocation result rather than a capacity result (`delta_map.md` §1.1).
+- **Printing an allocation exponent as settled.** The two anchor sources disagree on the split and both
+  self-report extrapolation uncertainty; the assumption is declared, never supplied (`delta_map.md` §1.2).
+- **Switching the data-point definition mid-argument** — raw examples in one step, augmented views or
+  tokens in the next — which silently invalidates every ratio built on it (`delta_map.md` §1.3).
+
 ## 5. Outputs and reporting
 
 - The baseline actually used, with any deviation from §11.2 and its reason.
@@ -229,6 +325,16 @@ knobs at once (`SOP-DL-05`), and verifying that the errors are measured correctl
   error, how large a gap is unacceptable, how many capacity points to sample, and the doubling schedule
   for data-size experiments.
 
+Modern-update additions to the report (`delta_map.md` §1.1, §1.3):
+
+- **The counting convention** for every capacity-to-data ratio reported: what was counted as a data point
+  (raw examples, augmented views, or tokens), and which the ratio uses.
+- **The compute axis**, when compute rather than data availability was the binding constraint: the budget,
+  the parameter count and data/token count chosen, and the allocation assumption made — recorded with the
+  conditions under which its source fitted it. No exponent is reported as this lineage's own.
+- **Whether the capacity curve was sampled past the point where test error rose**, and what the further
+  points showed. Reporting only up to the first rise leaves the second-descent question unasked.
+
 ## 6. Source traceability
 
 | Claim or step | Locator |
@@ -242,6 +348,17 @@ knobs at once (`SOP-DL-05`), and verifying that the errors are measured correctl
 | Default baseline recipe: model class by data structure, unit choice, SGD with decayed LR and momentum, Adam, batch normalization policy, mild regularization default, early stopping, Dropout, transfer from a similar task, unsupervised-learning caveat, the book's own obsolescence warning | §11.2, pp. 439–440 |
 | More-data decision tree; data-quality branch; log-scale doubling; algorithmic improvement as research | §11.3, pp. 440–442 |
 
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. The blocks
+marked *Modern update (2017–2026)* in §3.4, §3.5 and §3.6, and the corresponding entries in §4 and §5,
+are sourced outside the 2016 book and are recorded in
+[`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§1.1, §1.3, §1.4, §1.5, with source keys defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §8.4 fol. 127–132,
+§8.5 fol. 132–133, §20.1.1 fol. 403, §20.5 fol. 415–418; `SCALE`; `CHINCHILLA`. Resource reporting is
+cross-linked to Trustworthy-ML
+[`SOP-08`](../Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md) rather than
+restated.
+
 **Historical boundary.** §11.2 is the most era-bound part of this SOP and the book says so itself: deep
 learning progresses quickly, so better default algorithms may exist soon after publication (§11.2,
 p. 439). Treated as historical here: the specific default menu (logistic regression; fully connected /
@@ -250,5 +367,10 @@ named decay forms, including division by 2–10× on validation stalls; Adam), t
 examples" threshold for skipping regularization, the ImageNet-feature transfer example, and the
 2016-vintage verdict that unsupervised learning helps NLP but not computer vision except in
 semi-supervised settings. These are recorded as the book's recommendations, not as current defaults.
-The regime definitions, the capacity distinctions, the U-curve reasoning, Bayes error, the data-size
-behaviour and the scope of no-free-lunch are stated as general results and are not era-bound.
+The regime definitions, the capacity distinctions, Bayes error, the data-size behaviour and the scope of
+no-free-lunch are stated as general results and are not era-bound.
+
+The U-curve reasoning is a **partial** exception, and this note was amended by the modern update: the
+curve's *left* branch and the underfitting/overfitting regime definitions are general, but the assumption
+that generalization error rises monotonically past the optimum is era-scoped — see the modern-update block
+in §3.4. The 2016 text is retained with its original citations; only the annotation was added.

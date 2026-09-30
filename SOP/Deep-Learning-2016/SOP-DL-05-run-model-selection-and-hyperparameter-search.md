@@ -44,6 +44,40 @@ metric being searched over (see
    overfits (§5.3, p. 150). Mark each knob as capacity-increasing, capacity-decreasing, or
    non-monotone. The learning rate is non-monotone: effective capacity is highest when the learning
    rate is right, and degrades when it is either too large or too small (§11.4.1, p. 443, Fig. 11.1).
+
+   > **Modern update (2017–2026) — add a fourth classification: *conditional*.** Step 1's three categories
+   > describe what a knob does to capacity. The modern anchor adds an orthogonal property that changes what a
+   > sampler does: hyperparameters divide into **discrete** and **conditional** ones, and searching over the
+   > architecture itself is named as a distinct activity.
+   >
+   > A conditional hyperparameter is one that is **undefined unless its parent takes a particular value** —
+   > the number of units in a layer that only exists if that layer is present, or a coefficient for a
+   > regularizer that may be switched off. Mark each knob conditional or not, and for each conditional knob
+   > name its parent and the parent value that makes it defined.
+   >
+   > Why it changes step 7's arithmetic rather than its advice: both samplers there assume the space is a
+   > product over knobs. Under a conditional space,
+   >
+   > - the grid's O(n^m) count is wrong, because combinations in undefined branches do not exist and are
+   >     either wasted trials or silently coerced into a default that is itself an unrecorded decision;
+   > - the random-search argument that matters — that the important knob gets a distinct value in nearly
+   >     every trial — is diluted by draws landing in undefined branches;
+   > - and the marginals the book has you update between random-search runs are marginals over a space whose
+   >     effective dimensionality varies from trial to trial.
+   >
+   > The required step is small and is the only one added: **declare the conditional structure before
+   > sampling**, and state how the sampler handles an undefined branch (skip the trial, or impute a named
+   > default that is then reported as part of the configuration). Report the number of trials actually
+   > evaluated, not the nominal product size.
+   >
+   > No architecture-search method is endorsed here, and none is added to the search-algorithm menu in
+   > step 7. One tension is recorded rather than resolved: a scaling-law source in this lineage's list finds
+   > that architecture details such as width versus depth "have minimal effects within a wide range", which
+   > would make an architecture search low-yield — but that is a language-model result and is not generalized
+   > here.
+   >
+   > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §1.8. Sources:
+   > `UDL` §8.5, fol. 133; `SCALE` (for the recorded tension).*
 2. **Freeze the validation material before searching.** The book's stated default is 80% of the
    training data for parameter learning and 20% for validation (§5.3, p. 151). Record that validation
    error is *not* an estimate of generalization error: because validation data is used to fit
@@ -147,10 +181,20 @@ metric being searched over (see
 - **Paying for full runs in model-based search.** Complete training runs are consumed on settings a
   human would have abandoned early (§11.4.5, p. 449).
 
+Modern-update failure mode (provenance in the block at step 1):
+
+- **Sampling a conditional space as if it were a product.** Trials land in undefined branches and are
+  either wasted or silently coerced into an unrecorded default, so the reported trial count and the
+  effective dimensionality of the search both misdescribe what was searched (`delta_map.md` §1.8).
+
 ## 5. Outputs and reporting
 
 - Hyperparameter table: name, type, capacity direction, search distribution or grid, chosen value,
   and whether it was set by hand or by search.
+- **Modern update (2017–2026):** in that table, also mark each knob **conditional or not**, and for each conditional
+  knob name its parent and the parent value under which it is defined; and report the number of trials
+  **actually evaluated** alongside the nominal product size, plus how undefined branches were handled
+  (skipped, or imputed with a named default that then forms part of the configuration). See step 1.
 - Validation protocol: split sizes or fold count, and the pre-declared comparison rule.
 - Search log: number of trials, objective per trial, and which split each trial touched.
 - One final test-set estimate, with the number and dates of test-set contacts.
@@ -173,8 +217,18 @@ metric being searched over (see
 | Random search: marginals, no discretization, no wasted trials, faster validation-error reduction per trial, repeated runs | §11.4.4, pp. 448–449 |
 | Model-based search: unavailable gradients, Bayesian surrogates, Spearmint/TPE/SMAC, immaturity verdict, full-run defect, freeze/unfreeze variant | §11.4.5, pp. 449–450 |
 
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. The
+modern-update block at step 1 (conditional hyperparameters), and the matching entries in §4 and §5, are
+sourced outside the 2016 book and recorded in
+[`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§1.8, with source keys defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §8.5, fol. 133, and
+`SCALE` for the recorded tension. No architecture-search method was added to step 7's menu.
+
 **Historical boundary.** Spearmint, TPE, SMAC and the Swersky et al. (2014) freeze/unfreeze scheme are
 the 2016 state of the art as the book reports it; the judgement that Bayesian hyperparameter
 optimization is immature and unreliable is a 2016 judgement and is recorded here as such, not as a
 standing rule. The 80/20 split, the ~10⁵-sample resolvability point and the ≤3-knob grid limit are
-book-era rules of thumb: usable defaults, not derived bounds.
+book-era rules of thumb: usable defaults, not derived bounds. The ≤3-knob grid limit counts *nominal*
+knobs; under the conditional-space classification added at step 1 the count that governs it is the
+effective dimensionality of the defined region, which may be smaller.

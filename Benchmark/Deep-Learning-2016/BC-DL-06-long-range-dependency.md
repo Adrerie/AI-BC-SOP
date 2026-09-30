@@ -131,6 +131,26 @@ spectral-radius target for trained networks; these are evaluator choices and mus
 - Display equations are images in this copy, so the exact form of the information-flow regularizer and of the
   eigenvalue decomposition are cited at prose level.
 
+**Modern update (2017–2026) — one further validity limit (`delta_map.md` §2.1, §2.4).** The structural limit this
+benchmark tests is **architecture-bound**, and that scope must be stated with the result. The spectral account
+and the span-10/20 figure describe a *recurrent* path, where a dependency at distance n is carried by n
+successive applications of the same transition matrix. An architecture that connects all positions with a
+**constant number of sequentially executed operations** removes that path altogether: the shortest route
+between any two positions no longer grows with n, which is precisely the quantity the spectral account makes
+exponential. For recurrent models — this benchmark's entire scope — nothing here changes, and the 2016 account
+is left intact.
+
+What changes is the interpretation of a *failure* to learn a long dependency. Under the 2016 account there is
+one explanation available: the recurrent gradient path. Under the modern account a second must be ruled out
+before that explanation is reported — whether the dependency was simply **outside the length the
+architecture's cost permits**. Attention's cost grows quadratically with sequence length, which bounds the
+usable length in a different way, and sparsifying the connection pattern is the named category of response. So
+the same observable, "the model cannot learn a dependency at span n", has two distinct modern causes, and a
+report that does not say which architecture was under test cannot distinguish them.
+
+No attention architecture is specified, no sparsification scheme is endorsed, and no arm is added to this
+benchmark. *Sources: `ATTN` (abstract, §4); `UDL` §12.9 fol. 227–228.*
+
 | Claim | Locator |
 | --- | --- |
 | Wᵗ mechanism; explosion and vanishing by eigenvalue magnitude; power-method view; feedforward nets use different matrices | §8.2.5, pp. 310–311 |
@@ -143,6 +163,14 @@ spectral-radius target for trained networks; these are evaluator choices and mus
 | Recursive nets: O(log τ) depth; unresolved tree construction | §10.6, pp. 417–419 |
 | Which recurrent block to deepen; shortest-path argument | §10.5, pp. 415–417 |
 
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. The added
+validity limit in §6 is sourced outside the 2016 book and recorded in
+[`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§2.1 and §2.4, with source keys defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `ATTN` (abstract, §4) and
+`UDL` §12.9 fol. 227–228. The claim under test, the comparison conditions, the baselines and the metrics are
+unchanged, and no arm was added.
+
 **Historical boundary.** The span-10/20 result, the reservoir-computing spectral-radius practice, the echo
 state property, leaky units and clockwork-style update frequencies, peephole connections, and the verdict that
 gated RNNs were the most effective sequence models in practice at the time of writing are all book-era and
@@ -151,3 +179,10 @@ were superseded by careful initialization plus Nesterov momentum and, for LSTMs,
 model that is easy to optimize being usually easier than designing a more powerful optimizer (§10.11,
 pp. 429–430). No post-2016 sequence architecture is introduced, and no attention-based replacement for the
 fixed context vector is assumed beyond what the book itself states.
+
+The closing clause of this note was qualified by the modern update. The 2016 text remains free of any
+post-2016 architecture, and this benchmark still tests only recurrent models. But the *verdict* that gated RNNs
+were the most effective sequence models in practice is now era-bound in a stronger sense than the note
+originally conveyed: the structural limit this benchmark measures is a property of the recurrent path, and an
+architecture with a constant-length path between positions is not subject to it. That is recorded as a
+validity limit in §6 rather than as a change to the claim under test.
