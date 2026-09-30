@@ -1,139 +1,126 @@
-# Deep Learning (Goodfellow, Bengio & Courville, 2016) — SOP / Benchmark plan
+# Deep Learning (Goodfellow, Bengio & Courville, 2016) — source-package cleanup
 
 ## Goal
 
-Use the local copy of *Deep Learning* ("the flower book") to build a reusable SOP and Benchmark/BC
-package without mirroring the book chapter by chapter.
+Finish the 2016 source package before any modern update is added.
 
-This branch starts from `framework/book-base`. Do not import the Trustworthy ML package and do not
-merge `main` automatically.
+The package is already extracted. This pass is only for correcting over-strong claims and reducing
+overgrown artifacts. Do not add new SOPs, new BCs, new validators, new gates, or post-2016 material.
 
-## 1. Read and reconstruct
+## 1. Correct the BCs
 
-Use the book file already present in the local workspace. Record the edition/language, filename and
-pagination convention in:
+### BC-DL-03 — regularization
 
-`Validation/Deep-Learning-2016/SOURCE.md`
+Keep the benchmark, but fix the interpretation of the book's definition.
 
-Do not commit the PDF or bulk extracted text.
+Do not say that a method stops being regularization merely because training error also decreases.
+Instead:
 
-Read the table of contents first, then the relevant body sections. Reconstruct the book by research
-function rather than chapter number.
+- report training and generalization error separately;
+- if both improve, note that optimization/capacity may also have changed;
+- keep the classification based on the intended role and the actual experimental mechanism, not on one
+  observed training-error direction.
 
-Keep a single working record:
+### BC-DL-04 — adversarial linearity
 
-`Validation/Deep-Learning-2016/concept_reconstruction.md`
+Remove this as an active reusable BC.
 
-It should briefly record:
-- what reusable research workflows the book supports;
-- what evaluable capabilities/failure modes it supports;
-- which major parts are mainly theory and therefore do not need an SOP/BC;
-- where a 2016 implementation detail is historical rather than a current general rule.
+The 2016 adversarial-linearity explanation and FGSM-era experiment should remain as a historical
+source-era observation in `concept_reconstruction.md` and, where useful, as context in the regularization
+SOP. Do not present "excessive linearity" as a current causal benchmark hypothesis.
 
-Do not create separate audit/gate documents unless they become genuinely necessary.
+Delete the BC file and remove its index/cross-links.
 
-## 2. Build SOPs
+### BC-DL-05 — optimization pathology
 
-Create:
+Keep the useful diagnostic experiments, but remove the strong "separability/classify the pathology from
+the trace" claim.
 
-`SOP/Deep-Learning-2016/`
+Reframe it as an **optimization diagnostic probe suite**:
 
-Only create an SOP when the material yields a reusable workflow.
+- each probe tests one symptom/repair relation;
+- a probe can rule out or support a diagnosis;
+- the suite does not promise unique identification from traces;
+- remedies are evaluated against the quantity they are meant to change.
 
-Prefer broad research procedures such as:
-- formulate an objective and output distribution;
-- diagnose underfitting/overfitting and capacity;
-- select regularization;
-- diagnose optimization failure;
-- perform model selection / hyperparameter search;
-- debug a deep-learning experiment.
+Rename the file/title if needed and update links.
 
-These are examples, not a required list.
+### BC-DL-12 — representation quality
 
-Do not create one SOP for every optimizer, architecture, chapter, or method family.
+Keep the benchmark, but narrow PCA to the claims it actually supports.
 
-Each SOP only needs:
-- purpose / scope;
-- inputs or assumptions;
-- procedure;
-- important failure modes;
-- outputs/reporting;
-- source traceability.
+PCA is a required matched-dimension control for the linear/undercomplete-autoencoder and related
+downstream comparisons. It is not the universal baseline for every representation claim.
 
-Chapter 11 practical methodology should be folded into the relevant workflows rather than copied as a
-chapter summary.
+Use local controls for manifold sensitivity, contractiveness, one-hot similarity, sparse coding and
+distributed-representation arguments.
 
-## 3. Build Benchmarks / BCs
+## 2. Reduce overgrown SOPs
 
-Create:
+Keep the current nine-SOP architecture unless a deletion becomes obviously necessary.
 
-`Benchmark/Deep-Learning-2016/`
+Shorten these four:
 
-Only create a BC when the book provides a concrete evaluable research question.
+- `SOP-DL-03`
+- `SOP-DL-04`
+- `SOP-DL-08`
+- `SOP-DL-09`
 
-A BC should state enough to run the evaluation:
-- what capability/failure is tested;
-- data or comparison conditions;
-- baseline(s);
-- metric(s);
-- how to interpret failure;
-- validity limits and source traceability.
+The main procedure should contain only the decision path a researcher follows.
 
-An architecture name is not a Benchmark. CNN, RNN, autoencoder, generative model, etc. should become a
-BC only if there is a distinct evaluable claim.
+Move or compress long catalog-style material — optimizer inventories, historical method menus, model
+family surveys, detailed derivations and era-specific recipes — into compact tables or
+`concept_reconstruction.md`.
 
-Do not invent metrics just to complete a template.
+In particular, `SOP-DL-04` should read approximately as:
 
-## 4. Historical boundary
+`verify objective → inspect symptom → run the relevant probe → apply the smallest repair → re-run → report`
 
-Treat the book as a 2016 source.
+It should not function as a rewritten optimization textbook.
 
-Preserve principles that remain general, but mark book-era implementation choices or empirical examples
-as historical when needed.
+Do not shorten by deleting source boundaries, important failure modes, or the historical caveat.
 
-Do not silently modernize the source with Transformers, AdamW, scaling laws, modern leaderboards, or
-other later material. Those can be added in a future source-update cycle.
+## 3. Synchronize the package
 
-Likewise, do not turn an old implementation detail into a mandatory current best practice merely because
-the book used it.
+Update:
 
-## Scope
+- `Validation/Deep-Learning-2016/concept_reconstruction.md`
+- SOP/BC READMEs and cross-links
+- root/SOP/Benchmark indexes if IDs or filenames changed
 
-Prioritize material with clear research-method value:
+The reconstruction should clearly distinguish:
 
-- generalization / capacity / regularization;
-- optimization and initialization;
-- model selection and practical methodology;
-- architectural inductive bias where it changes experimental reasoning;
-- representation learning and transfer where the book supports a reusable procedure or evaluable claim;
-- inference / generative-model material only where an actual workflow or evaluation protocol can be
-  extracted.
+- book-derived principle;
+- historical 2016 observation/example;
+- repository operationalization.
 
-Theory-only material may remain in `concept_reconstruction.md` with no artifact.
+## 4. Finish
 
-## Finish
+Do one concise content pass only:
 
-Before stopping, do one concise pass to ensure:
+- no chapter-shaped duplication;
+- no historical explanation promoted to a current universal claim;
+- no broken links after BC-DL-04 removal / BC-DL-05 rename;
+- no obvious inconsistency between reconstruction and artifact indexes.
 
-- no obvious chapter-shaped duplication;
-- every SOP/BC has a book source;
-- historical examples are not written as universal current defaults;
-- package indexes and internal links are usable.
-
-Do not add validator frameworks, mutation tests, multi-stage gates, repeated acceptance cycles, or
-extra plan files.
-
-Expected result:
-
-```text
-SOP/Deep-Learning-2016/
-Benchmark/Deep-Learning-2016/
-Validation/Deep-Learning-2016/
-  SOURCE.md
-  concept_reconstruction.md
-plans/Deep-Learning-2016/README.md
-```
-
-Update the branch's root/SOP/Benchmark indexes only enough to expose the package.
+Do not create an acceptance framework or another revision plan.
 
 Commit and push `plan/deep-learning-2016`. Do not merge `main`.
+
+## Next phase — not part of this run
+
+After this source package is reviewed and merged, create a separate modern-update branch from the then
+current `main`.
+
+That future update should compare the 2016 workflows against modern sources and add only structural
+deltas such as:
+
+- model/data/compute scaling;
+- Transformer/modern sequence and vision inductive biases;
+- modern pretraining, transfer and representation learning;
+- diffusion / flow-based generative modeling;
+- modern optimization/training stability where it changes the workflow;
+- resource-normalized adaptation/efficiency;
+- test-time compute and post-training/reasoning.
+
+Do not add those topics during this cleanup.
