@@ -94,8 +94,10 @@ Supporting claims to be tested alongside it:
   methods: the book states that the cited experiments predate ReLU units, dropout and batch normalization and
   that little is known about combining unsupervised pretraining with them (§15.1.1, p. 539). A win is
   evidence about this configuration, not a refutation of the size rule.
-- **Pretraining lowers training error** ⇒ it is acting as a capacity or optimization change, not as the
-  regularizer the book describes (§15.1, p. 535).
+- **Pretraining lowers training error** ⇒ do not read this as either confirmation or refutation on its own:
+  a lower training error is equally consistent with pretraining acting as a capacity or optimization change
+  rather than as the regularizer the book describes (§15.1, p. 535). Report both errors separately and check
+  the capacity and optimization confounders before attributing the gain.
 - **Semi-supervised gain appears on the uninformative-p(x) dataset** ⇒ the gain is not coming from the
   unlabeled structure; check for leakage between the unlabeled pool and the evaluation split.
 - **Multi-task gain appears on the unrelated pair** ⇒ the gain is compute or regularization, not shared

@@ -17,7 +17,7 @@ Artifacts are grouped by the source they were reconstructed from. Each package k
 
 | Package | Source | SOPs | Benchmark checks | Source record |
 | --- | --- | --- | --- | --- |
-| `Deep-Learning-2016` | *Deep Learning*, Goodfellow, Bengio & Courville, MIT Press 2016 (local copy: Simplified Chinese edition, 人民邮电出版社 2017) | [`SOP/Deep-Learning-2016/`](SOP/Deep-Learning-2016/README.md) — 9 | [`Benchmark/Deep-Learning-2016/`](Benchmark/Deep-Learning-2016/README.md) — 12 | [`Validation/Deep-Learning-2016/`](Validation/Deep-Learning-2016/SOURCE.md) |
+| `Deep-Learning-2016` | *Deep Learning*, Goodfellow, Bengio & Courville, MIT Press 2016 (local copy: Simplified Chinese edition, 人民邮电出版社 2017) | [`SOP/Deep-Learning-2016/`](SOP/Deep-Learning-2016/README.md) — 9 | [`Benchmark/Deep-Learning-2016/`](Benchmark/Deep-Learning-2016/README.md) — 11 | [`Validation/Deep-Learning-2016/`](Validation/Deep-Learning-2016/SOURCE.md) |
 
 Packages are reconstructed **by research function, not by chapter**. Material with no reusable procedure or evaluable claim is recorded as theory-only in the package's `concept_reconstruction.md` instead of being forced into an artifact, and era-specific implementation detail is labeled historical rather than promoted to current practice.
 

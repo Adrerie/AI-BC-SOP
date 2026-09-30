@@ -1,28 +1,39 @@
-# BC-DL-05 — Can optimization pathologies be distinguished from traces, and do the remedies move the diagnosed quantity?
+# BC-DL-05 — Optimization diagnostic probe suite: do the probes support or rule out a diagnosis, and do the remedies move the diagnosed quantity?
 
-**Tests:** whether the book's symptom → cause → remedy mappings are separable in practice · **Executed by:**
+**Tests:** whether each probe the book offers is informative in the direction it claims, and whether the
+prescribed remedy changes the quantity the diagnosis implicated · **Executed by:**
 [`SOP-DL-04`](../../SOP/Deep-Learning-2016/SOP-DL-04-diagnose-optimization-failure.md) ·
 **Source package:** *Deep Learning* (2016), Chinese edition — see
 [`SOURCE.md`](../../Validation/Deep-Learning-2016/SOURCE.md)
 
 ## 1. Capability / failure under test
 
-The book gives a diagnostic taxonomy in which each pathology has a distinct observable signature and a
-distinct remedy. The capability under test is **separability**: can a researcher, given only training traces,
-identify which pathology is present; and does the prescribed remedy change the quantity the diagnosis
-implicated?
+The book offers a set of diagnostic probes, each attached to a candidate cause and a remedy. The capability
+under test is **whether each probe carries the evidential weight the book gives it** — that is, whether it can
+*rule out* what it claims to rule out and *support* what it claims to support — and whether the remedy then
+moves the implicated quantity.
 
-| Arm | Claim under test | Locator |
+**What this benchmark does not claim.** A trace does **not** uniquely identify a pathology. Ill-conditioning,
+cliffs, plateaus and saddles co-occur in the same run; the same ‖g‖ trajectory is compatible with several of
+them; and the book itself leaves first-order behaviour near saddles unclear (§8.2.3, p. 309) and records that
+whether high-cost local minima are common for real networks was open (§8.2.2, pp. 306–307). The suite is
+therefore scored as **elimination plus corroboration**, not as classification: a probe result either removes a
+diagnosis from consideration or adds support to one that is already live, and the report states which diagnoses
+remain undecided.
+
+Each arm below is written with its inference direction made explicit.
+
+| Arm | Probe and the inference it licenses | Locator |
 | --- | --- | --- |
-| a | Ill-conditioning signature: SGD "sticks" — even very small steps increase the cost, because the curvature term gᵀHg exceeds the linear term. In many runs ‖g‖ does not shrink much while gᵀHg grows by more than an order of magnitude | §8.2.1, pp. 304–305 |
-| b | A **rising** gradient norm is compatible with successful training, so gradient norm alone is not a failure indicator | §8.2.1, p. 305, Fig. 8.1 |
-| c | Local-minima exclusion test: plot the gradient norm over time; if it never shrinks to a tiny value, the failure is not a local minimum or any other critical point | §8.2.2, p. 307 |
-| d | Saddles dominate in high dimensions; SGD trajectories escape prominent saddles quickly, while **unmodified Newton is attracted to them** | §8.2.3, pp. 307–310 |
-| e | Cliffs: a gradient step can catapult parameters far away and destroy accumulated progress, whether approached from above or below; clipping bounds the step | §8.2.4, p. 310; §10.11.1, pp. 430–431 |
-| f | A learning rate above the optimum can make gradient descent *increase* training error — in the idealized quadratic case when the rate is twice the optimal value | §11.4.1, p. 443, Fig. 11.1 |
-| g | Initialization scale is diagnosable on a **single minibatch**: propagate forward, find the first layer whose activations shrink unacceptably, raise its weights, repeat; if learning is still slow, do the same with gradient magnitudes | §8.4, p. 325 |
-| h | Batch normalization makes lower-layer updates nearly harmless, permits one learning rate across layers, and enables single-sample inference via running averages; in a purely linear chain it makes lower layers *useless* rather than merely harmless | §8.7.1, pp. 339–343 |
-| i | Batch size trades generalization against runtime: generalization error is usually best at batch size 1, but the high gradient variance forces a small learning rate and many more steps; second-order updates need much larger batches (~10,000) than first-order (~100) | §8.1.3, pp. 301–302 |
+| a | **Ill-conditioning.** SGD "sticks" — even very small steps increase the cost, because the curvature term gᵀHg exceeds the linear term. In many runs ‖g‖ does not shrink much while gᵀHg grows by more than an order of magnitude. *Supports* ill-conditioning; does not exclude a cliff or a too-large rate | §8.2.1, pp. 304–305 |
+| b | **Gradient norm is not a failure indicator.** A *rising* gradient norm is compatible with successful training. *Rules out* "‖g‖ rising" as evidence of failure — a negative control on the most commonly misused trace | §8.2.1, p. 305, Fig. 8.1 |
+| c | **Critical-point exclusion.** Plot the gradient norm over time; if it never shrinks to a tiny value, the failure is not a local minimum or any other critical point. *Rules out* only; a tiny gradient does not confirm a minimum, because in high dimensions many non-minimum structures also have small gradients | §8.2.2, p. 307 |
+| d | **Saddle behaviour.** Saddles dominate in high dimensions; SGD trajectories escape prominent saddles quickly, while **unmodified Newton is attracted to them**. *Supports* a saddle diagnosis when escape is observed and Newton is not used; the dominance argument is about random function ensembles, not this network | §8.2.3, pp. 307–310 |
+| e | **Cliff detection.** A gradient step can catapult parameters far away and destroy accumulated progress, whether approached from above or below; clipping bounds the step. *Supports* a cliff when a single step produces the displacement; also the arm that tests the remedy | §8.2.4, p. 310; §10.11.1, pp. 430–431 |
+| f | **Learning-rate bracket.** A rate above the optimum can make gradient descent *increase* training error — in the idealized quadratic case when the rate is twice the optimal value. *Rules out* "the rate is too small" when error rises with the rate; the quadratic prediction is idealized and need not transfer | §11.4.1, p. 443, Fig. 11.1 |
+| g | **Initialization scale, on a single minibatch.** Propagate forward, find the first layer whose activations shrink unacceptably, raise its weights, repeat; if learning is still slow, do the same with gradient magnitudes. *Supports* an initialization diagnosis; the book warns a theory-based criterion may be the wrong one or may trade generalization for speed | §8.4, p. 325 |
+| h | **Batch normalization as remedy probe.** Makes lower-layer updates nearly harmless, permits one learning rate across layers, and enables single-sample inference via running averages; in a purely linear chain it makes lower layers *useless* rather than merely harmless. Tests the remedy and its stated failure condition | §8.7.1, pp. 339–343 |
+| i | **Batch-size trade-off.** Generalization error is usually best at batch size 1, but the high gradient variance forces a small learning rate and many more steps; second-order updates need much larger batches (~10,000) than first-order (~100). Tests whether the gradient-variance mechanism is the operative one | §8.1.3, pp. 301–302 |
 
 ## 2. Data and comparison conditions
 
@@ -75,14 +86,20 @@ implicated?
 7. With and without batch normalization: iterations to a target cost, sensitivity to the single global
    learning rate, and agreement between minibatch-statistic inference and running-average inference (arm h).
 8. Generalization error and total wall-clock versus batch size (arm i).
+9. **Per-arm verdict in the arm's own inference direction**: for each probe, record whether it *ruled out* a
+   diagnosis, *supported* one, or was *uninformative*, and end with the set of diagnoses still live. A suite
+   run that ends with one diagnosis is a report of elimination, not of identification.
 
 The book states no numeric threshold for "sticks", no tolerance for the gᵀHg growth ratio, no clipping
 threshold v, and no batch-size optimum; those are evaluator choices and must be reported.
 
 ## 5. How to interpret failure
 
-- **Arm a reproduces but the remedy does not help** ⇒ the diagnosis is right and the repair is wrong for this
-  model; the book notes that Newton-style fixes for convex ill-conditioning need major modification for
+- **Two or more arms point at different pathologies** is the expected outcome, not a broken suite. Report both
+  and prefer the remedy that is safe under either — the book's own repair menu (clipping, momentum, batch
+  normalization, a smaller rate) overlaps across causes for exactly this reason.
+- **Arm a reproduces but the remedy does not help** ⇒ the diagnosis is supported and the repair is wrong for
+  this model; the book notes that Newton-style fixes for convex ill-conditioning need major modification for
   networks, and presents momentum as aimed at exactly this problem.
 - **Arm b: a rising gradient norm in a failing run** ⇒ gradient norm is not the discriminator; use the gᵀHg
   ratio instead. This is the point of the arm.
@@ -105,9 +122,16 @@ threshold v, and no batch-size optimum; those are evaluator choices and must be 
   the book predicts exactly this; nonlinearity is what keeps lower layers useful.
 - **Arm i: batch size 1 generalizes best but is impractical** ⇒ that is the book's stated trade-off, not a
   contradiction; report both generalization error and wall-clock.
+- **Every arm uninformative** ⇒ the failure is probably not an optimization pathology at all. Route to
+  `SOP-DL-06` (implementation health) before re-running the suite, since a mis-implemented gradient produces
+  traces that no pathology taxonomy explains.
 
 ## 6. Validity limits and source traceability
 
+- **No probe identifies a pathology uniquely.** The suite licenses elimination and corroboration only. Where
+  the book itself hedges — saddle behaviour under first-order methods, the prevalence of high-cost local
+  minima, the too-small-rate stall — the corresponding arm inherits the hedge and cannot be reported as a
+  settled diagnosis.
 - Arm d's saddle-dominance argument is about **random function ensembles**: for random functions the ratio of
   saddles to minima grows exponentially with dimension. It is not a statement about any particular trained
   network, and the book records that whether high-cost local minima are common for real networks was an open

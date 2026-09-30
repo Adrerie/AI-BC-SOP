@@ -24,7 +24,7 @@ SOP-DL-08  leverage      what should be shared across tasks, domains, labels, la
 SOP-DL-02  diagnose      underfitting or overfitting — which capacity knob moves?
     ↓
 SOP-DL-03  regularize    which mechanism fits the failure and the data?
-SOP-DL-04  optimize      training will not descend — which pathology, which minimal repair?
+SOP-DL-04  optimize      training will not descend — verify objective → symptom → probe → repair → rerun → report
     ↓
 SOP-DL-05  select        how do I search and split so the comparison is resolvable?
 SOP-DL-09  evaluate      how do I compare generative models honestly?
@@ -47,7 +47,7 @@ Two dependency rules the book forces rather than we invented:
 | `SOP-DL-01` | define | [Specify the task, output distribution and cost](SOP-DL-01-specify-task-output-and-cost.md) | What is predicted, measured against what, with which output unit and cost? | §5.1, §6.2.1, §6.2.2, §5.10, §11.1, §11.6 |
 | `SOP-DL-02` | diagnose | [Diagnose the fitting regime and set effective capacity](SOP-DL-02-diagnose-fitting-regime-and-capacity.md) | Underfitting or overfitting, and is more data the right answer? | §5.2, §11.2, §11.3, §11.4.1 |
 | `SOP-DL-03` | regularize | [Select regularization](SOP-DL-03-select-regularization.md) | Which mechanism fits this failure mode and this dataset? | §5.2.2, §7.1–7.5, §7.8–7.14 |
-| `SOP-DL-04` | optimize | [Diagnose optimization failure](SOP-DL-04-diagnose-optimization-failure.md) | Which pathology is blocking descent, and what is the cheapest repair? | §8.1–8.7, §10.11, §4.1–4.4 |
+| `SOP-DL-04` | optimize | [Diagnose optimization failure](SOP-DL-04-diagnose-optimization-failure.md) | Training will not descend — verify objective → inspect symptom → probe → minimal repair → rerun → report | §8.1–8.7, §10.11, §4.1–4.4 |
 | `SOP-DL-05` | select | [Run model selection and hyperparameter search](SOP-DL-05-run-model-selection-and-hyperparameter-search.md) | Grid, random or model-based — and can the split resolve the difference? | §5.3, §5.3.1, §11.4 |
 | `SOP-DL-06` | localize | [Debug a deep-learning experiment](SOP-DL-06-debug-deep-learning-experiment.md) | Is this a real result or an implementation bug? | §11.5, §4.1, §8.4 |
 | `SOP-DL-07` | design | [Choose and test an inductive bias](SOP-DL-07-choose-and-test-inductive-bias.md) | Which prior does the data license, what does it buy, how would it break? | §6.4.2, §9, §10 |
@@ -74,6 +74,11 @@ rule.
    `concept_reconstruction.md` §5.4.
 5. **Function-shaped, not chapter-shaped.** If a chapter produced no reusable decision procedure it
    is recorded as theory-only in `concept_reconstruction.md` §4 and has no SOP.
+6. **Decision path in the SOP, inventory in the reconstruction record.** An SOP keeps the executable
+   branch structure and the caveat that changes a decision. Catalog-style method inventories, historical
+   menus, long derivations and era-specific recipes live in
+   `concept_reconstruction.md` §4.1 — (a) optimization, (b) regularization, (c) sharing and
+   representation, (d) generative evaluation — and the SOP points at them instead of restating them.
 
 ## Related
 

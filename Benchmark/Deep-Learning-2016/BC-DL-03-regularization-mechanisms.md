@@ -1,16 +1,19 @@
 # BC-DL-03 — Do regularizers work through the mechanisms the book claims?
 
-**Tests:** whether a modification actually reduces generalization error without reducing training error, and
-whether the specific mechanism claims hold · **Executed by:**
+**Tests:** whether each regularizer produces the mechanism-specific effect the book claims, with training and
+generalization error reported separately · **Executed by:**
 [`SOP-DL-03`](../../SOP/Deep-Learning-2016/SOP-DL-03-select-regularization.md) ·
 **Source package:** *Deep Learning* (2016), Chinese edition — see
 [`SOURCE.md`](../../Validation/Deep-Learning-2016/SOURCE.md)
 
 ## 1. Capability / failure under test
 
-The definition to be tested is the book's own: regularization is any modification to a learning algorithm
+The book's definition is quoted for orientation: regularization is any modification to a learning algorithm
 intended to reduce its **generalization** error but **not its training error** (§5.2.2, p. 150; §7, p. 253).
-Eight mechanism claims are tested as sub-arms:
+This benchmark does **not** turn that definition into a classifier. Whether training error happened to move in
+a single run conflates regularization with capacity and optimization effects, so the two errors are reported
+separately and the verdict rests on the mechanism-specific observable for each arm. Eight mechanism claims are
+tested as sub-arms:
 
 | Arm | Claim | Locator |
 | --- | --- | --- |
@@ -26,7 +29,9 @@ Eight mechanism claims are tested as sub-arms:
 ## 2. Data and comparison conditions
 
 - **Common condition for every arm**: training error and generalization error are measured **separately**, on
-  a fixed split built per `SOP-DL-05`. An arm that lowers both is not demonstrating regularization.
+  a fixed split built per `SOP-DL-05`. Neither number alone decides the arm; the mechanism observable does.
+  When both improve, record it and check for optimization or capacity effects before attributing the gain to
+  regularization.
 - **a**: two model classes — the book's stated regime (simple linear model, quadratic error, plain gradient
   descent, parameters initialized at the origin, small ε, small Hessian eigenvalues), and a deep nonlinear
   model to locate where the equivalence breaks. Sweep matched pairs of (ε, τ) against λ and compare the
@@ -73,8 +78,11 @@ Eight mechanism claims are tested as sub-arms:
 
 ## 5. How to interpret failure
 
-- **A "regularizer" that lowers training error too** is not regularization by the book's definition; reclassify
-  it as a capacity or optimization change and route to `SOP-DL-02` or `SOP-DL-04`.
+- **Both errors improving together** is not a failed arm and not proof of regularization. Note it, then check
+  the two confounders the book separates out: a capacity change (route to `SOP-DL-02`) and an optimization
+  change — a modified objective or step rule can simply reach a better minimum (route to `SOP-DL-04`). Only
+  after both are ruled out does the generalization gain belong to the regularizer, and even then the arm is
+  decided by its own mechanism observable, not by the direction of the training-error movement.
 - **Arm a diverging on the deep model** is expected, not a refutation: the equivalence is established only for
   the stated linear/quadratic/origin/small-ε/small-eigenvalue regime. Report where it broke.
 - **Arm b showing no U** means the model is not large enough to overfit; increase capacity before concluding

@@ -108,25 +108,16 @@ still have serious flaws** (§20.14, p. 717).
     when Σ log p̃(x; θ_A) − m log Z(θ_A) exceeds the same quantity for B; this requires both partition
     functions, but can be rewritten so that only the **ratio** Z(θ_B)/Z(θ_A) is needed (§18.7, p. 625).
     Report which form was used.
-14. **Choose the estimator and audit it** (§18.7, pp. 626–632):
-    - *Simple importance sampling* from a tractable proposal p₀ with known Z₀ degrades when
-      D_KL(p₀ ‖ p₁) is large: few samples carry significant weight. The book quantifies this by the
-      **variance of the importance weights**, which is maximal when the weights are highly dispersed.
-    - *Annealed importance sampling (AIS)* — described as the most common method for estimating the
-      partition function of undirected models, popularized for RBMs and DBNs by Salakhutdinov and Murray
-      (2008, as cited): a chain of geometric-mean intermediate distributions between p₀ and p₁, MCMC
-      transitions (Metropolis–Hastings or Gibbs) preserving each, per-sample weights accumulated in log
-      space, and the ratio estimated as the mean of the weights. Its validity is argued by recasting AIS
-      as simple importance sampling on an extended state space. **The book states no upper/lower-bound
-      and no bias or consistency result for AIS**, deferring variance and efficiency analysis to Neal
-      (2001, as cited) — so the bias direction must be established by the evaluator, not assumed.
-    - *Bridge sampling* uses a single bridge distribution p*; the optimal bridge is the harmonic mixture
-      of p₀ and p₁ weighted by r = Z₁/Z₀, found by iterating from a rough r. It is more efficient than AIS
-      when D_KL(p₀ ‖ p₁) is moderate. Chained importance sampling (Neal, 2005, as cited) bridges AIS's
-      intermediate distributions to improve the estimate (§18.7.2, p. 631).
-    - AIS is too expensive for tracking Z *during* training; the book cites Desjardins et al. (2011)
-      combining bridge sampling, short-run AIS and parallel tempering to track an RBM's Z during training
-      with lower variance (§18.7.2, pp. 631–632).
+14. **Choose the estimator by the size of D_KL(p₀ ‖ p₁) and audit it.** Estimating Z matters exactly when
+    evaluating models, monitoring training and comparing models (§18.7, pp. 624–625). Simple importance
+    sampling from a tractable proposal degrades as D_KL(p₀ ‖ p₁) grows — few samples carry significant weight,
+    quantified by the **variance of the importance weights**. **Annealed importance sampling (AIS)** is
+    described as the most common method for undirected models; **bridge sampling** is more efficient when
+    D_KL(p₀ ‖ p₁) is moderate; AIS is too expensive for tracking Z *during* training. The mechanics of each
+    estimator, and the in-training tracking workaround, are catalogued in `concept_reconstruction.md` §4.1(d).
+    **The book states no upper/lower bound and no bias or consistency result for AIS**, deferring variance and
+    efficiency analysis to Neal (2001, as cited) — so the bias direction must be established by the evaluator,
+    not assumed (§18.7.1–§18.7.2, pp. 626–632).
 15. **Record the one bias direction the book does state.** A compute-economical AIS implementation may
     fail to find several modes of the model distribution and therefore **underestimate Z**, which
     **overestimates** the log-likelihood. The consequence is the trap this SOP exists to avoid: it becomes
@@ -159,67 +150,37 @@ still have serious flaws** (§20.14, p. 717).
 
 ### 3.7 Establish whether any MCMC-derived number can be trusted
 
-19. **Burn in, then handle correlation.** Run the chain until equilibrium (磨合); post-equilibrium samples
-    are correlated, so either thin by returning every n-th sample or run parallel chains — the book notes
-    deep-learning practice uses around 100 chains, comparable to the minibatch size (§17.3,
-    pp. 599–600).
-20. **Do not claim mixing.** Mixing time is unknown a priori: theory says the second-largest eigenvalue of
-    the transition matrix determines it, but that matrix is exponentially large and inaccessible, and the
-    book states plainly that we typically cannot know whether a Markov chain has mixed successfully. Its
-    prescribed substitutes are heuristics — run the chain for a crudely sufficient time, then manually
-    inspect samples or measure the correlation between successive samples (§17.3, p. 600). Report which
-    heuristic was used and what it showed.
-21. **When chains do not mix**, the book's options are: Gibbs or block Gibbs (Metropolis–Hastings is
-    rarely used for undirected models in deep learning); grouping highly dependent variables and updating
-    blocks jointly, which is often intractable; and tempering — sampling at inverse temperature β < 1,
-    tempered transitions (Neal, 1994) and parallel tempering (Iba, 2001) — with the verdict that tempering
-    is limited because transitions must be very slow near critical temperatures. Depth may help: deeper
-    stacked RBM/autoencoder top-layer marginals are more uniform, easing mode-hopping, but exploiting this
-    remains to be explored (§§17.4–17.5.2, pp. 601–605).
-22. **Know the symptom picture.** Consecutive Gibbs samples from an MNIST DBM are nearly identical —
-    non-mixing at the semantic scale (the book's Fig. 17.2). Ancestral samples from a GAN are independent,
-    so no mixing problem arises there (§17.5, p. 603).
-23. **If the model was trained with persistent chains (SML/PCD), evaluate on a fresh chain initialized at
-    a random point.** Training-time negative-phase samples are influenced by recent versions of the model
-    and would make the model appear to have more capacity than it actually has (§18.2, p. 615). There is no
-    formal test for whether chains re-mix between gradient steps; the heuristic symptom is within-step
-    negative-phase sample variance exceeding between-chain variance — the book's example is an MNIST model
-    that samples only 7s, then only 9s (§18.2, p. 615).
+19. **Burn in, then handle correlation.** Run the chain until equilibrium (磨合); post-equilibrium samples are
+    correlated, so either thin by returning every n-th sample or run parallel chains — the book notes
+    deep-learning practice uses around 100 chains, comparable to the minibatch size (§17.3, pp. 599–600).
+20. **Do not claim mixing.** Mixing time is unknown a priori: theory says the second-largest eigenvalue of the
+    transition matrix determines it, but that matrix is exponentially large and inaccessible, and the book
+    states plainly that we typically cannot know whether a Markov chain has mixed successfully. Its prescribed
+    substitutes are heuristics — run the chain for a crudely sufficient time, then manually inspect samples or
+    measure the correlation between successive samples. Report which heuristic was used and what it showed.
+    The remedy menu for chains that do not mix (Gibbs/block Gibbs, block updates, tempering and its limitation,
+    depth helping mode-hopping) and the symptom picture are in `concept_reconstruction.md` §4.1(d)
+    (§§17.3–17.5.2, pp. 596–605).
+21. **If the model was trained with persistent chains (SML/PCD), evaluate on a fresh chain initialized at a
+    random point.** Training-time negative-phase samples are influenced by recent versions of the model and
+    would make the model appear to have more capacity than it actually has. There is no formal test for
+    whether chains re-mix between gradient steps; the heuristic symptom is within-step negative-phase sample
+    variance exceeding between-chain variance — the book's example is an MNIST model that samples only 7s,
+    then only 9s (§18.2, p. 615).
 
 ### 3.8 Restrict claims to what the training objective actually supports
 
-24. **If the model was trained by pseudolikelihood, do not claim joint-distribution capability.**
-    Pseudolikelihood replaces the chain-rule conditional p(x_i | x_{<i}) with p(x_i | x_{−i}) computed as a
-    ratio in which Z cancels, costing k × n evaluations instead of kⁿ; maximizing it is asymptotically
-    consistent (Mase, 1995, as cited), but finite-sample behaviour can differ from maximum likelihood. The
-    book's verdict: for tasks that need the full joint — density estimation **and sampling** —
-    pseudolikelihood usually performs poorly, whereas it can beat MLE for conditional-only tasks such as
-    filling in a few missing values. It is also incompatible with lower-bound approximations, because p̃
-    sits in a denominator, so a lower bound there yields only an upper bound on the objective, and
-    maximizing an upper bound is not meaningful (§18.3, pp. 616–619).
-25. **If score matching, ratio matching, denoising score matching or noise-contrastive estimation was
-    used, state what the objective does and does not estimate.** Score matching minimizes the expected
-    squared difference between model and data scores and gives a consistent fit without Z, but needs
-    derivatives with respect to x, so it is not applicable to discrete data, and it is incompatible with
-    lower-bound-only models — the book notes it is used for pretraining the first hidden layer
-    (§18.4, pp. 619–621). NCE turns density estimation into binary classification of data against samples
-    from an easy noise distribution, and its classification MLE defines an **asymptotically consistent**
-    estimator of the original problem; the caveat is that the learned log p_model may not correspond
-    exactly to a valid probability distribution until the extra parameter c ≈ −log Z has converged, and
-    efficiency drops when there are many random variables, because once basic marginals are learned the
-    classifier rejects nearly all noise samples and learning slows (§18.6, pp. 621–624).
-26. **If the model has no sampler, say how samples were produced.** For a (generalized) denoising
-    autoencoder, each chain step is: corrupt the current state x by sampling x̃ from the corruption
-    distribution; encode h = f(x̃); decode to obtain the parameters of the reconstruction distribution
-    p(x′|h); sample the next state x′ from it. If the autoencoder is a consistent estimator of the true
-    conditional, the chain's stationary distribution is an implicit consistent estimator of the data
-    distribution (Bengio et al., 2013c/2014, as cited); the injected noise level controls mixing speed and
-    smoothing. For conditional sampling, **clamp** the observed units and resample only the free ones, with
-    the missing condition that the transition operator must satisfy **detailed balance** (Alain et al.,
-    2015, as cited). The back-propagation-through-training variant replaces one-shot encode-decode with
-    multiple stochastic encode-decode steps initialized at training samples, penalizing the final (or all)
-    reconstructions: k steps are equivalent to one step for the stationary distribution but empirically
-    remove spurious modes better (§20.11, pp. 709–712).
+22. Read the objective off this table and state the restriction in the report. The mechanics behind each row
+    are catalogued in `concept_reconstruction.md` §4.1(d).
+
+| Training objective | What it licenses | What it forbids | Locator |
+| --- | --- | --- | --- |
+| Pseudolikelihood | Conditional-only tasks such as filling in a few missing values, where it can beat MLE | **Any joint-distribution claim** — density estimation *and sampling* usually perform poorly. Also incompatible with lower-bound approximations, because p̃ sits in a denominator, so a lower bound there yields only an upper bound on the objective and maximizing an upper bound is not meaningful | §18.3, pp. 616–619 |
+| Score matching / ratio matching / denoising score matching | A consistent fit **without** Z | Discrete data (it needs derivatives with respect to x); models that admit only lower bounds. The book notes it is used for pretraining the first hidden layer | §18.4–§18.5, pp. 619–621 |
+| Noise-contrastive estimation | An **asymptotically consistent** estimator of the original density problem, via binary classification of data against easy noise samples | Treating the learned log p_model as a valid distribution before the extra parameter c ≈ −log Z has converged. Efficiency drops with many random variables, because once basic marginals are learned the classifier rejects nearly all noise samples and learning slows | §18.6, pp. 621–624 |
+| Maximum likelihood with intractable Z | Likelihood comparison **only through the Z ratio rule** at step 13, with the estimator's bias direction reported | Reading a high likelihood as a good model when the estimator underestimates Z | §18.7, pp. 624–625; §20.14, p. 715 |
+| (Generalized) denoising autoencoder, no sampler | Samples from a Markov chain: corrupt x → x̃, encode h = f(x̃), decode to p(x′|h), sample x′. If the autoencoder is a consistent estimator of the true conditional, the chain's stationary distribution is an implicit consistent estimator of the data distribution; the injected noise level controls mixing and smoothing | Conditional sampling without **clamping** the observed units and without the transition operator satisfying **detailed balance**. The back-propagation-through-training variant (multiple stochastic encode-decode steps from training samples) is equivalent for the stationary distribution but empirically removes spurious modes better | §20.11, pp. 709–712 |
+
 
 ## 4. Important failure modes
 
