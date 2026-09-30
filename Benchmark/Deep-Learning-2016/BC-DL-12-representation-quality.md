@@ -50,8 +50,7 @@ book's own non-distributed contrast class, and one-hot against a distributed enc
 - **Perturbation protocol (arms c, d).** Inputs perturbed along estimated manifold-tangent directions and
   orthogonally to them, recording the induced change in the code; and the encoder Jacobian's singular-value
   spectrum recorded per example. Controls: the **orthogonal-direction response** for arm c, and a
-  structure-free reference encoder (random projection at the same dimension) to show the tangent alignment is
-  not an artifact of any encoder.
+  orthogonal to them. The control is the orthogonal-direction response of the same encoder; no extra representation baseline is required by the book.
 - **Noise-scale sweep (arm e).** Denoising autoencoder trained at decreasing Gaussian noise scales, with the
   reconstruction error and the contractive penalty compared as the noise becomes small. Control: the two
   quantities against each other — this is a self-comparison, not a comparison to PCA.
@@ -78,7 +77,7 @@ Each arm has the control that fits its own claim. There is no single baseline fo
 | --- | --- | --- |
 | a | **PCA at matched dimension**, plus the covariance's principal eigenvectors | This is the linear / undercomplete regime where the book proves the equivalence (§13.5, p. 509; §14.1, pp. 511–512) |
 | b | **The identity function** | The degenerate solution the arm must be shown not to have reached (§14.1, p. 512) |
-| c | **Orthogonal-direction response** on the same encoder, plus a random-projection encoder at matched dimension | The criterion is a directional contrast within one code, not a code-to-code ranking (§14.6, pp. 523–524) |
+| c | **Orthogonal-direction response** on the same encoder | The criterion is a directional contrast within one code, not a code-to-code ranking (§14.6, pp. 523–524) |
 | d | **The untrained encoder's Jacobian spectrum** | "Most singular values below 1" is read against where training started (§14.7, pp. 527–529) |
 | e | **The contractive penalty at the same noise scale** | An asymptotic equivalence between two quantities of one model (§14.7, p. 528) |
 | f | **The tied-decoder variant** | The degenerate small-constant solution appears only when weights are untied (§14.7, p. 530) |
@@ -102,13 +101,13 @@ it.
    (arm c).
 4. **Cosine similarity between the learned linear decoder subspace and the covariance's principal
    eigenvectors** (arm a).
-5. **Identity-degeneration indicator**: the code's mutual agreement with the input under an overcomplete
-   unregularized configuration (arm b).
-6. **Contractive penalty versus denoising reconstruction error** across the noise-scale sweep (arm e).
-7. **Downstream linear-classifier accuracy and semantic-retrieval quality** on frozen codes (arm g).
-8. **Parameters versus distinguished regions** for the representation-family contrast, and the number of
+5. **Contractive penalty versus denoising reconstruction error** across the noise-scale sweep (arm e).
+6. **Downstream linear-classifier accuracy and semantic-retrieval quality** on frozen codes (arm g).
+7. **Parameters versus distinguished regions** for the representation-family contrast, and the number of
    concepts describable by n features with k values (arm h).
-9. **Labels-per-class sensitivity** for arm j.
+8. **Labels-per-class sensitivity** for arm j.
+
+Arm b is a validity check, not a separate invented metric: an overcomplete unregularized autoencoder can realize the identity map, so low reconstruction error by itself cannot establish representation quality.
 
 The book gives no threshold for "most singular values below 1", no acceptable ‖Δh‖ ratio and no target
 downstream margin; these are evaluator choices and must be declared.
