@@ -205,8 +205,7 @@ usually zero; the named exceptions and the named initialization schemes are list
   not a repair.
 - Re-read the symptom table after each rerun rather than assuming the same cause persists: fixing a cliff can
   expose ill-conditioning that the cliff was masking.
-- Stop the loop when training error meets target, or when two consecutive repairs produce no change — the
-  second case means the diagnosis was wrong, so return to §3.2 rather than adding a third repair.
+- Stop when the declared training objective is adequate for the task, or when the current evidence no longer supports another repair. If a repair does not move the quantity it was meant to change, return to §3.2 and re-open the diagnosis rather than applying repairs mechanically.
 - Do not chase convergence past the generalization floor: since generalization error cannot fall faster than
   O(1/√m), a faster-converging optimizer may correspond to overfitting (§8.3.1, p. 317).
 
