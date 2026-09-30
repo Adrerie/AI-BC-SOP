@@ -2,170 +2,138 @@
 
 ## Goal
 
-Build a source-traceable SOP and Benchmark/BC package from the local copy of *Deep Learning* ("the
-flower book") without mirroring its chapter structure.
+Use the local copy of *Deep Learning* ("the flower book") to build a reusable SOP and Benchmark/BC
+package without mirroring the book chapter by chapter.
 
-This branch starts from `framework/book-base`. Do not import the Trustworthy ML package into this
-branch and do not merge `main` automatically.
+This branch starts from `framework/book-base`. Do not import the Trustworthy ML package and do not
+merge `main` automatically.
 
-## Source handling
+## 1. Read and reconstruct
 
-1. Locate the local book file already present in the workspace. Do not download another copy unless the
-   local file is unusable.
-2. Record the exact edition/language, title, authors, year, publisher/ISBN if present, local filename,
-   table of contents, and the pagination actually used for citations.
-3. Do not commit the PDF or bulk extracted book text. Commit only notes, source coverage, concise
-   quotations where necessary, and page/section references.
-4. If the local copy is a translation, use standard English technical terminology in the repository
-   and cite the local edition consistently. If a translation is ambiguous, consult the original
-   terminology only to resolve the term; do not silently switch pagination.
+Use the book file already present in the local workspace. Record the edition/language, filename and
+pagination convention in:
 
-Create a small provenance record under:
+`Validation/Deep-Learning-2016/SOURCE.md`
 
-`Validation/Deep-Learning-2016/`
+Do not commit the PDF or bulk extracted text.
 
-At minimum:
-- `SOURCE.md` — source identity and citation convention
-- `source_coverage.md` — what parts were read and what was intentionally not operationalized
-- `concept_reconstruction.md` — the research-function reconstruction used to form SOPs and BCs
-- `acceptance_report.md` — short final summary of coverage, files produced, and any known limits
+Read the table of contents first, then the relevant body sections. Reconstruct the book by research
+function rather than chapter number.
 
-## Reconstruction rule
+Keep a single working record:
 
-Do **not** create one SOP or Benchmark per chapter.
+`Validation/Deep-Learning-2016/concept_reconstruction.md`
 
-Classify the book's material into three buckets:
+It should briefly record:
+- what reusable research workflows the book supports;
+- what evaluable capabilities/failure modes it supports;
+- which major parts are mainly theory and therefore do not need an SOP/BC;
+- where a 2016 implementation detail is historical rather than a current general rule.
 
-1. **Foundations / theory** — mathematics, probability, information theory, graphical-model or
-   optimization theory needed to understand later procedures. Keep these in reconstruction notes unless
-   they directly define an executable research step or an evaluable claim.
-2. **Reusable research procedures** — material that can be turned into a sequence of inputs, decisions,
-   steps, checks, failure modes, and outputs. These become SOP candidates.
-3. **Evaluable capabilities / failure modes** — claims that can be tested with a defined setup,
-   baselines, metrics, comparisons, and interpretation. These become Benchmark/BC candidates.
+Do not create separate audit/gate documents unless they become genuinely necessary.
 
-A method family or architecture name by itself is not a Benchmark.
-
-## Research-function axes to inspect
-
-Use these as prompts, not as a fixed file list:
-
-- problem/objective formulation and probabilistic interpretation
-- capacity, bias/variance, underfitting/overfitting and generalization
-- data splitting, model selection and hyperparameter search
-- initialization, optimization stability and convergence diagnosis
-- regularization and its trade-offs
-- architecture-specific inductive bias: feedforward, convolutional and sequence/recurrent models
-- practical debugging and experimental methodology
-- representation learning, transfer, semi-supervised learning and disentangling claims
-- structured/probabilistic modeling where it yields a reusable workflow
-- approximate inference, Monte Carlo, partition-function estimation and generative modeling where the
-  book supplies an executable evaluation protocol
-
-Do not force every axis to produce an artifact.
-
-## SOP construction
+## 2. Build SOPs
 
 Create:
 
 `SOP/Deep-Learning-2016/`
 
-Choose the number of SOPs from the reconstructed workflows rather than in advance.
+Only create an SOP when the material yields a reusable workflow.
 
-Each SOP should contain only what is needed to execute it:
+Prefer broad research procedures such as:
+- formulate an objective and output distribution;
+- diagnose underfitting/overfitting and capacity;
+- select regularization;
+- diagnose optimization failure;
+- perform model selection / hyperparameter search;
+- debug a deep-learning experiment.
 
-- purpose / when to use
-- required inputs and assumptions
-- procedure
-- essential checks and common failure modes
-- outputs to retain/report
-- links to relevant BCs
-- source traceability
+These are examples, not a required list.
 
-Prefer broad reusable workflows over method-specific recipes. For example, "diagnose optimization
-failure" is preferable to a file for every optimizer.
+Do not create one SOP for every optimizer, architecture, chapter, or method family.
 
-## Benchmark / BC construction
+Each SOP only needs:
+- purpose / scope;
+- inputs or assumptions;
+- procedure;
+- important failure modes;
+- outputs/reporting;
+- source traceability.
+
+Chapter 11 practical methodology should be folded into the relevant workflows rather than copied as a
+chapter summary.
+
+## 3. Build Benchmarks / BCs
 
 Create:
 
 `Benchmark/Deep-Learning-2016/`
 
-A BC should exist only when the book supports a concrete evaluable question. Each BC should state:
+Only create a BC when the book provides a concrete evaluable research question.
 
-- capability or failure mode
-- evaluation hypothesis
-- data/split assumptions
-- comparison or stress conditions
-- required baselines
-- primary metrics and their direction
-- aggregation/reporting
-- failure interpretation
-- computational/resource notes where material
-- validity limits
-- related SOPs
-- source traceability
+A BC should state enough to run the evaluation:
+- what capability/failure is tested;
+- data or comparison conditions;
+- baseline(s);
+- metric(s);
+- how to interpret failure;
+- validity limits and source traceability.
 
-Avoid inventing a metric merely to make the schema look complete. A directly defined rate or loss is
-fine when it is local to one BC.
+An architecture name is not a Benchmark. CNN, RNN, autoencoder, generative model, etc. should become a
+BC only if there is a distinct evaluable claim.
 
-## 2016-to-2026 boundary
+Do not invent metrics just to complete a template.
 
-The book is foundational but old enough that some implementation advice, architecture choices and
-empirical expectations are historical.
+## 4. Historical boundary
 
-For every operational rule, distinguish:
+Treat the book as a 2016 source.
 
-- **book-derived principle** — still meaningful independent of the period;
-- **book-era implementation/example** — useful historically but should not be presented as a current
-  universal default;
-- **repository convention** — a small operational choice needed to make an SOP/BC executable.
+Preserve principles that remain general, but mark book-era implementation choices or empirical examples
+as historical when needed.
 
-Do not silently modernize the book with Transformers, AdamW, modern scaling laws, current benchmark
-leaderboards, etc. Those belong to later sources and can extend the package in a future cycle.
+Do not silently modernize the source with Transformers, AdamW, scaling laws, modern leaderboards, or
+other later material. Those can be added in a future source-update cycle.
 
-Likewise, do not preserve obsolete implementation detail as a mandatory 2026 practice merely because
+Likewise, do not turn an old implementation detail into a mandatory current best practice merely because
 the book used it.
 
-## Scope decisions
+## Scope
 
-The package should emphasize reusable research methodology, not encyclopedic coverage.
+Prioritize material with clear research-method value:
 
-It is acceptable to leave a chapter or section with no SOP/BC when it is primarily explanatory theory.
-Record that decision briefly in `source_coverage.md`.
+- generalization / capacity / regularization;
+- optimization and initialization;
+- model selection and practical methodology;
+- architectural inductive bias where it changes experimental reasoning;
+- representation learning and transfer where the book supports a reusable procedure or evaluable claim;
+- inference / generative-model material only where an actual workflow or evaluation protocol can be
+  extracted.
 
-Pay particular attention to Chapter 11 practical methodology: it is likely to contain high-value
-cross-cutting SOP material and should be integrated into the relevant workflows rather than copied into
-a single chapter-summary file.
+Theory-only material may remain in `concept_reconstruction.md` with no artifact.
 
-For Parts III / deep generative models, create SOPs or BCs only where the text yields an operational
-workflow or evaluable claim. Do not create a generative-model taxonomy just to claim coverage.
+## Finish
 
-## Final package review
+Before stopping, do one concise pass to ensure:
 
-Before stopping:
+- no obvious chapter-shaped duplication;
+- every SOP/BC has a book source;
+- historical examples are not written as universal current defaults;
+- package indexes and internal links are usable.
 
-- confirm every SOP/BC is traceable to the local book;
-- remove obvious chapter-shaped duplication;
-- check that theory-only material was not forced into procedures;
-- check that historical examples are not written as current universal defaults;
-- ensure internal links and package indexes resolve;
-- compare the final artifact names at a high level with current `main` and note obvious cross-source
-  overlaps, but do not merge or redesign them in this branch.
+Do not add validator frameworks, mutation tests, multi-stage gates, repeated acceptance cycles, or
+extra plan files.
 
-No new validator framework, mutation suite, multi-stage gates, or repeated review cycles are required.
-
-## Deliverable
-
-The finished branch should contain:
+Expected result:
 
 ```text
 SOP/Deep-Learning-2016/
 Benchmark/Deep-Learning-2016/
 Validation/Deep-Learning-2016/
+  SOURCE.md
+  concept_reconstruction.md
 plans/Deep-Learning-2016/README.md
 ```
 
-Update the branch's root/SOP/Benchmark indexes only enough to expose this source package.
+Update the branch's root/SOP/Benchmark indexes only enough to expose the package.
 
 Commit and push `plan/deep-learning-2016`. Do not merge `main`.
