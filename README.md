@@ -8,6 +8,18 @@ This repository is not tied to a single topic, textbook, or research direction. 
 
 - `SOP/` — reusable research and experimental procedures.
 - `Benchmark/` — reusable benchmark designs, evaluation protocols, metrics, and test frameworks.
+- `Validation/` — per-source records: identification, pagination/citation convention, and the reconstruction notes that explain which material became an artifact and which stayed theory-only.
+- `plans/` — per-source plans describing the scope and boundaries of each reading-to-practice cycle.
+
+## Source Packages
+
+Artifacts are grouped by the source they were reconstructed from. Each package keeps its SOPs, benchmark checks and source record aligned.
+
+| Package | Source | SOPs | Benchmark checks | Source record |
+| --- | --- | --- | --- | --- |
+| `Deep-Learning-2016` | *Deep Learning*, Goodfellow, Bengio & Courville, MIT Press 2016 (local copy: Simplified Chinese edition, 人民邮电出版社 2017) | [`SOP/Deep-Learning-2016/`](SOP/Deep-Learning-2016/README.md) — 9 | [`Benchmark/Deep-Learning-2016/`](Benchmark/Deep-Learning-2016/README.md) — 12 | [`Validation/Deep-Learning-2016/`](Validation/Deep-Learning-2016/SOURCE.md) |
+
+Packages are reconstructed **by research function, not by chapter**. Material with no reusable procedure or evaluable claim is recorded as theory-only in the package's `concept_reconstruction.md` instead of being forced into an artifact, and era-specific implementation detail is labeled historical rather than promoted to current practice.
 
 ## Development Principle
 
