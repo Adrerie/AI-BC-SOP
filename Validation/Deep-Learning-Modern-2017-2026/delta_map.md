@@ -23,7 +23,7 @@ evidence of coverage, and a new model family is not evidence of a new capability
 **not** accepted just because it is modern — it is accepted only when it changes a reusable research
 workflow or an evaluable claim that an existing artifact already owns.
 
-Net artifact decision: **no new SOP and no new BC.** Nine existing artifacts receive minimal extensions
+Net artifact decision: **no new SOP and no new BC.** Eleven existing SOP/BC artifacts receive modern extensions
 (§6). This is a consequence of the per-item judgements below, not a target set in advance.
 
 ---
@@ -282,7 +282,7 @@ carried forward into this lineage. Only the prior each architecture encodes ente
   rate schedules"; SGD is a special case of Adam (β = 0, γ → 1); Choi et al. (2019) found that a *searched*
   Adam matches SGD and converges faster; SWATS switches from Adam to SGD mid-training.
 - **Source.** `UDL` §6.4, fol. 88–90.
-- **Destination.** `SOP-DL-03` §3.2 — a note on the lever table marking the 2016 ordering as era-bound.
+- **Destination.** `SOP-DL-03` §3.2 and `SOP-DL-04` §3.4 — notes on the regularization lever and optimizer-repair menu; neither creates an optimizer ranking.
 - **Boundary.** **No ranking is produced.** The delta is that the sensitivity-to-learning-rate assumption
   behind the 2016 ordering no longer holds; the choice remains problem-dependent, and the 2016 package's
   rejection of an optimizer leaderboard is reaffirmed rather than reversed. `SOP-DL-04`'s repair menu is not
@@ -606,6 +606,7 @@ excludes.
 | --- | --- | --- |
 | `SOP-DL-02` §3.4, §3.5, §3.6 | §1.1, §1.3, §1.4, §1.5 | Compute as a third axis; ratio ill-defined; U-curve right branch era-scoped; overparameterization evidence |
 | `SOP-DL-03` §3.2, §3.3 | §3.1, §3.2 | L2 ≠ weight decay under adaptive optimizers; optimizer-ordering note, no ranking |
+| `SOP-DL-04` §3.4 | §3.2 | Adaptive-optimizer sensitivity note; no optimizer ranking or repair-menu reorder |
 | `SOP-DL-05` §3 | §1.8 | Conditional hyperparameters declared before sampling |
 | `SOP-DL-07` §3.1, §3.2 | §2.1, §2.2, §2.3 | Attention prior in the bias register; conditional supersession of the convolutional prior |
 | `SOP-DL-08` §3.3, §3.4, §3.8 | §3.3, §3.4, §3.6, §3.7 | Self-supervised pretraining; contrastive resource condition; low-rank adaptation as a third share option; zero-shot closed label set |
