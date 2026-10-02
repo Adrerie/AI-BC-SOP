@@ -108,67 +108,48 @@ supervised pretraining as an *optimization* device (`SOP-DL-04` §3.4, repair 9)
     - **Multimodal learning** learns the two input mappings and their relation jointly (§15.2, pp. 544–545).
 
 > **Modern update (2017–2026) — a third factorization, and the zero-shot requirement realized.** Steps 8–10
-> stand, including the conditions at step 10: shared features must correspond to latent factors appearing
-> across settings, and the source setting must have abundant data. Nothing below displaces them. Two
-> additions to the decision space:
+> stand, including step 10's conditions: shared features must correspond to latent factors appearing across
+> settings, and the source setting must have abundant data. Nothing below displaces them.
 >
-> **(a) Step 9 gains a third option: freeze the base and adapt a low-rank increment.** The 2016 choice is
-> between sharing the bottom or the top, with fine-tuning adjusting all layers jointly. The modern option
-> freezes the pretrained base entirely and adapts a **low-rank increment on the attention weight matrices**.
-> Its structural properties are what make it a distinct point in the decision rather than a cheaper
-> approximation of one:
+> **(a) Step 9 gains a third option: freeze the base and adapt a low-rank increment** on the attention weight
+> matrices, instead of sharing the bottom or the top and fine-tuning jointly. Three properties make it a
+> distinct decision point rather than a cheaper approximation of one:
 >
-> - Adapting **both** the query and value projections gives the best result under a fixed parameter budget,
->   and spreading a low rank across several matrices beats concentrating it in one.
-> - There is **no additional inference latency**, because the increment is materialized into the weights
->   (W = W₀ + BA) before deployment. A latency-sensitive deployment is therefore not a reason to reject it.
-> - Many tasks are served from **one frozen base** by swapping the increments, which cuts storage and
->   task-switching overhead. This changes step 9's question from "which layers does this task share?" to
->   "how many tasks must one stored base serve?"
-> - The scale of the change is what makes it a decision rather than a detail: trainable parameters can be
->   roughly 10,000× fewer than full fine-tuning of a 175B-parameter model, at roughly 3× lower GPU memory.
+> - Under a fixed parameter budget, adapt **both** the query and value projections, and spread the low rank
+>   across several matrices rather than concentrating it in one.
+> - The increment is **materialized into the weights before deployment**, so there is no added inference
+>   latency. Latency sensitivity is not by itself a reason to reject this option.
+> - One frozen base can serve many tasks by swapping increments, which changes step 9's question from "which
+>   layers does this task share?" to **"how many tasks must one stored base serve?"**
 >
-> **Boundary on (a):** the quality claim is "on-par or better than fine-tuning" on the four model families
-> its source tested. No general ranking against full fine-tuning is implied, and the parameter and memory
-> ratios are that source's own measurements, not transferable constants. Record which option was chosen and
-> why in §3.8.
+> **Boundary on (a):** the quality claim is "on-par or better than fine-tuning" on the model families its
+> source tested; no general ranking against full fine-tuning is implied, and its parameter and memory ratios
+> are that source's own measurements, not transferable constants (see `delta_map.md` §3.6).
 >
-> **(b) Step 10's zero-shot requirement is now realizable, and its defining limit is a closed label set.**
-> The 2016 text requires an extra task variable T that is **a generalizable representation, not a one-hot
-> encoding**, citing word embeddings. Natural language has been used as exactly that T: a text encoder acts
-> as a hypernetwork generating the weights of a linear classifier from the text, with cosine similarities, a
-> temperature and a softmax. The requirement is confirmed, not relaxed. What must be added is the limit that
-> comes with it, in the source's own words:
+> **(b) Step 10's zero-shot requirement is realizable with natural language as T, and its defining limit is a
+> closed label set.** The 2016 requirement — T must be a generalizable representation, not a one-hot encoding
+> — is **confirmed, not relaxed**. Four conditions attach to the realized form:
 >
-> - The model "is still limited to choosing from only those concepts in a given zero-shot classifier" — the
->   label set is closed by the classifier you construct, so this is a *selection* capability, not open-ended
+> - The classifier closes over a fixed concept set, so this is a *selection* capability, not open-ended
 >   prediction.
-> - It "still generalizes poorly to data that is truly out-of-distribution for it".
-> - It is "quite weak on several specialized, complex, or abstract tasks", "struggles with more abstract and
->   systematic tasks such as counting the number of objects in an image", and is near-random on distance
->   estimation.
-> - Prompt templates and their ensembling are worth roughly five points, so the reported number depends on a
->   prompt-construction decision that must be declared.
-> - Comparables that are usable, all from the same source: zero-shot performance "only approaches fully
->   supervised performance on 5 datasets"; it wins on 16 of 27 datasets against a supervised baseline; and it
->   underperforms by more than 10% on two named fine-grained benchmarks. Read these as evidence that the
->   capability is strongly dataset-dependent, not as a benchmark result.
+> - It generalizes poorly to data that is truly out-of-distribution for the model, and is weak on specialized,
+>   abstract or systematic tasks — counting objects is the named example.
+> - Prompt templates and their ensembling materially move the reported number, so prompt construction is a
+>   declared decision, not a detail.
+> - **Prompts must not be selected on the benchmark's own validation set**; the source calls that unrealistic
+>   for true zero-shot scenarios.
 >
-> **Boundary on (b):** a sentence to the effect that zero-shot evaluation amounts to evaluating on a
-> different task specification was searched for in the source and **not found**; it is not used anywhere in
-> this lineage.
+> The verbatim limitation quotes and the cross-dataset comparables are evidence that the capability is
+> strongly dataset-dependent; they are recorded in
+> [`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.3 and `delta_map.md` §3.7 and
+> are not reproduced here.
 >
-> **Cross-links — do not duplicate.** Two of the failures above are capabilities the Trustworthy-ML lineage
-> already owns, and this SOP points at them instead of restating a procedure:
->
-> - Selecting prompts on a **benchmark validation set** is described by the source itself as "unrealistic for
->   true zero-shot scenarios". That is an evaluation-integrity failure: see Trustworthy-ML
->   [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md).
-> - The truly-out-of-distribution limitation is distribution shift: see Trustworthy-ML
->   [`BM-01`](../../Benchmark/Trustworthy-ML-2023/BM-01-distribution-shift-generalization.md).
+> **Cross-links — do not duplicate.** Prompt-selection integrity is audited by Trustworthy-ML
+> [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md); the truly-OOD limitation
+> by [`BM-01`](../../Benchmark/Trustworthy-ML-2023/BM-01-distribution-shift-generalization.md).
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §3.6, §3.7, §3.8.
-> Sources: `LORA`; `CLIP` (limitations section quoted verbatim in `sources.md` §2.3).*
+> Sources: `LORA`; `CLIP`.*
 
 ### 3.4 Pretraining across stages (§15.1, pp. 533–540)
 
@@ -194,60 +175,43 @@ supervised pretraining as an *optimization* device (`SOP-DL-04` §3.4, repair 9)
     and hyperparameter feedback is delayed between stages. Select pretraining hyperparameters by **validation
     error in the supervised stage** (§15.1, p. 539).
 
-> **Modern update (2017–2026) — the category that replaced greedy layer-wise pretraining.** Steps 11–14
-> remain an accurate record of the 2016 verdict, which was correct about the method it named. What has
-> changed is that the *category* the 2016 book closed is not the category now in use: **self-supervised
-> learning** does not appear as a category in the 2016 book at all.
+> **Modern update (2017–2026) — the category that replaced greedy layer-wise pretraining.** Steps 11–14 are
+> an accurate record of the 2016 verdict, which was correct about the method it named. **Self-supervised
+> learning** does not appear as a category in the 2016 book at all, so the verdict does not reach it.
 >
-> 14a. **Recognize the category before applying step 11's verdict.** The modern framing is that
->      self-supervised learning creates "free" labeled data in order to feed transfer learning — the same
->      function step 11 assigns to unsupervised pretraining, by a different mechanism. It splits into two
->      families: **generative** (mask-and-predict) and **contrastive** (pairwise relatedness). Step 11's
->      "no longer necessary" verdict applies to greedy layer-wise pretraining of stacked layers; it is not
->      evidence about either family.
+> 14a. **Do not apply step 11 to the wrong category.** Self-supervised learning manufactures supervision from
+>      unlabeled data in order to feed transfer learning. It splits into **generative** (mask-and-predict) and
+>      **contrastive** (pairwise relatedness) families. Step 11's "no longer necessary" is about greedy
+>      layer-wise pretraining of stacked layers; it is not evidence about either family. Step 13's low-label
+>      expectation still governs where the gain appears.
 >
-> 14b. **If the generative family is used, the masking ratio is the load-bearing choice.** Masking a *high*
->      proportion of the input — e.g. 75% — yields a nontrivial and meaningful self-supervisory task; ratios
->      from 40% to 80% were studied and 75% was best both for fine-tuning and for linear probing. The stated
->      rationale is that images are natural signals with heavy spatial redundancy, so sparse random masking
->      leaving a quarter visible suffices — a reason tied to the signal, not a universal constant. The
->      architecture is **asymmetric**: the encoder sees only the visible patches and receives no mask tokens,
->      while a lightweight decoder is used **only during pretraining** and discarded afterwards, which is what
->      produces a 3× or more training acceleration.
+> 14b. **Generative family — the masking ratio and the asymmetry are the load-bearing choices.** Mask a
+>      *high* proportion of the input (≈75% in the source's best configuration; see `delta_map.md` §3.3),
+>      because a low ratio leaves the task trivial for a spatially redundant signal. Use an **asymmetric
+>      encoder–decoder**: the encoder sees only visible patches and receives no mask tokens, and the
+>      lightweight decoder is used **only during pretraining** and discarded before transfer. The ratio is the
+>      source's tuned value for its data, not a universal constant.
 >
-> 14c. **If the contrastive family is used, two conditions attach and both change the plan.**
->      - *Augmentation composition is not a free choice.* Composition of multiple augmentations is crucial to
->        defining the contrastive task, and it is critical to compose cropping **with** colour distortion —
->        cropping alone lets the model shortcut through colour statistics. The aim of augmentation in this
->        setting is to teach the model to be indifferent to irrelevant transformations, so an augmentation set
->        that leaves an exploitable cue defeats the objective. That failure is a spurious-cue failure and is
->        audited by Trustworthy-ML
+> 14c. **Contrastive family — two conditions attach, and both change the plan.**
+>      - *Augmentation composition is not a free choice.* Multiple augmentations must be **composed**: cropping
+>        without colour distortion lets the model shortcut through colour statistics, which defeats the
+>        purpose of teaching indifference to irrelevant transformations. That shortcut is a spurious-cue
+>        failure, audited by Trustworthy-ML
 >        [`BM-02`](../../Benchmark/Trustworthy-ML-2023/BM-02-spurious-cue-dependence.md); this SOP records the
 >        composition requirement and does not restate the audit.
->      - *The method carries a resource condition.* Contrastive learning benefits from **larger batch sizes
->        and more training steps** than supervised learning; batch sizes from 256 to 8192 are reported, a batch
->        of 8192 yields 16382 negative examples per positive pair, and the best models were trained for 1000
->        epochs. These are one source's configuration range, recorded as evidence that the resource axis is
->        bound to the method — not as a recipe, and not as a claim that larger batches always help. This
->        condition belongs in the compute declaration that
->        [`SOP-DL-02`](SOP-DL-02-diagnose-fitting-regime-and-capacity.md) §3.5 now requires.
+>      - *The method carries a resource condition.* It needs **larger batches and more training steps** than
+>        supervised learning, because negatives are drawn from the batch. An under-budgeted run measures the
+>        budget, not the method. The source's configuration range belongs in the compute declaration
+>        [`SOP-DL-02`](SOP-DL-02-diagnose-fitting-regime-and-capacity.md) §3.5 now requires; the numbers are in
+>        `delta_map.md` §3.4 and are not a recipe here.
 >
-> 14d. **Take the representation from before the projection head.** A nonlinear projection head substantially
->      improves the quality of the learned representation, but the representation that transfers is the one
->      **before** the head. Reading out the post-head representation is a category error, and the head is
->      discarded at transfer time. The loss's normalization and its temperature are load-bearing parts of the
->      objective, not tuning detail.
->
-> 14e. **Step 13's low-label expectation survives, with its regime widened.** Step 13 confines the gain to the
->      low-label regime and notes the gain grows with pretraining depth. That reasoning is unchanged. What is
->      new is that the source of the pretraining signal is no longer limited by the availability of a
->      generative model that fits the data: the modern families manufacture their own supervision from
->      unlabeled data, which is why the step 11 verdict about *necessity* and the step 13 verdict about
->      *where the gain appears* can both hold at once.
+> 14d. **Take the representation from before the projection head.** A nonlinear projection head improves the
+>      learned representation, but the head is discarded at transfer time and the representation that
+>      transfers is the one **before** it — reading out the post-head code is a category error. The loss's
+>      normalization and temperature are load-bearing parts of the objective, not tuning detail.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §3.3, §3.4, §3.5.
-> Sources: `UDL` §9.3.7 fol. 152–153 and §9.3.8 fol. 154; `MAE`; `SIMCLR`. `MAE`'s language-model
-> "vocabulary" analogy is paraphrase rather than verbatim text and is not quoted (`sources.md` §2.4).*
+> Sources: `UDL` §9.3.7; `MAE`; `SIMCLR`.*
 
 ### 3.5 Let the labeled-data budget decide
 
@@ -330,19 +294,11 @@ supervised pretraining as an *optimization* device (`SOP-DL-04` §3.4, repair 9)
     trade-off coefficient searched, the representation-quality criteria used beyond reconstruction error, the
     labeled-data branch that selected it, and the observation that would falsify the choice.
 
-> **Modern update (2017–2026) — three further items to record.** Step 24's list is unchanged; these are added
-> to it where the corresponding modern option was available.
->
-> - **Which factorization was chosen at §3.3 step 9**, now including the third option: shared bottom, shared
->   top with task-specific preprocessing, or a frozen base with a low-rank increment. If the third, also
->   record how many tasks the stored base must serve, since that is the question the option changes.
-> - **For a zero-shot construction**: the label set the classifier closes over, the prompt templates used and
->   whether they were ensembled, and **which split the prompts were selected on** — selecting on a benchmark
->   validation set is an integrity failure owned by Trustworthy-ML
->   [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md).
-> - **For a self-supervised pretraining stage**: the family (generative or contrastive), the masking ratio or
->   the augmentation composition, the batch size and step count actually used, and confirmation that the
->   transferred representation was taken **before** any projection head.
+> **Modern update (2017–2026) — three further items to record.** Step 24's list is unchanged. Where a modern
+> option at §3.3 or §3.4 was available, add to the record the items listed for that case in §5: the
+> factorization chosen (and, for a frozen base, how many tasks it must serve), the self-supervised family with
+> its masking ratio or augmentation composition and resource budget, and for a zero-shot construction the
+> closed label set with the split the prompts were selected on.
 >
 > *Delta: `delta_map.md` §3.3, §3.4, §3.6, §3.7.*
 
@@ -372,28 +328,23 @@ supervised pretraining as an *optimization* device (`SOP-DL-04` §3.4, repair 9)
 - **Reading a fixed reconstruction criterion as task-neutral**: it embeds a saliency judgement and can miss
   small task-relevant structure (§15.3, pp. 547–548).
 
-Modern-update failure modes (provenance in §3.3, §3.4 and §3.8 above):
+Modern-update failure modes (rules in §3.3 and §3.4 above; delta references given per item):
 
-- **Reading out the representation after the projection head.** The head improves the learned representation
-  but is discarded at transfer time; the representation that transfers is the one before it (`delta_map.md`
-  §3.4).
-- **Composing augmentations that leave an exploitable cue** — cropping without colour distortion lets the
-  model shortcut through colour statistics, defeating the stated aim of teaching indifference to irrelevant
-  transformations. Audited by Trustworthy-ML `BM-02`, not here (`delta_map.md` §3.5).
-- **Budgeting a contrastive run as if it had a supervised run's resource profile.** It benefits from larger
-  batches and more training steps, so an under-budgeted run measures the budget, not the method
-  (`delta_map.md` §3.4).
-- **Treating a zero-shot classifier as open-ended prediction.** It selects among the concepts in the
-  classifier that was constructed; the label set is closed by that construction (`delta_map.md` §3.7).
-- **Selecting zero-shot prompts on a benchmark validation set**, which the source itself calls unrealistic
-  for true zero-shot scenarios; an integrity failure owned by Trustworthy-ML `BM-08` (`delta_map.md` §3.8).
-- **Rejecting a low-rank adaptation because of inference latency.** The increment is materialized into the
-  weights before deployment, so there is no additional latency (`delta_map.md` §3.6).
-- **Reading "on-par or better" as a general ranking** over full fine-tuning. The claim covers the four model
-  families its source tested (`delta_map.md` §3.6).
 - **Applying step 11's "no longer necessary" verdict to self-supervised pretraining.** That verdict is about
   greedy layer-wise pretraining of stacked layers; self-supervised learning is a different category and does
   not appear in the 2016 book as one (`delta_map.md` §3.3).
+- **Reading out the representation after the projection head**, which is discarded at transfer time
+  (`delta_map.md` §3.4).
+- **Composing augmentations that leave an exploitable cue** — cropping without colour distortion invites a
+  colour-statistics shortcut, defeating the objective (`delta_map.md` §3.5).
+- **Budgeting a contrastive run as if it had a supervised run's resource profile**, so the result measures the
+  budget rather than the method (`delta_map.md` §3.4).
+- **Treating a zero-shot classifier as open-ended prediction.** The label set is closed by the classifier that
+  was constructed (`delta_map.md` §3.7).
+- **Selecting zero-shot prompts on a benchmark validation set** — an integrity failure owned by Trustworthy-ML
+  `BM-08`, not evaluated here (`delta_map.md` §3.8).
+- **Rejecting a low-rank adaptation on inference-latency grounds.** The increment is materialized into the
+  weights before deployment (`delta_map.md` §3.6).
 
 ## 5. Outputs and reporting
 
@@ -406,14 +357,16 @@ Modern-update failure modes (provenance in §3.3, §3.4 and §3.8 above):
   evidence that the tasks share factors.
 - For transfer runs: source and target settings, what was shared (bottom representation, top layers, or a
   trained model), and the data-abundance condition.
-- **Modern update (2017–2026) — for transfer runs,** which of the three factorizations was chosen, now including a frozen
-  base with a low-rank increment; if the third, the number of tasks the stored base must serve and
-  confirmation that the increment was materialized before deployment.
-- **Modern update (2017–2026) — for self-supervised pretraining runs,** the family (generative or contrastive), the
-  masking ratio or the augmentation composition, the batch size and step count actually used, and
-  confirmation that the transferred representation was taken before any projection head.
-- **Modern update (2017–2026) — for zero-shot constructions,** the closed label set, the prompt templates and whether
-  they were ensembled, and which split the prompts were selected on.
+- **Modern update (2017–2026) — three additional reporting lines.**
+  - *Transfer runs:* which of the three factorizations was chosen; for a frozen base with a low-rank
+    increment, the number of tasks the stored base must serve and confirmation the increment was materialized
+    before deployment.
+  - *Self-supervised pretraining runs:* the family (generative or contrastive), the masking ratio or the
+    augmentation composition, the batch size and step count actually used, and confirmation that the
+    transferred representation was taken before any projection head.
+  - *Zero-shot constructions:* the closed label set, the prompt templates and whether they were ensembled, and
+    **which split the prompts were selected on** — selecting on a benchmark validation set is an integrity
+    failure owned by Trustworthy-ML [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md).
 - For pretraining runs: the stacking procedure, whether lower layers were frozen, the fine-tuning step, and
   the supervised-stage validation error used to select pretraining hyperparameters.
 - The representation-quality report: reconstruction error **plus** the control appropriate to each criterion
@@ -449,15 +402,15 @@ Modern-update failure modes (provenance in §3.3, §3.4 and §3.8 above):
 | Domain asymmetry in the first baseline (NLP vs vision) | §11.2, p. 440 |
 | Supervised pretraining as an optimization device | §8.7.4, pp. 344–347 |
 
-**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Four
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Three
 modern-update blocks were added — at §3.3 step 10 (third factorization; zero-shot realized and its closed
-label set), §3.4 step 14 (self-supervised pretraining as a category, with steps 14a–14e), §3.8 step 24
-(three further items to record) — plus the matching entries in §4 and §5. They are sourced outside the 2016
-book and recorded in
+label set), §3.4 step 14 (self-supervised pretraining as a category, with steps 14a–14d), and §3.8 step 24
+(a pointer to the §5 reporting lines) — plus the matching entries in §4 and §5. Detailed evidence, verbatim
+source quotations and the sources' own result figures are **not** reproduced here; they are recorded in
 [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
-§3.3, §3.4, §3.5, §3.6, §3.7, §3.8, with source keys defined in
-[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §9.3.7 fol. 152–153 and
-§9.3.8 fol. 154; `MAE`; `SIMCLR`; `LORA`; `CLIP`. Three capabilities are **cross-linked rather than
+§3.3, §3.4, §3.5, §3.6, §3.7, §3.8 and in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.2–§2.4. Source keys: `UDL`
+§9.3.7 and §9.3.8; `MAE`; `SIMCLR`; `LORA`; `CLIP`. Three capabilities are **cross-linked rather than
 restated**: spurious-cue audit → Trustworthy-ML
 [`BM-02`](../../Benchmark/Trustworthy-ML-2023/BM-02-spurious-cue-dependence.md); evaluation-integrity audit →
 [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md); distribution shift →
@@ -480,7 +433,7 @@ for judging a representation — are stated as general and are retained.
 
 The closing sentence of this note was amended by the modern update. It previously stated that no post-2016
 pretraining paradigm is introduced; that is no longer true of the file as a whole. The 2016 procedure above
-still introduces none, but §3.4's steps 14a–14e add self-supervised pretraining as the category that replaced
+still introduces none, but §3.4's steps 14a–14d add self-supervised pretraining as the category that replaced
 greedy layer-wise pretraining, and §3.3 adds a frozen-base low-rank factorization and language-as-task-variable
 zero-shot transfer. Each is marked in place as a modern update with its own sources, and the 2016 verdicts in
 steps 11–13 are retained as history rather than rewritten — step 11's "no longer necessary" was correct about

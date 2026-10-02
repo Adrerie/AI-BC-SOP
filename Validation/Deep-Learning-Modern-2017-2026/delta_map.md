@@ -489,9 +489,9 @@ carried forward into this lineage. Only the prior each architecture encodes ente
 
 ### 4.4 The 2016 metric exclusion is scoped, and three metrics now have an anchor source — **A-extend**
 
-- **2016 baseline.** `Benchmark/Deep-Learning-2016/README.md` standing rule 5: "No post-2016 metric (FID,
-  Inception Score, perplexity-as-standard) appears anywhere in this package." `BC-DL-11` §4 consequently
-  names only quantities the 2016 book defines.
+- **2016 baseline.** `Benchmark/Deep-Learning-2016/README.md` standing rule 6, in its pre-update wording:
+  "No post-2016 metric (FID, Inception Score, perplexity-as-standard) appears anywhere in this package."
+  `BC-DL-11` §4 consequently names only quantities the 2016 book defines.
 - **Modern delta.** `UDL` §14.3, fol. 272–275 names all three as book quantities **with their failure modes
   attached**: test likelihood is ineffective for GANs, expensive for VAEs and diffusion, and exact and
   efficient only for flows; Inception Score is "only sensible for … the ImageNet database", is "sensitive to
@@ -503,8 +503,9 @@ carried forward into this lineage. Only the prior each architecture encodes ente
   realism of the samples and their diversity but does not distinguish between these factors", approximating
   the manifold with k-NN hyperspheres in classifier feature space (Kynkäänniemi et al. 2019).
 - **Source.** `UDL` §14.3, fol. 272–275.
-- **Destination.** `BC-DL-11` §4 — a clearly marked modern-update metric block carrying all three with their
-  stated failure modes; `Benchmark/Deep-Learning-2016/README.md` standing rule 5 — scoped to the 2016 text.
+- **Destination.** `BC-DL-11` §4.M — a clearly marked modern-update metric block carrying all three with
+  their stated failure modes; `Benchmark/Deep-Learning-2016/README.md` standing rule 6 — scoped to the 2016
+  text, with rule 7 governing what the block may do.
 - **Boundary.** The metrics enter **only** with their failure modes attached and **only** in a block marked
   as a modern update. FID additionally requires the real-data reference split: `DDPM` §4.1 reports
   FID 3.17 against training data and 5.24 against test data for the same model. They are never a bare ranking axis, which is what the 2016 rule was protecting. The
@@ -612,13 +613,13 @@ excludes.
 | `SOP-DL-05` §3 | §1.8 | Conditional hyperparameters declared before sampling |
 | `SOP-DL-07` §3.1, §3.2 | §2.1, §2.2, §2.3 | Attention prior in the bias register; conditional supersession of the convolutional prior |
 | `SOP-DL-08` §3.3, §3.4, §3.8 | §3.3, §3.4, §3.6, §3.7 | Self-supervised pretraining; contrastive resource condition; low-rank adaptation as a third share option; zero-shot closed label set |
-| `SOP-DL-09` §3.1, §3.3, §3.4, §3.8, §4 | §4.1, §4.2, §4.3, §4.5, §4.6 | Exact-versus-bound across families; FM row; likelihood/sample-quality disagreement; conditional-generation use; metric-indexed ranking |
+| `SOP-DL-09` §3.1, §3.4, §3.8, §4, §5 | §4.1, §4.2, §4.3, §4.5, §4.6 | Exact-versus-bound across families with training objective separated from evaluation instrument; FM row; likelihood/sample-quality disagreement; conditional-generation use; metric-indexed ranking |
 | `BC-DL-02` §5, §6 | §1.3, §1.4, §1.5 | Second descent on the data in use; ratio caveat; overparameterization reading |
 | `BC-DL-06` §6 + Historical boundary | §2.1, §2.4 | Structural limit is architecture-bound; quadratic cost replaces recurrence depth |
 | `BC-DL-08` §2, §5 | §2.3, §2.5 | Equivariance given-versus-learned arm; depth counter-evidence in interpretation |
-| `BC-DL-11` §4, §5 | §4.3, §4.4, §4.6 | Modern metric block with failure modes attached; likelihood/sample-quality instance; metric-indexed ranking |
+| `BC-DL-11` §4.M, §5 | §4.3, §4.4, §4.6 | Modern metric block with failure modes and reference-split requirement attached; likelihood/sample-quality instance; metric-indexed ranking |
 | `Validation/Deep-Learning-2016/concept_reconstruction.md` §5.1 | §7.1 | Pointer to the revised adversarial explanation |
-| `Benchmark/Deep-Learning-2016/README.md` rule 5 | §4.4 | Exclusion scoped to the 2016 text |
+| `Benchmark/Deep-Learning-2016/README.md` rule 6 | §4.4 | Post-2016 metric exclusion scoped to the 2016 text |
 | `SOP/Deep-Learning-2016/README.md` rule 4 | §6 note | "No post-2016 material" scoped to the 2016 text, with a pointer to this lineage |
 
 Cross-links added, nothing duplicated:
@@ -675,3 +676,10 @@ delta and source; wholly new artifacts list their modern sources directly. In pr
 - `sources.md` and this file list their modern sources directly, as the plan requires for new artifacts.
 - No 2016 citation was altered. The 2016 package's citation convention (`§section, p. N` = PDF page) is
   unchanged; `UDL` uses its own convention (`§section, fol. N`) recorded in `sources.md` §1.1.
+- **Division of labour between an SOP/BC and these records.** An SOP or BC carries only what changes a
+  decision: the rule, the experiment control it requires, the failure boundary, and a pointer back to the
+  delta row that licenses it. Verbatim source quotations, the sources' own result figures, dataset-dependent
+  comparables and configuration ranges live **here and in `sources.md`**, not in the procedure. A reader who
+  needs the evidence follows the pointer; a reader who needs to act does not have to read past the rule.
+  Where the same content would otherwise recur, one location is authoritative and the others point to it —
+  in particular a reporting requirement is stated once in §5 of its SOP and referenced from the procedure.

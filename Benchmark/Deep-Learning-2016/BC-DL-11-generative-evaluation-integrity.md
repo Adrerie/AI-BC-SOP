@@ -93,7 +93,7 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
 
 > ### 4.M Modern-update metric block (2017–2026)
 >
-> Metrics 1–9 above are quantities the 2016 book names, and none was altered. This package's standing rule 5
+> Metrics 1–9 above are quantities the 2016 book names, and none was altered. This package's standing rule 6
 > excludes post-2016 metrics from the 2016 text, and that exclusion still governs metrics 1–9. The rule is
 > **scoped** here rather than broken: three later metrics now have an anchor-textbook source that states each
 > one's failure modes, so they can be admitted on the same terms as the 2016 quantities — named by a source,
@@ -248,9 +248,9 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
 | Gap at the learned θ certifies nothing about θ*; Dirac q makes the bound infinitely loose | §19.4.4, pp. 651–652; §19.3–19.4, pp. 637–638 |
 | Importance-weighted autoencoder objective is a lower bound that tightens with more samples | §20.10.3, pp. 697–698 |
 
-**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Three
-modern-update blocks were added: the metric block §4.M (metrics 10–12 with their source-stated failure modes),
-the interpretation rules in §5, and the scoped statement of this package's standing rule 5 in
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Two
+modern-update blocks were added here — the metric block §4.M (metrics 10–12 with their source-stated failure
+modes) and the interpretation rules in §5 — and the package's standing rule 6 was scoped in
 [`Benchmark/Deep-Learning-2016/README.md`](README.md). They are sourced outside the 2016 book and recorded in
 [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
 §4.1, §4.3, §4.4, §4.6, with source keys defined in

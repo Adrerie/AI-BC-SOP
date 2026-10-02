@@ -54,44 +54,42 @@ still have serious flaws** (§20.14, p. 717).
    p. 715). This sidesteps incommensurable likelihoods entirely.
 
 > **Modern update (2017–2026) — two additions to the declaration step.** Steps 1–3 are unchanged and the
-> ambiguity in step 2's worked case remains; the first modern case adds a valid one-sided comparison.
-> Two cases the 2016 book did not have to contemplate now arise.
+> ambiguity in step 2's worked case remains; the first addition supplies a valid one-sided case.
 >
 > **3a. A lower bound from one family can legitimately outrank an exact likelihood from another.** Step 2
 > cautions that a higher stochastic estimate cannot be ranked above another model's lower bound without
 > further information. A valid lower bound for A **above** B's exact log-likelihood does establish a
-> one-sided likelihood ordering on matched data and units. When A's bound falls below B's exact value,
-> the ranking is undecided. The modern families also make it easy to confuse training with evaluation:
+> one-sided likelihood ordering on matched data and units; when A's bound falls below B's exact value, the
+> ranking is undecided. The modern families also make it easy to confuse training with evaluation:
 >
 > - Of the four generative families the modern anchor discusses, **normalizing flows are the only one that
 >   computes the exact log-likelihood.** Test likelihood is ineffective for GANs, expensive for
 >   variational-autoencoder and diffusion models, and exact and efficient only for flows.
-> - Its own footnote supplies the trap: "**The lower bound on the likelihood for diffusion models can
->   actually exceed the exact computation in normalizing flows, but data generation is much slower.**" A
->   diffusion bound above a flow's exact value supports a one-sided likelihood conclusion when both are
->   evaluated on commensurate data. Report generation cost separately before making any overall utility claim.
+> - Its own footnote supplies the case that trips the 2016 rule: "**The lower bound on the likelihood for
+>   diffusion models can actually exceed the exact computation in normalizing flows, but data generation is
+>   much slower.**" That ordering is a valid one-sided **likelihood** result on commensurate data; the
+>   generation-cost asymmetry is a separate axis and must not be folded into the likelihood conclusion. State
+>   both, and make any overall utility claim only from both.
 > - Diffusion models are trained on an ELBO in which "the decoder must do all the work since the encoder has
->   no parameters." One widely used training objective **drops the variational weighting** from that bound
->   because down-weighting the hard small-noise terms lets the network focus on the more difficult large-noise
->   ones — and that simplified objective produces the best sample-quality score *despite deviating from the
->   bound* as a training objective. Its trained model can still be evaluated separately using the standard
->   variational bound: `DDPM` §4.1, Table 1 reports a valid NLL upper bound of ≤3.75 bits/dim for the
->   `L_simple`-trained model. The value of `L_simple` itself is not that evaluation bound.
+>   no parameters." A widely used training objective **drops the variational weighting** from that bound —
+>   down-weighting the hard small-noise terms lets the network concentrate on the more difficult large-noise
+>   ones — and produces the best sample-quality score in its source's experiments. **The training loss and the
+>   evaluation instrument are different things**: a model trained with that simplified loss can still be
+>   evaluated with the standard variational bound, and that evaluation result is the number to put on a
+>   likelihood axis.
 >
 > Required of step 2: identify the model family, the **training objective** and the **separate evaluation
 > instrument** (exact likelihood, stochastic estimate or bound). State any valid one-sided comparison and
 > report generation cost separately when overall practical utility is discussed.
 >
 > **3b. A conditional-generation use decomposes into nameable attribute axes.** Step 1 requires the intended
-> use to be declared. For text-conditioned generation the use is not a single axis: the modern anchor records
-> systems conditioned on text embeddings from a contrastive image-text model or from a large language model,
-> and a purpose-built evaluation set "designed to evaluate the ability of a model to render colors, numbers
-> of objects, spatial relations, and other characteristics." Declare **which attribute-rendering axes the use
-> will be judged on** — colour, counting, spatial relation, and whatever else the use turns on — because a
-> model can satisfy the aggregate and fail a named axis.
+> use to be declared. For text-conditioned generation the use is not one axis: declare **which
+> attribute-rendering axes it will be judged on** — colour, counting, spatial relation, and whatever else the
+> use turns on — because a model can satisfy an aggregate score while failing a named axis.
 >
-> Boundary on 3b: that evaluation set is cited as an *example of the category*, not as a required instrument.
-> This SOP requires the axes to be declared; it does not require a benchmark, and none is named as mandatory.
+> Boundary on 3b: the modern anchor names a purpose-built evaluation set for exactly these axes, cited here as
+> an *example of the category* (`delta_map.md` §4.5). This SOP requires the axes to be declared; it requires no
+> benchmark, and none is named as mandatory.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §4.1, §4.5. Sources:
 > `UDL` §14.3 fol. 272, §16.5.1 fol. 319 and fn. 2, §18.4.1 fol. 358, §18.6 fol. 371–372; `DDPM`; `FM`.*
@@ -144,40 +142,28 @@ still have serious flaws** (§20.14, p. 717).
     all. The book draws the conclusion explicitly: this strongly indicates that other ways of evaluating
     generative models need to be developed (§20.14, p. 717).
 
-> **Modern update (2017–2026) — steps 8 and 11 were right, and the disagreement now has a named
-> mechanism.** Step 8 warns that a very poor probability model may produce very good-looking samples;
-> step 11 responds by requiring the likelihood to be computed where feasible. The modern literature supplies
-> the worked instance in which *both* hold at once for a model nobody would call poor, together with an
-> explanation — which strengthens rather than weakens the 2016 pairing.
->
-> The first widely cited diffusion-model paper reports state-of-the-art sample-quality scores on its
-> benchmarks while conceding, in its own words: "**Despite their sample quality, our models do not have
-> competitive log likelihoods compared to other likelihood-based models.**" Its explanation is a coding
-> argument: "**More than half of the lossless codelength describes imperceptible distortions.**" A model
-> optimized for sample quality spends description length on detail no observer can see, and a likelihood
-> metric charges it for that spending.
->
-> The numbers that make the disagreement concrete, all on one test set and all from that source: a strong
-> likelihood-based autoregressive baseline reaches 3.03 bits/dim; the diffusion model's full variational
-> bound is ≤3.70 bits/dim; and the simplified objective that produced the best sample-quality score is
-> ≤3.75 bits/dim — the objective that *deviates from the bound* is the one that wins on samples. The gap is
-> not a tuning artifact; it is the direction the two objectives pull in.
+> **Modern update (2017–2026) — the likelihood/sample-quality disagreement has a named mechanism.** Steps 8
+> and 11 stand: a very poor probability model may produce very good-looking samples, so compute the likelihood
+> where it is feasible. The modern literature supplies the mirror case — a model with state-of-the-art sample
+> quality that concedes uncompetitive log-likelihoods, and explains it by spending lossless codelength on
+> distortions no observer can perceive. So the two instruments can move in opposite directions for reasons that
+> are **not** either instrument failing. Its result figures are in `delta_map.md` §4.3, not restated here.
 >
 > What this changes in practice, as an addition to steps 8 and 11 rather than a replacement:
 >
 > - **Report which axis a number is on.** A bits-per-dim figure and a sample-quality score are not two
->   readings of one underlying quality; they can move in opposite directions for a defensible reason. Report
->   both, label each, and never present one as evidence about the other.
-> - **When likelihood and sample quality disagree, do not adjudicate by picking a favourite.** Step 12's
->   variance collapse is one way a likelihood number is earned dishonestly; imperceptible-detail codelength is
->   another way a likelihood number is *honestly* uncompetitive. Name which is in play — the first is a
->   defect, the second is a property of the metric.
+>   readings of one underlying quality. Report both, label each, and never present one as evidence about the
+>   other.
+> - **When they disagree, name which kind of disagreement it is before adjudicating.** Step 12's variance
+>   collapse is a likelihood number earned dishonestly — a defect. Imperceptible-detail codelength is a
+>   likelihood number honestly uncompetitive — a property of the metric. The two look identical from the
+>   direction of the numbers, and step 12's per-dimension variance check is what separates them.
 > - **The disagreement is not a licence to drop likelihood.** The flow-matching source reports bits/dim and a
->   sample-quality score jointly and disputes neither. Nothing in this lineage's sources declares
->   bits-per-dim an inappropriate metric; that stronger claim was searched for and **not found**.
+>   sample-quality score jointly and disputes neither. Nothing in this lineage's sources declares bits-per-dim
+>   an inappropriate metric; that stronger claim was searched for and **not found**.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §4.3, §4.2. Sources:
-> `DDPM` (§3.4, §4.1 and verified Table 1; verbatim quotes in `sources.md` §2.3); `FM`.*
+> `DDPM` (§3.4, §4.1 and Table 1; verbatim quotes in `sources.md` §2.3); `FM`.*
 
 ### 3.5 Compare through the partition function when the likelihood is intractable
 
@@ -260,13 +246,13 @@ still have serious flaws** (§20.14, p. 717).
 | (Generalized) denoising autoencoder, no sampler | Samples from a Markov chain: corrupt x → x̃, encode h = f(x̃), decode to p(x′|h), sample x′. If the autoencoder is a consistent estimator of the true conditional, the chain's stationary distribution is an implicit consistent estimator of the data distribution; the injected noise level controls mixing and smoothing | Conditional sampling without **clamping** the observed units and without the transition operator satisfying **detailed balance**. The back-propagation-through-training variant (multiple stochastic encode-decode steps from training samples) is equivalent for the stationary distribution but empirically removes spurious modes better | §20.11, pp. 709–712 |
 
 **Modern update (2017–2026) — three added rows.** The five rows above are the 2016 book's objectives and are
-unchanged. Step 22's instruction is unchanged too: read the objective off the table and state the
-restriction. Three modern entries (two diffusion training objectives and flow matching) are added in the same shape and marked as modern rows so they
-cannot be mistaken for book entries.
+unchanged, and step 22's instruction is unchanged: read the objective off the table and state the restriction.
+Three modern entries (two diffusion training objectives and flow matching) are added in the same shape and
+marked as modern rows so they cannot be mistaken for book entries.
 
 | Training objective | What it licenses | What it forbids | Source |
 | --- | --- | --- | --- |
-| **Diffusion ELBO** *(modern row)* — a weighted variational bound whose weighting is derived from a connection between diffusion models and denoising score matching; equivalently multi-scale score estimation, with sampling resembling annealed Langevin dynamics | A **lower bound** on the data log-likelihood, and samples. Because "the decoder must do all the work since the encoder has no parameters", the bound is the only likelihood-like quantity available | Reading the bound as an exact likelihood, or comparing it against one without §3.1 step 3a's declaration. A diffusion bound **can exceed** a normalizing flow's exact computation — a correct outcome that is uninterpretable unless the much slower generation cost is reported beside it | `UDL` §18.4.1 fol. 358, §16.5.1 fol. 319 and fn. 2; `DDPM` |
+| **Diffusion ELBO** *(modern row)* — a weighted variational bound whose weighting is derived from a connection between diffusion models and denoising score matching; equivalently multi-scale score estimation, with sampling resembling annealed Langevin dynamics | A **lower bound** on the data log-likelihood, and samples. Because "the decoder must do all the work since the encoder has no parameters", the bound is the only likelihood-like quantity available | Reading the bound as an exact likelihood, or comparing it against one without §3.1 step 3a's declaration. A diffusion bound **above** a flow's exact computation is a valid one-sided likelihood ordering on commensurate data — but it says nothing about generation cost, which is a separate axis and must not be inferred from it | `UDL` §18.4.1 fol. 358, §16.5.1 fol. 319 and fn. 2; `DDPM` |
 | **Simplified diffusion training (`L_simple`)** *(modern row)* — removes standard ELBO term weighting during training | Better sample quality in `DDPM`'s experiments; its trained model can **separately** be evaluated using the standard variational bound (NLL ≤3.75 bits/dim in Table 1) | Reporting `L_simple` itself as a likelihood bound, or claiming `L_simple` training prevents valid likelihood-bound evaluation | `DDPM` §3.4, §4.1, Table 1 |
 | **Flow matching** *(modern row)* — simulation-free training of continuous normalizing flows by regressing vector fields of fixed conditional paths | Samples and tractable CNF log-density evaluation via ODE integration, **subject to numerical solver/trace-estimation error**; report bits/dim and sample-quality metrics jointly | Confusing simulation-free training with ODE-free evaluation/sampling, or treating numerically evaluated likelihood as error-free closed-form likelihood. Flow matching subsumes diffusion paths; it does not replace diffusion models | `FM` |
 
@@ -307,28 +293,27 @@ Sources: `UDL` §16.5.1 fol. 319 and fn. 2, §18.2 fn. 1 fol. 350, §18.4.1 fol.
 - **Treating a metric disagreement as a model disagreement** when the two models were designed for
   forward-KL and reverse-KL behaviour respectively (§20.14, p. 717).
 
-Modern-update failure modes (provenance in §3.1, §3.4 and §3.8 above):
+Modern-update failure modes (rules in §3.1, §3.4 and §3.8 above):
 
 - **Reading a family ranking off a metric-indexed result.** The modern worked case is the report that
-  diffusion-model images were quantitatively superior to GAN images — stated by its own source **in terms of
-  one specific sample-quality metric**. The 2016 failure mode above is the same error with a different cause:
-  there the models were designed for different KL directions, here the ranking holds only under the named
-  metric. A family ranking that does not name its metric is not a result (`delta_map.md` §4.6).
-- **Treating a valid diffusion lower bound above a comparable flow likelihood as an invalid result.**
-  It supports a one-sided likelihood conclusion, not an overall utility verdict; report generation cost
-  separately (`delta_map.md` §4.1).
-- **Placing the `L_simple` training-loss value on a likelihood axis.** It is not an ELBO; the model may
+  diffusion-model images were quantitatively superior to GAN images, stated by its own source **in terms of one
+  specific sample-quality metric**. Same error as the 2016 forward/reverse-KL item above, different cause: here
+  the ranking holds only under the named metric. A ranking that does not name its metric is not a result
+  (`delta_map.md` §4.6).
+- **Discarding a valid diffusion lower bound that lands above a comparable flow likelihood.** It supports a
+  one-sided likelihood conclusion; generation cost is a separate axis and is not inferred from it
+  (`delta_map.md` §4.1).
+- **Placing an `L_simple` training-loss value on a likelihood axis.** It is not an ELBO; the trained model may
   nevertheless be evaluated with a separately computed standard bound (`delta_map.md` §4.1).
-- **Reading a likelihood/sample-quality disagreement as a defect without checking which kind it is.**
-  Variance collapse (step 12) is a defect; imperceptible-detail codelength is a property of the metric. They
-  look identical from the direction of the numbers (`delta_map.md` §4.3).
-- **Presenting one axis as evidence about the other** — bits/dim as evidence about sample quality, or a
-  sample-quality score as evidence about density estimation (`delta_map.md` §4.3).
+- **Confusing the axis of a likelihood/sample-quality disagreement.** Presenting one instrument's number as
+  evidence about the other, or reading every disagreement as a defect — variance collapse is a defect,
+  imperceptible-detail codelength is a property of the metric, and step 12's per-dimension variance check is
+  what tells them apart (`delta_map.md` §4.3).
 - **Declaring an aggregate use for a conditional generator** without naming the attribute axes it will be
   judged on, so a model passes in aggregate while failing counting, colour or spatial relation
   (`delta_map.md` §4.5).
-- **Treating flow matching as a replacement for diffusion** when its own source subsumes diffusion paths as
-  specific instances (`delta_map.md` §4.2).
+- **Treating flow matching as a replacement for diffusion**, or its simulation-free *training* as
+  simulation-free *evaluation* (`delta_map.md` §4.2).
 
 ## 5. Outputs and reporting
 
@@ -354,8 +339,9 @@ Modern-update additions to the report (`delta_map.md` §4.1, §4.3, §4.5):
 
 - In the **measured-quantity declaration**, the model family, its **training objective** and the **separate
   evaluation instrument** — a model trained with `L_simple` may still receive a valid ELBO evaluation.
-- Where a bound is compared against an exact value from a different family, the **generation-cost
-  asymmetry** reported alongside the comparison.
+- Where a bound is compared against an exact value from a different family, the **generation cost** of each
+  model reported as a separate axis — a valid one-sided likelihood ordering does not license any inference
+  about it, and an overall utility claim does require it.
 - In the **likelihood record**, an explicit statement of **which axis each number is on**, and — where
   likelihood and sample quality disagree — which of the two explanations is in play: variance collapse
   (a defect) or imperceptible-detail codelength (a property of the metric).
@@ -389,18 +375,18 @@ Modern-update additions to the report (`delta_map.md` §4.1, §4.3, §4.5):
 | Wake-sleep drawback: inference net only sees model-typical v | §19.5.1, pp. 653–654 |
 | Sampling from autoencoders: Markov-chain procedure, consistency argument, noise level controls mixing, clamping and detailed balance (Alain et al., 2015), back-propagation through training | §20.11, pp. 709–712 |
 
-**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Four
-modern-update blocks were added — at §3.1 step 3 (steps 3a and 3b), §3.4 step 12, and three added rows plus
-their boundaries in §3.8's objective-capability table — along with the matching entries in §4 and §5. They are
-sourced outside the 2016 book and recorded in
+**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Three
+modern-update blocks were added — §3.1 steps 3a and 3b, §3.4 step 12, and three added rows plus their
+boundaries in §3.8's objective-capability table — along with the matching entries in §4 and §5. Detailed
+evidence, verbatim source quotations and the sources' own result figures are **not** reproduced here; they are
+recorded in
 [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
-§4.1, §4.2, §4.3, §4.5, §4.6, §4.8, with source keys defined in
-[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §14.3 fol. 272,
-§16.5.1 fol. 319 and fn. 2, §18.2 fn. 1 fol. 350, §18.4.1 fol. 358, §18.6 fol. 371–372, ch. 18 Notes fol.
-369, fol. 305; `DDPM`; `FM`; `RF`. No sample-quality metric was introduced here — the metric block that adds
-them, with their failure modes attached, is in
-[`BC-DL-11`](../../Benchmark/Deep-Learning-2016/BC-DL-11-generative-evaluation-integrity.md) §4, because that
-is where metrics are owned in this package.
+§4.1, §4.2, §4.3, §4.5, §4.6, §4.8 and in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.2–§2.4. Source keys: `UDL`
+§14.3, §16.5.1 and fn. 2, §18.2 fn. 1, §18.4.1, §18.6, ch. 18 Notes; `DDPM`; `FM`; `RF`. The sample-quality
+metric block lives in
+[`BC-DL-11`](../../Benchmark/Deep-Learning-2016/BC-DL-11-generative-evaluation-integrity.md) §4.M, because
+that is where metrics are owned in this package.
 
 **Historical boundary.** Treated as book-era and reported as such: MNIST as the dominant generative
 benchmark and the practice of sharing binarized MNIST files; ~100 parallel chains matched to minibatch
@@ -418,4 +404,4 @@ added here**, because metrics are owned by `BC-DL-11` in this package. What the 
 is a family-exactness status, a training-objective restriction, an attribute-axis declaration and a
 generation-cost asymmetry — all of them *declaration* requirements of the kind §3.1 already imposed, and none
 of them a score. The metric block itself, and the scoping of the 2016 exclusion rule that permits it, are in
-`BC-DL-11` §4 and in `Benchmark/Deep-Learning-2016/README.md` standing rule 5.
+`BC-DL-11` §4.M and in `Benchmark/Deep-Learning-2016/README.md` standing rule 6.

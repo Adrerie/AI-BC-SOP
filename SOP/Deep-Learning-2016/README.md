@@ -84,10 +84,14 @@ rule.
 7. **Modern updates are marked, sourced and additive.** *(added by the 2017–2026 update lineage)* A
    modern block is a blockquote opened by **Modern update (2017–2026)** and closed by a source line naming
    its `delta_map.md` row and its source keys. It **annotates** 2016 text; it never rewrites it, and no
-   2016 citation was altered to accommodate one. Three further limits apply: no modern block may supply a
+   2016 citation was altered to accommodate one. Four further limits apply: no modern block may supply a
    threshold its source does not state (rule 2 applies unchanged); no modern block may create an
-   architecture entry, a variant catalogue or a family ranking; and where a capability is already owned by
-   the Trustworthy-ML package, the block cross-links instead of restating a procedure. Method-specific,
+   architecture entry, a variant catalogue or a family ranking; where a capability is already owned by the
+   Trustworthy-ML package, the block cross-links instead of restating a procedure; and **the SOP carries
+   only what changes a decision** — the rule, the control it requires, the failure boundary and the pointer.
+   Verbatim source quotations, the sources' own result figures, dataset-dependent comparables and
+   configuration ranges belong in `Validation/Deep-Learning-Modern-2017-2026/`, not in the procedure, and a
+   reporting requirement is stated once in §5 rather than repeated in the procedure. Method-specific,
    weakly supported or unsettled material is **not** imported at all — it stays in `delta_map.md`.
 
 Seven SOPs carry modern-update blocks: `SOP-DL-02` (compute as a third axis; the U-curve's right branch;
@@ -95,8 +99,8 @@ the capacity-to-data ratio), `SOP-DL-03` (L2 versus decoupled weight decay under
 `SOP-DL-04` (the learning-rate-sensitivity assumption behind the repair ordering), `SOP-DL-05`
 (conditional hyperparameters), `SOP-DL-07` (the attention prior and the pretraining-scale precondition on
 model-class routing), `SOP-DL-08` (self-supervised pretraining; low-rank adaptation; zero-shot transfer)
-and `SOP-DL-09` (family exactness status; flow matching; likelihood versus sample quality;
-conditional-generation uses).
+and `SOP-DL-09` (family exactness status with the training objective kept separate from the evaluation
+instrument; flow matching; likelihood versus sample quality; conditional-generation criteria).
 
 ## Related
 

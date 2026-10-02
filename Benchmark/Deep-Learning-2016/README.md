@@ -75,7 +75,11 @@ traceability — plus a closing **Historical boundary** note.
      own source states *in terms of one metric* precisely as evidence for the failure mode the 2016 text
      already named. This package does not rank families, and rule 1 stands.
    - **Still no invented threshold.** The three §4.M metrics have no source-stated acceptable value, so
-     they enter as ordering comparisons only, exactly like metrics 1–9.
+     they enter as ordering comparisons only, exactly like metrics 1–9. Two of them are also **indexed to a
+     measurement setup** rather than being portable numbers: a Fréchet inception distance value is defined
+     only by its feature network, its layer **and its real-data reference split**, and an Inception score
+     changes when its classifier is retrained. A value reported without its setup is not a measurement, and
+     values from different reference splits are not comparable as though they were.
    - **Unsettled material is not imported.** Contested quantities — notably the compute-allocation
      exponents, where the two sources in this lineage's list disagree — are recorded in `delta_map.md` and
      in no BC.
