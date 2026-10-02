@@ -83,6 +83,27 @@ cross-links instead of restating it. Contested quantities — notably the comput
 the layer's own two sources disagree — and single-source frontier results were left in the delta map rather
 than imported. No architecture encyclopaedia, leaderboard, validator or acceptance gate was added.
 
+## Published handbooks
+
+The SOP and Benchmark corpus is also published as readable volumes, built from the repository files by a
+conversion pipeline kept outside Git. Each release names its build branch and commit, so a PDF can always
+be traced back to the markdown it came from.
+
+- **`handbook-v1`** — *Trustworthy ML Handbook*, Vol. 1 SOP and Vol. 2 Benchmark, English and Chinese.
+  Built from `plan/trustworthy-ml-official-updates`. The source book is **CC BY 4.0**, so these volumes are
+  published as attributed adaptations, and each carries the license link and a note that the material was
+  changed.
+- **`deep-learning-handbook-v1`** — *Deep Learning: Procedures and Benchmark Checks*, one combined English
+  volume of 146 pages holding the nine procedures and eleven checks of the Deep Learning lineage, with the
+  2017–2026 update layer marked in place. Built from `plan/deep-learning-modern-update`. **This volume is
+  framed differently, on purpose**: its principal source states no adaptation licence, so it is published as
+  original methodology notes that *cite* their sources — not an authorized adaptation, translation, edition
+  or derivative of any of them, and it reproduces no source text and ships no source PDF. The rights status
+  of every cited work, including the one that could not be accessed at all, is printed inside the volume.
+
+A future volume inherits that rule rather than the wording of the last one: the framing a release uses is
+set by what the source's licence permits, not by how the previous volume was described.
+
 ## Development Principle
 
 The repository follows a reading-to-practice workflow:
