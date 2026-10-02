@@ -132,9 +132,8 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
 >   three. Comparisons are **orderings**, and the absolute value comes from the run.
 > - **Never a bare axis.** Metric 10's classifier sensitivity and metric 11's layer dependence make both
 >   numbers indexed to a measurement setup, so a value reported without that setup is not a measurement. Where
->   the exact likelihood is available — the modern anchor notes that of the four families it discusses,
->   normalizing flows are the **only** one that computes it — metric 2 remains the primary quantity and this
->   block supplements it.
+>   tractable likelihood evaluation is available — the modern anchor identifies normalizing flows among its
+>   four families (CNFs require numerical integration) — metric 2 remains primary and this block supplements it.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §4.4. Source: `UDL`
 > §14.3, fol. 272–275 (citing Kynkäänniemi et al. 2019 for manifold precision and recall). The token `FID`
@@ -143,8 +142,9 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
 
 ## 5. How to interpret failure
 
-- **Arm a produces a ranking** ⇒ the ranking is invalid unless the bound's looseness is known; report the two
-  numbers separately with their types.
+- **Arm a: a stochastic estimate exceeds another model's lower bound** ⇒ the ranking remains uncertain
+  unless the bound's looseness and estimator uncertainty are resolved. In the reverse case, a **valid lower
+  bound above a comparable exact log-likelihood** establishes a one-sided likelihood ordering.
 - **Arm b: the cheap AIS run gives a higher likelihood** ⇒ mode-dropping is the likely cause, since
   underestimating Z overestimates the likelihood; the high score is not evidence of a better model.
 - **Arm c: likelihood changes under input rescaling** ⇒ expected, and the point of the arm: the two runs are
@@ -178,7 +178,9 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
 >   the lossless codelength describes imperceptible distortions". Its own numbers make the disagreement
 >   concrete on one test set: a strong likelihood-based autoregressive baseline at 3.03 bits/dim, the diffusion
 >   model's full variational bound at ≤3.70, and the simplified objective that produced the best sample-quality
->   score at ≤3.75 — the objective that *deviates from the bound* is the one that wins on samples. So a
+>   score at ≤3.75 — the **model trained with** the simplified objective still receives a separately
+>   evaluated standard variational NLL bound (`DDPM` §4.1, Table 1). The training objective, not that
+>   likelihood-bound evaluation, is the quantity that deviates from the standard bound. So a
 >   likelihood/sample-quality disagreement is **not by itself** evidence that either instrument failed. Arm e's
 >   reading still requires the nearest-neighbour check and the dropped-mode caveat; the modern instance adds a
 >   third possibility to distinguish — that the model is spending description length on detail no observer can
@@ -193,21 +195,23 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
 >   inception distance**. That is the correct way to state it, and it is the worked modern instance of the
 >   failure mode `SOP-DL-09` §4 already names — treating a metric disagreement as a model disagreement. A
 >   ranking reported without its metric is not a result, and this benchmark does not rank families.
-> - **A bound beating an exact value is not an error.** Of the four families the modern anchor discusses,
->   normalizing flows are the only one computing the exact log-likelihood, and its own footnote records that a
->   diffusion model's likelihood **lower bound** can exceed a flow's exact computation while its generation is
->   much slower. Where arm a's estimate-versus-bound comparison crosses families, report the generation-cost
->   asymmetry next to it; without that, the comparison reads as a quality verdict it cannot support.
+> - **A valid lower bound above an exact value supports a one-sided likelihood ordering.** Of the four
+>   families the modern anchor discusses, flows admit tractable density evaluation (for CNFs, subject to
+>   numerical solver error). Its footnote describes a diffusion lower bound exceeding a flow's exact
+>   value while generation is slower. On matched data and units the ordering is informative about
+>   likelihood; generation cost is a separate dimension in an overall utility comparison.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §4.1, §4.3, §4.6.
 > Sources: `DDPM` (verbatim quotes in `sources.md` §2.3); `UDL` §16.5.1 fol. 319 and fn. 2, ch. 18 Notes fol.
-> 369. The `DDPM` results-table index is unverified and is not cited (`sources.md` §2.4).*
+> 369. `DDPM` §4.1, Table 1 was independently checked against the original arXiv HTML.*
 
 ## 6. Validity limits and source traceability
 
-- **No common numeric axis exists** across estimate-based and bound-based scores, or across binary and
-  real-valued likelihoods. Where models cannot be placed on one axis, the book's alternative is task-based
-  comparison (§20.14, p. 715).
+- **Estimates, bounds and exact likelihoods are not interchangeable**, but may describe the same quantity
+  on identical data, preprocessing and units. A stochastic estimate above a lower bound is inconclusive;
+  a valid lower bound above an exact likelihood supports a one-sided ordering. Binary likelihoods and
+  real-valued densities remain incommensurable without a justified common measure. Where comparisons
+  cannot be made, use task-based evaluation (§20.14, p. 715).
 - **The book states no bound or bias result for AIS** other than the mode-dropping direction in arm b; it
   defers variance and efficiency analysis to the cited literature (§18.7.1, pp. 627–630). Any stronger
   statement about AIS bias is not supported here.
