@@ -177,8 +177,7 @@ still have serious flaws** (§20.14, p. 717).
 >   bits-per-dim an inappropriate metric; that stronger claim was searched for and **not found**.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §4.3, §4.2. Sources:
-> `DDPM` (verbatim quotes in `sources.md` §2.3); `FM`. The `DDPM` results-table index is unverified and is not
-> cited (`sources.md` §2.4).*
+> `DDPM` (§3.4, §4.1 and verified Table 1; verbatim quotes in `sources.md` §2.3); `FM`.*
 
 ### 3.5 Compare through the partition function when the likelihood is intractable
 
