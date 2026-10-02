@@ -142,9 +142,10 @@ be reported.
 >
 > - **A U that turns back down is not a failed replication.** The modern account distinguishes three regimes
 >   and reports a **second descent** beyond the interpolation threshold. If the capacity ladder spans that
->   threshold and test error falls again, the correct report is *which* regime boundary was crossed, not that
->   the U-curve was falsified. Extend the ladder past the first rise before concluding anything — the same
->   instruction the first bullet already gives for the opposite outcome.
+>   threshold and error falls again, the report identifies *which* regime boundary was crossed, rather than
+>   calling the U-curve falsified. **Predeclare** a ladder covering the proposed regimes before measuring
+>   its held-out test curve. Any adaptive extension or capacity selection must use development/validation
+>   data; a test-selected arm remains an explicitly labelled oracle, as specified in §2.
 > - **Whether a second descent appears must be measured on the data actually in use.** The source is explicit
 >   that the phenomenon is dataset-dependent: present on MNIST with the original labels, but emerging or
 >   becoming prominent under label noise and on MNIST-1D and CIFAR-100. It is therefore a property of this
