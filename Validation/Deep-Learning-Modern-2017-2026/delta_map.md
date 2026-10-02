@@ -94,9 +94,10 @@ Net artifact decision: **no new SOP and no new BC.** Eleven existing SOP/BC arti
 - **Destination.** `SOP-DL-02` §3.4 (the U-curve reasoning step) and §3.6; `BC-DL-02` §5 (how to interpret
   failure) — the modern arm asks whether a second descent appears **on the data actually in use**, since
   that is what the source makes conditional.
-- **Boundary.** No mechanism is asserted, because the source does not settle one. No threshold is supplied
-  for where the interpolation point sits — it is a property of the run. The 2016 U-curve text is not
-  rewritten; it is annotated as era-scoped.
+- **Boundary.** No mechanism or interpolation threshold is asserted. Capacity exploration must use
+  development/validation data or a predeclared diagnostic sweep; the final test may not decide whether
+  to extend the ladder. The 2016 source's test-selected toy arm remains an explicitly marked oracle.
+  The original U-curve text is annotated as era-scoped, not rewritten.
 
 ### 1.5 Overparameterization is evidence-backed, not merely tolerated — **A-extend**
 
