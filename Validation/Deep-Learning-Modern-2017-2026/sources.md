@@ -228,8 +228,9 @@ is method-specific and stays out of the artifacts.
   spatial redundancy, so sparse random masking suffices.
 - `DDPM` — trained on a weighted variational bound connected to denoising score matching; the
   simplified loss `L_simple` drops the variational weighting, down-weighting hard small-t terms, and
-  produces the best FID despite deviating from the bound. Its likelihood-vs-sample-quality concession
-  is quoted in §2.3.
+  produces the best FID despite deviating from the **standard-bound training objective**. The model
+  trained with `L_simple` is nevertheless evaluated separately with the standard variational NLL bound
+  in §4.1, Table 1 (≤3.75 bits/dim). Its likelihood-vs-sample-quality concession is quoted in §2.3.
 - `FM` — a simulation-free training approach for continuous normalizing flows based on regressing
   vector fields of fixed conditional probability paths. It **generalizes rather than replaces**
   diffusion: it subsumes existing diffusion paths as specific instances, and FM instantiated with
@@ -264,7 +265,7 @@ distortions."
 `ADAMW` (§3 justification): the Bayesian-filtering argument "does not directly apply to practical
 adaptive gradient algorithms."
 
-### 2.4 Unverified items — do not cite
+### 2.4 Unverified items and post-review resolution
 
 Recorded so their absence downstream is a decision, not an oversight.
 
@@ -272,9 +273,10 @@ Recorded so their absence downstream is a decision, not an oversight.
   specification" was **not found**. It is a hypothesis, not a quote.
 - The phrase "task-dependent" attributed to `SIMCLR` was **not verified verbatim**; cite its framing
   questions instead.
-- The `DDPM` results table's index number was not established by the fetch; the bits/dim figures
-  (Gated PixelCNN 3.03, DDPM full bound ≤3.70, `L_simple` ≤3.75 on CIFAR-10 test) are usable, the
-  table number is not.
+- **Resolved in post-review verification:** `DDPM` §4.1, **Table 1** in the original arXiv HTML
+  confirms CIFAR-10 test NLL: Gated PixelCNN 3.03, ELBO-trained DDPM ≤3.70 and the
+  `L_simple`-trained DDPM **evaluated using a separate standard bound** ≤3.75 bits/dim.
+  `L_simple` as a training loss is not itself that evaluation bound.
 - `MAE`'s analogy to a language-model "vocabulary" is paraphrase, not verbatim text.
 - No concurrency or derivation relationship between `RF` and `FM` was verified; the two are cited as
   distinct works.
