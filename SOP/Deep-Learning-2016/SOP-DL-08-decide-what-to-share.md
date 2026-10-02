@@ -115,10 +115,11 @@ supervised pretraining as an *optimization* device (`SOP-DL-04` §3.4, repair 9)
 > matrices, instead of sharing the bottom or the top and fine-tuning jointly. Three properties make it a
 > distinct decision point rather than a cheaper approximation of one:
 >
-> - Under a fixed parameter budget, adapt **both** the query and value projections, and spread the low rank
->   across several matrices rather than concentrating it in one.
-> - The increment is **materialized into the weights before deployment**, so there is no added inference
->   latency. Latency sensitivity is not by itself a reason to reject this option.
+> - For the source's attention-based models, adapting **both** query and value projections and distributing
+>   a fixed rank budget across matrices performed well. Treat the target matrices and rank allocation as
+>   choices to validate for the model in use, not universal settings.
+> - When the increment is **merged into the weights before inference**, it adds no adapter-specific
+>   forward-pass operations. Verify merging and task-switching costs for the actual deployment.
 > - One frozen base can serve many tasks by swapping increments, which changes step 9's question from "which
 >   layers does this task share?" to **"how many tasks must one stored base serve?"**
 >
@@ -182,33 +183,32 @@ supervised pretraining as an *optimization* device (`SOP-DL-04` §3.4, repair 9)
 > 14a. **Do not apply step 11 to the wrong category.** Self-supervised learning manufactures supervision from
 >      unlabeled data in order to feed transfer learning. It splits into **generative** (mask-and-predict) and
 >      **contrastive** (pairwise relatedness) families. Step 11's "no longer necessary" is about greedy
->      layer-wise pretraining of stacked layers; it is not evidence about either family. Step 13's low-label
->      expectation still governs where the gain appears.
+>      layer-wise pretraining of stacked layers; it is not evidence about either family. Measure transfer
+>      at the target label budget rather than imposing the 2016 low-label conclusion on modern methods.
 >
-> 14b. **Generative family — the masking ratio and the asymmetry are the load-bearing choices.** Mask a
->      *high* proportion of the input (≈75% in the source's best configuration; see `delta_map.md` §3.3),
->      because a low ratio leaves the task trivial for a spatially redundant signal. Use an **asymmetric
->      encoder–decoder**: the encoder sees only visible patches and receives no mask tokens, and the
->      lightweight decoder is used **only during pretraining** and discarded before transfer. The ratio is the
->      source's tuned value for its data, not a universal constant.
+> 14b. **For MAE-style masked-image pretraining**, test a high masking ratio (≈75% in `MAE`'s source
+>      configuration; see `delta_map.md` §3.3), since image redundancy can make low-ratio reconstruction
+>      trivial. Its asymmetric design gives only visible patches to the encoder and uses a lightweight
+>      decoder during pretraining, not transfer. Tune the ratio for the actual signal and task; this is
+>      not a requirement for all generative self-supervised methods.
 >
-> 14c. **Contrastive family — two conditions attach, and both change the plan.**
->      - *Augmentation composition is not a free choice.* Multiple augmentations must be **composed**: cropping
->        without colour distortion lets the model shortcut through colour statistics, which defeats the
->        purpose of teaching indifference to irrelevant transformations. That shortcut is a spurious-cue
->        failure, audited by Trustworthy-ML
+> 14c. **For SimCLR-style in-batch contrastive learning, check two design conditions.**
+>      - *Augmentation composition must be tested.* In `SIMCLR`'s image setting, cropping without colour
+>        distortion lets the model shortcut through colour statistics. Choose task-valid transformations
+>        and audit exploitable cues rather than mandating that specific image recipe. The shortcut is a
+>        spurious-cue failure, audited by Trustworthy-ML
 >        [`BM-02`](../../Benchmark/Trustworthy-ML-2023/BM-02-spurious-cue-dependence.md); this SOP records the
 >        composition requirement and does not restate the audit.
->      - *The method carries a resource condition.* It needs **larger batches and more training steps** than
->        supervised learning, because negatives are drawn from the batch. An under-budgeted run measures the
->        budget, not the method. The source's configuration range belongs in the compute declaration
->        [`SOP-DL-02`](SOP-DL-02-diagnose-fitting-regime-and-capacity.md) §3.5 now requires; the numbers are in
->        `delta_map.md` §3.4 and are not a recipe here.
+>      - *Resource budget matters for this in-batch-negative design.* `SIMCLR` benefited from larger batches
+>        and more training steps than its supervised comparisons. Declare the batch, negatives and training
+>        budget; do not extrapolate this resource requirement to every contrastive method. Record resources
+>        under [`SOP-DL-02`](SOP-DL-02-diagnose-fitting-regime-and-capacity.md) §3.5; the source's values
+>        remain in `delta_map.md` §3.4.
 >
-> 14d. **Take the representation from before the projection head.** A nonlinear projection head improves the
->      learned representation, but the head is discarded at transfer time and the representation that
->      transfers is the one **before** it — reading out the post-head code is a category error. The loss's
->      normalization and temperature are load-bearing parts of the objective, not tuning detail.
+> 14d. **For SimCLR, evaluate the pre-projection representation.** Its nonlinear projection head serves
+>      contrastive training; the transferred representation is read **before** that head. Record which
+>      feature stage is exported, and report loss normalization and temperature when reproducing SimCLR;
+>      other self-supervised architectures require their own readout choice.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §3.3, §3.4, §3.5.
 > Sources: `UDL` §9.3.7; `MAE`; `SIMCLR`.*
