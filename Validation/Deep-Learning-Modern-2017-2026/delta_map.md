@@ -505,7 +505,8 @@ carried forward into this lineage. Only the prior each architecture encodes ente
 - **Destination.** `BC-DL-11` §4 — a clearly marked modern-update metric block carrying all three with their
   stated failure modes; `Benchmark/Deep-Learning-2016/README.md` standing rule 5 — scoped to the 2016 text.
 - **Boundary.** The metrics enter **only** with their failure modes attached and **only** in a block marked
-  as a modern update. They are never a bare ranking axis, which is what the 2016 rule was protecting. The
+  as a modern update. FID additionally requires the real-data reference split: `DDPM` §4.1 reports
+  FID 3.17 against training data and 5.24 against test data for the same model. They are never a bare ranking axis, which is what the 2016 rule was protecting. The
   word-boundary scan confirms `FID` does not occur as a token in the thirteen `UDL` chapters read
   (`sources.md` §2.5) — the metric is named in full as "Fréchet inception distance", so the block cites the
   name the source uses. No threshold is invented for any of the three.
