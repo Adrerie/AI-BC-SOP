@@ -113,8 +113,9 @@ acceptable ELBO gap. None is invented; every threshold used must be declared by 
 > 11. **Fréchet inception distance** *(modern)* — a distance between the feature distributions of generated and
 >     real samples. It is computed on the **deepest activations** of a pretrained classifier, so the comparison
 >     is semantic and "any information discarded by the network does not contribute to the result". Report
->     which network and which layer produced the features: the number is indexed to that choice, and a
->     different classifier gives a different quantity.
+>     the feature network, layer **and real-data reference split**: the number is indexed to all three.
+>     `DDPM` §4.1 reports FID 3.17 against training data but 5.24 against the test set; values computed
+>     with different reference splits must not be compared as though the evaluation were identical.
 > 12. **Manifold precision and recall** *(modern)* — a two-number decomposition obtained by approximating each
 >     distribution's manifold with k-nearest-neighbour hyperspheres in classifier feature space. Its source
 >     states the reason it exists: the Fréchet inception distance "is sensitive both to the realism of the
