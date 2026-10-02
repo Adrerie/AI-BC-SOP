@@ -54,29 +54,33 @@ still have serious flaws** (§20.14, p. 717).
    p. 715). This sidesteps incommensurable likelihoods entirely.
 
 > **Modern update (2017–2026) — two additions to the declaration step.** Steps 1–3 are unchanged and the
-> rule at step 2 is **not** relaxed. Two cases the 2016 book did not have to contemplate now arise.
+> ambiguity in step 2's worked case remains; the first modern case adds a valid one-sided comparison.
+> Two cases the 2016 book did not have to contemplate now arise.
 >
 > **3a. A lower bound from one family can legitimately outrank an exact likelihood from another.** Step 2
-> forbids sharing a ranking axis between an estimate and a bound unless the bound's looseness is reported.
-> The modern model families make that condition satisfiable rather than merely aspirational, and also make it
-> easy to violate silently:
+> cautions that a higher stochastic estimate cannot be ranked above another model's lower bound without
+> further information. A valid lower bound for A **above** B's exact log-likelihood does establish a
+> one-sided likelihood ordering on matched data and units. When A's bound falls below B's exact value,
+> the ranking is undecided. The modern families also make it easy to confuse training with evaluation:
 >
 > - Of the four generative families the modern anchor discusses, **normalizing flows are the only one that
 >   computes the exact log-likelihood.** Test likelihood is ineffective for GANs, expensive for
 >   variational-autoencoder and diffusion models, and exact and efficient only for flows.
 > - Its own footnote supplies the trap: "**The lower bound on the likelihood for diffusion models can
 >   actually exceed the exact computation in normalizing flows, but data generation is much slower.**" A
->   diffusion bound beating a flow's exact value is therefore a possible and correct outcome, not an error —
->   and it is uninterpretable unless the generation-cost asymmetry is reported next to it.
+>   diffusion bound above a flow's exact value supports a one-sided likelihood conclusion when both are
+>   evaluated on commensurate data. Report generation cost separately before making any overall utility claim.
 > - Diffusion models are trained on an ELBO in which "the decoder must do all the work since the encoder has
 >   no parameters." One widely used training objective **drops the variational weighting** from that bound
 >   because down-weighting the hard small-noise terms lets the network focus on the more difficult large-noise
 >   ones — and that simplified objective produces the best sample-quality score *despite deviating from the
->   bound*. A likelihood number from such a model is not a bound on the data likelihood at all.
+>   bound* as a training objective. Its trained model can still be evaluated separately using the standard
+>   variational bound: `DDPM` §4.1, Table 1 reports a valid NLL upper bound of ≤3.75 bits/dim for the
+>   `L_simple`-trained model. The value of `L_simple` itself is not that evaluation bound.
 >
-> Required of step 2, in addition to what it already asks: name the **family** whose exactness status the
-> number has, name the **objective** that produced it, and where a bound is compared against an exact value
-> from a different family, report the **generation-cost asymmetry** alongside.
+> Required of step 2: identify the model family, the **training objective** and the **separate evaluation
+> instrument** (exact likelihood, stochastic estimate or bound). State any valid one-sided comparison and
+> report generation cost separately when overall practical utility is discussed.
 >
 > **3b. A conditional-generation use decomposes into nameable attribute axes.** Step 1 requires the intended
 > use to be declared. For text-conditioned generation the use is not a single axis: the modern anchor records
@@ -264,8 +268,8 @@ cannot be mistaken for book entries.
 | Training objective | What it licenses | What it forbids | Source |
 | --- | --- | --- | --- |
 | **Diffusion ELBO** *(modern row)* — a weighted variational bound whose weighting is derived from a connection between diffusion models and denoising score matching; equivalently multi-scale score estimation, with sampling resembling annealed Langevin dynamics | A **lower bound** on the data log-likelihood, and samples. Because "the decoder must do all the work since the encoder has no parameters", the bound is the only likelihood-like quantity available | Reading the bound as an exact likelihood, or comparing it against one without §3.1 step 3a's declaration. A diffusion bound **can exceed** a normalizing flow's exact computation — a correct outcome that is uninterpretable unless the much slower generation cost is reported beside it | `UDL` §18.4.1 fol. 358, §16.5.1 fol. 319 and fn. 2; `DDPM` |
-| **Diffusion ELBO with the variational weighting dropped** *(modern row)* — the simplified objective that down-weights the hard small-noise terms so the network can focus on the more difficult large-noise ones | The **best sample-quality score** in its source's own experiments | Any likelihood claim. It **deviates from the bound**, so its number is not a bound on the data likelihood and must not be placed on a likelihood axis at all | `DDPM` |
-| **Flow matching** *(modern row)* — a simulation-free approach for training continuous normalizing flows by regressing vector fields of fixed conditional probability paths | Exact likelihood where the flow is invertible, **plus** samples, reported jointly as bits/dim and a sample-quality score. Straighter optimal-transport paths reach the same error threshold at roughly 60% of the function evaluations | Treating it as a **replacement** for diffusion. It **subsumes existing diffusion paths as specific instances**, and instantiated with diffusion paths it is described as a more robust and stable alternative for training diffusion models. It makes **no** claim that likelihood is an inappropriate metric and does not dispute bits/dim | `FM` |
+| **Simplified diffusion training (`L_simple`)** *(modern row)* — removes standard ELBO term weighting during training | Better sample quality in `DDPM`'s experiments; its trained model can **separately** be evaluated using the standard variational bound (NLL ≤3.75 bits/dim in Table 1) | Reporting `L_simple` itself as a likelihood bound, or claiming `L_simple` training prevents valid likelihood-bound evaluation | `DDPM` §3.4, §4.1, Table 1 |
+| **Flow matching** *(modern row)* — simulation-free training of continuous normalizing flows by regressing vector fields of fixed conditional paths | Samples and tractable CNF log-density evaluation via ODE integration, **subject to numerical solver/trace-estimation error**; report bits/dim and sample-quality metrics jointly | Confusing simulation-free training with ODE-free evaluation/sampling, or treating numerically evaluated likelihood as error-free closed-form likelihood. Flow matching subsumes diffusion paths; it does not replace diffusion models | `FM` |
 
 Boundaries on the modern rows. Every layer of a normalizing flow must be invertible, which is what buys the
 exact likelihood and is also the constraint that shapes the architecture; the diffusion and flow literatures
@@ -311,11 +315,11 @@ Modern-update failure modes (provenance in §3.1, §3.4 and §3.8 above):
   one specific sample-quality metric**. The 2016 failure mode above is the same error with a different cause:
   there the models were designed for different KL directions, here the ranking holds only under the named
   metric. A family ranking that does not name its metric is not a result (`delta_map.md` §4.6).
-- **Comparing a diffusion bound against a flow's exact likelihood without the generation-cost asymmetry.**
-  The bound can legitimately be higher; the omission makes the comparison look like a quality verdict
-  (`delta_map.md` §4.1).
-- **Placing a simplified-objective number on a likelihood axis.** That objective deliberately deviates from
-  the variational bound, so its number bounds nothing (`delta_map.md` §4.1).
+- **Treating a valid diffusion lower bound above a comparable flow likelihood as an invalid result.**
+  It supports a one-sided likelihood conclusion, not an overall utility verdict; report generation cost
+  separately (`delta_map.md` §4.1).
+- **Placing the `L_simple` training-loss value on a likelihood axis.** It is not an ELBO; the model may
+  nevertheless be evaluated with a separately computed standard bound (`delta_map.md` §4.1).
 - **Reading a likelihood/sample-quality disagreement as a defect without checking which kind it is.**
   Variance collapse (step 12) is a defect; imperceptible-detail codelength is a property of the metric. They
   look identical from the direction of the numbers (`delta_map.md` §4.3).
@@ -349,9 +353,8 @@ Modern-update failure modes (provenance in §3.1, §3.4 and §3.8 above):
 
 Modern-update additions to the report (`delta_map.md` §4.1, §4.3, §4.5):
 
-- In the **measured-quantity declaration**, the model **family**'s exactness status and the **training
-  objective** that produced each number — required because a diffusion bound can exceed a flow's exact value,
-  and because a simplified objective's number is not a bound at all.
+- In the **measured-quantity declaration**, the model family, its **training objective** and the **separate
+  evaluation instrument** — a model trained with `L_simple` may still receive a valid ELBO evaluation.
 - Where a bound is compared against an exact value from a different family, the **generation-cost
   asymmetry** reported alongside the comparison.
 - In the **likelihood record**, an explicit statement of **which axis each number is on**, and — where
