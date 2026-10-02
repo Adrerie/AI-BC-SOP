@@ -137,10 +137,10 @@ knobs at once (`SOP-DL-05`), and verifying that the errors are measured correctl
 >
 > Two changes to how this section is used follow, and no change to steps 13–16 themselves:
 >
-> - A rising test error at high capacity is **not** by itself evidence that the optimum has been passed. If
->   capacity is still affordable, sample one more point before concluding. Whether a second descent appears
->   is a property of the data in use, so it must be measured on that data rather than assumed from either
->   era.
+> - A rising **development/validation** error at high capacity is **not** by itself evidence that the
+>   optimum has been passed. If capacity is affordable, explore additional points using development data.
+>   Whether a second descent appears must be measured rather than assumed. **Do not inspect the final test
+>   set to decide whether to extend the capacity ladder or select a checkpoint**; freeze the protocol first.
 > - Separately, the modern evidence runs *against* treating excess capacity as the thing to regularize
 >   away: there are almost no examples of state-of-the-art test performance on complex datasets where the
 >   model has significantly fewer parameters than training data points; pruned networks remain
