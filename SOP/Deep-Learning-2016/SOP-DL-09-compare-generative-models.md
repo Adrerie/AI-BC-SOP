@@ -260,9 +260,9 @@ still have serious flaws** (§20.14, p. 717).
 | Maximum likelihood with intractable Z | Likelihood comparison **only through the Z ratio rule** at step 13, with the estimator's bias direction reported | Reading a high likelihood as a good model when the estimator underestimates Z | §18.7, pp. 624–625; §20.14, p. 715 |
 | (Generalized) denoising autoencoder, no sampler | Samples from a Markov chain: corrupt x → x̃, encode h = f(x̃), decode to p(x′|h), sample x′. If the autoencoder is a consistent estimator of the true conditional, the chain's stationary distribution is an implicit consistent estimator of the data distribution; the injected noise level controls mixing and smoothing | Conditional sampling without **clamping** the observed units and without the transition operator satisfying **detailed balance**. The back-propagation-through-training variant (multiple stochastic encode-decode steps from training samples) is equivalent for the stationary distribution but empirically removes spurious modes better | §20.11, pp. 709–712 |
 
-**Modern update (2017–2026) — two added rows.** The five rows above are the 2016 book's objectives and are
+**Modern update (2017–2026) — three added rows.** The five rows above are the 2016 book's objectives and are
 unchanged. Step 22's instruction is unchanged too: read the objective off the table and state the
-restriction. Two modern objectives are added in the same shape, and both are marked as modern rows so they
+restriction. Three modern entries (two diffusion training objectives and flow matching) are added in the same shape and marked as modern rows so they
 cannot be mistaken for book entries.
 
 | Training objective | What it licenses | What it forbids | Source |
