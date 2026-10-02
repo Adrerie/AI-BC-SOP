@@ -438,29 +438,29 @@ carried forward into this lineage. Only the prior each architecture encodes ente
   a stochastic estimate or a bound, and forbids sharing a ranking axis between an estimate and a bound
   unless the bound's looseness is reported (§20.14, p. 715). The 2016 book's families are RBM/DBM, VAE,
   GAN, NADE and directed models.
-- **Modern delta.** `UDL` §16.5.1, fol. 319: "Of the four generative models discussed in this book,
-  normalizing flows is the only model that can compute the exact log-likelihood" — with footnote 2: "The
-  lower bound on the likelihood for diffusion models can actually exceed the exact computation in
-  normalizing flows, but data generation is much slower." Diffusion trains on an ELBO in which "the decoder
-  must do all the work since the encoder has no parameters" (§18.4.1, fol. 358).
+- **Modern delta.** `UDL` §16.5.1, fol. 319 identifies flows as the tractable-likelihood family
+  among the four it discusses (CNFs require numerical integration). Its footnote describes a diffusion
+  likelihood lower bound exceeding a flow's exact value, while generation is slower. A **valid lower
+  bound above a comparable exact log-likelihood** supports a one-sided likelihood ordering; the
+  opposite ordering is inconclusive. Generation cost is a separate utility dimension.
 - **Source.** `UDL` §16.5.1, fol. 319 and fn. 2; `UDL` §18.4.1, fol. 358; `DDPM` (weighted variational
   bound; `L_simple` drops the variational weighting and gives the best FID despite deviating from the
   bound).
 - **Destination.** `SOP-DL-09` §3.1 — the declaration step gains the exact-versus-bound *across families*
   case, and the generation-cost asymmetry that must be reported alongside it.
-- **Boundary.** The 2016 rule is **not** relaxed. The new case is one where the rule is satisfiable — the
-  bound's relation to the exact value is stated by the source — and the artifact says so. `L_simple`'s
-  deviation from the bound is recorded as the reason a diffusion likelihood number must be labelled with
-  the objective that produced it.
+- **Boundary.** The 2016 case (stochastic estimate above another model's bound) remains inconclusive.
+  `L_simple` is a modified **training objective**, not the standard ELBO; its trained model can still be
+  independently evaluated using the standard bound (`DDPM` §4.1, Table 1: NLL ≤3.75 bits/dim).
+  Training objective and evaluation instrument must be reported separately.
 
 ### 4.2 Flow matching generalizes diffusion paths rather than replacing them — **A-extend**
 
 - **2016 baseline.** `SOP-DL-09` §3.8 restricts claims to what the training objective actually supports,
   with a row per objective (pseudolikelihood, score matching, ratio matching, NCE).
-- **Modern delta.** Flow matching is "a simulation-free approach for training CNFs based on regressing
-  vector fields of fixed conditional probability paths"; it **subsumes existing diffusion paths as specific
-  instances**, and FM instantiated with diffusion paths "results in a more robust and stable alternative for
-  training diffusion models". Optimal-transport paths are straighter, needing roughly 60% of the NFEs to
+- **Modern delta.** Flow matching is simulation-free **during training**, regressing vector fields of
+  fixed conditional paths; it **subsumes diffusion paths** as instances. Sampling and CNF likelihood
+  evaluation still require numerical ODE integration and have solver-dependent precision. FM on diffusion
+  paths is described as a more stable alternative for training diffusion models. Optimal-transport paths are straighter, needing roughly 60% of the NFEs to
   reach the same error threshold. FM reports bits/dim **and** FID jointly.
 - **Source.** `FM`.
 - **Destination.** `SOP-DL-09` §3.8 — one row in the objective-capability table.
@@ -477,14 +477,14 @@ carried forward into this lineage. Only the prior each architecture encodes ente
 - **Modern delta.** `DDPM` supplies the strongest citable instance: "Despite their sample quality, our
   models do not have competitive log likelihoods compared to other likelihood-based models", explained by
   "More than half of the lossless codelength describes imperceptible distortions". Its CIFAR-10 test
-  bits/dim are 3.03 for Gated PixelCNN, ≤3.70 for the full variational bound and ≤3.75 for `L_simple`,
-  against FID 3.17 / IS 9.46.
+  bits/dim are 3.03 for Gated PixelCNN, ≤3.70 for the ELBO-trained model and ≤3.75 from a
+  **separate standard-bound evaluation** of the `L_simple`-trained model; the latter achieves FID 3.17 / IS 9.46.
 - **Source.** `DDPM` (verbatim quotes in `sources.md` §2.3).
 - **Destination.** `BC-DL-11` §5 (how to interpret failure) and `SOP-DL-09` §3.3–§3.4.
 - **Boundary.** Neither `DDPM` nor `FM` declares bits-per-dim an inappropriate metric; that stronger claim
   was searched for and **not found** (`sources.md` §2.2, cross-cutting answer). The delta strengthens
-  `BC-DL-11`'s existing claim rather than replacing it. The `DDPM` table index is unverified and is not
-  cited.
+  `BC-DL-11`'s existing claim rather than replacing it. `DDPM` §4.1, Table 1 has now been verified
+  against the primary paper's arXiv HTML.
 
 ### 4.4 The 2016 metric exclusion is scoped, and three metrics now have an anchor source — **A-extend**
 
