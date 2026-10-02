@@ -54,8 +54,8 @@ traceability — plus a closing **Historical boundary** note.
    corroboration and reports which diagnoses remain live. No BC in this package claims to identify a
    single cause uniquely from a trace.
 5. **Validity limits are stated, not implied.** Each BC §6 records what the result cannot support —
-   dataset-bound conclusions, estimator bias direction, the unknowability of MCMC mixing, ELBO
-   incomparability across model families.
+   dataset-bound conclusions, estimator bias direction, the unknowability of MCMC mixing, and the
+   direction-dependent interpretation of estimate-versus-bound likelihood comparisons.
 6. **Historical means historical.** Era benchmarks (MNIST, CIFAR-10, SVHN, ImageNet, street-view
    house numbers) are used as carriers of a comparison condition and labeled as such; §5.3.2's
    benchmark-staleness argument is part of `BC-DL-09`, not an afterthought. No post-2016 metric appears in
