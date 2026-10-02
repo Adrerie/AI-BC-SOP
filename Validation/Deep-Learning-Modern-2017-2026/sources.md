@@ -276,7 +276,9 @@ Recorded so their absence downstream is a decision, not an oversight.
 - **Resolved in post-review verification:** `DDPM` §4.1, **Table 1** in the original arXiv HTML
   confirms CIFAR-10 test NLL: Gated PixelCNN 3.03, ELBO-trained DDPM ≤3.70 and the
   `L_simple`-trained DDPM **evaluated using a separate standard bound** ≤3.75 bits/dim.
-  `L_simple` as a training loss is not itself that evaluation bound.
+  `L_simple` as a training loss is not itself that evaluation bound. The same §4.1 reports FID 3.17
+  against the CIFAR-10 **training** reference and FID 5.24 against the **test** reference; the
+  reference split is part of the metric protocol.
 - `MAE`'s analogy to a language-model "vocabulary" is paraphrase, not verbatim text.
 - No concurrency or derivation relationship between `RF` and `FM` was verified; the two are cited as
   distinct works.
