@@ -154,10 +154,10 @@ still have serious flaws** (§20.14, p. 717).
 > - **Report which axis a number is on.** A bits-per-dim figure and a sample-quality score are not two
 >   readings of one underlying quality. Report both, label each, and never present one as evidence about the
 >   other.
-> - **When they disagree, name which kind of disagreement it is before adjudicating.** Step 12's variance
->   collapse is a likelihood number earned dishonestly — a defect. Imperceptible-detail codelength is a
->   likelihood number honestly uncompetitive — a property of the metric. The two look identical from the
->   direction of the numbers, and step 12's per-dimension variance check is what separates them.
+> - **When they disagree, investigate rather than assigning a cause from the scores alone.** Step 12's
+>   per-dimension variance check can reveal variance-collapse reward hacking; imperceptible-detail
+>   codelength is another documented explanation for weak likelihood despite good samples. Absence of
+>   variance collapse does not by itself prove that the second explanation applies.
 > - **The disagreement is not a licence to drop likelihood.** The flow-matching source reports bits/dim and a
 >   sample-quality score jointly and disputes neither. Nothing in this lineage's sources declares bits-per-dim
 >   an inappropriate metric; that stronger claim was searched for and **not found**.
@@ -305,10 +305,9 @@ Modern-update failure modes (rules in §3.1, §3.4 and §3.8 above):
   (`delta_map.md` §4.1).
 - **Placing an `L_simple` training-loss value on a likelihood axis.** It is not an ELBO; the trained model may
   nevertheless be evaluated with a separately computed standard bound (`delta_map.md` §4.1).
-- **Confusing the axis of a likelihood/sample-quality disagreement.** Presenting one instrument's number as
-  evidence about the other, or reading every disagreement as a defect — variance collapse is a defect,
-  imperceptible-detail codelength is a property of the metric, and step 12's per-dimension variance check is
-  what tells them apart (`delta_map.md` §4.3).
+- **Confusing the axes of likelihood and sample quality, or assigning a cause from their disagreement
+  alone.** Step 12's per-dimension variance check can identify one failure mode, but cannot by itself
+  establish that imperceptible-detail codelength is the alternative explanation (`delta_map.md` §4.3).
 - **Declaring an aggregate use for a conditional generator** without naming the attribute axes it will be
   judged on, so a model passes in aggregate while failing counting, colour or spatial relation
   (`delta_map.md` §4.5).
@@ -343,8 +342,8 @@ Modern-update additions to the report (`delta_map.md` §4.1, §4.3, §4.5):
   model reported as a separate axis — a valid one-sided likelihood ordering does not license any inference
   about it, and an overall utility claim does require it.
 - In the **likelihood record**, an explicit statement of **which axis each number is on**, and — where
-  likelihood and sample quality disagree — which of the two explanations is in play: variance collapse
-  (a defect) or imperceptible-detail codelength (a property of the metric).
+  likelihood and sample quality disagree — which diagnostic checks were run and which explanations
+  remain supported, including variance collapse and imperceptible-detail codelength where relevant.
 - For a conditional generator, the **attribute-rendering axes** the declared use will be judged on.
 - Any family ranking reported, with the **metric it is indexed to** named in the same sentence.
 
