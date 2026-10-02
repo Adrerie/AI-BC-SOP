@@ -343,8 +343,9 @@ Modern-update failure modes (rules in §3.3 and §3.4 above; delta references gi
   was constructed (`delta_map.md` §3.7).
 - **Selecting zero-shot prompts on a benchmark validation set** — an integrity failure owned by Trustworthy-ML
   `BM-08`, not evaluated here (`delta_map.md` §3.8).
-- **Rejecting a low-rank adaptation on inference-latency grounds.** The increment is materialized into the
-  weights before deployment (`delta_map.md` §3.6).
+- **Rejecting low-rank adaptation without checking its deployment mode.** Merging an increment into
+  the weights can eliminate adapter-specific forward-pass overhead, but unmerged adapters and task
+  switching have implementation-dependent costs (`delta_map.md` §3.6).
 
 ## 5. Outputs and reporting
 
@@ -358,9 +359,9 @@ Modern-update failure modes (rules in §3.3 and §3.4 above; delta references gi
 - For transfer runs: source and target settings, what was shared (bottom representation, top layers, or a
   trained model), and the data-abundance condition.
 - **Modern update (2017–2026) — three additional reporting lines.**
-  - *Transfer runs:* which of the three factorizations was chosen; for a frozen base with a low-rank
-    increment, the number of tasks the stored base must serve and confirmation the increment was materialized
-    before deployment.
+  - *Transfer runs:* which factorization was chosen; for a frozen base with a low-rank increment, record
+    the number of served tasks, whether the increment is merged at inference, and relevant latency or
+    task-switching costs.
   - *Self-supervised pretraining runs:* the family (generative or contrastive), the masking ratio or the
     augmentation composition, the batch size and step count actually used, and confirmation that the
     transferred representation was taken before any projection head.
