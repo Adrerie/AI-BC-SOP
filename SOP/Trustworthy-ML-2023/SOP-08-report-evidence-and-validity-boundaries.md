@@ -3,20 +3,20 @@
 **Stage:** report · **Tier:** Core + Extended · **Concepts:** C18 reporting, C15 subgroup view,
 C14 cost
 
-This document also carries the **shared glossary and metric register** for the whole group. Other
-SOPs and all benchmarks link here rather than restating definitions, so a term has exactly one
-meaning inside the package.
+The **shared glossary and metric register** for the whole group is in this document. Other SOPs and all
+benchmarks link here rather than restating definitions. So a term has exactly one meaning inside the
+package.
 
 ## 1. Purpose
 
-Make a result auditable: a reader must be able to tell what was measured, under which setting, at
-what cost, and what the number does *not* license. Under-reported evidence — not bad models — is
-what makes trustworthy-ML claims unrepeatable.
+Make a result auditable. A reader must be able to tell what the evaluation measures, under which
+setting, and at what cost. The reader must also be able to tell what the number does *not* license.
+Under-reported evidence, not bad models, is what makes trustworthy-ML claims unrepeatable.
 
 ## 2. When to use
 
 - Before publishing, handing off, or shipping any result produced with SOP-01 … SOP-07.
-- When inheriting someone else's result as a baseline.
+- When you inherit someone else's result as a baseline.
 - When a benchmark package is being maintained and its numbers refreshed.
 
 ## 3. Inputs / prerequisites
@@ -27,16 +27,20 @@ what makes trustworthy-ML claims unrepeatable.
 
 ## 4. Definitions needed for execution — shared glossary
 
-*Setting terms.* **Setting** = (development resources, deployment environment, time).
-**Development** covers training *and* all design choices, including reported testing.
-**Deployment** is the frozen model meeting a changing environment.
-**Generalization type** ∈ {ID, cross-domain, cross-bias, adversarial, declared-other}.
-**Cue** = factor of variation in the data; **causal/robust** vs **spurious/non-causal** relative to
-the declared deployment. **ρ** = fraction of unbiased (off-diagonal) development samples, with its
-direction always stated. **Underspecification** = several cues each reach training perfection, so
-the data do not determine which was learned; **misspecification** = the learned one was wrong.
+*Setting terms.* The terms below describe the setting block.
 
-*Metric register.* Names are fixed package-wide; use these, not synonyms.
+- **Setting** = (development resources, deployment environment, time).
+- **Development** covers training *and* all design choices, including reported testing.
+- **Deployment** is the frozen model meeting a changing environment.
+- **Generalization type** ∈ {ID, cross-domain, cross-bias, adversarial, declared-other}.
+- **Cue** = factor of variation in the data. A cue is labeled **causal/robust** or
+  **spurious/non-causal** relative to the declared deployment.
+- **ρ** = the fraction of unbiased (off-diagonal) development samples, with the direction of ρ always
+  stated.
+- **Underspecification** = several cues each reach training perfection, so the data do not determine
+  which cue the model learned. **Misspecification** = the learned cue was the wrong one.
+
+*Metric register.* Each name below has one fixed meaning package-wide. Use these names, not synonyms.
 
 | Metric | Definition to use | Where it is valid | Known degeneracy |
 |---|---|---|---|
@@ -65,56 +69,74 @@ the data do not determine which was learned; **misspecification** = the learned 
 | `disclosure_completeness` | fraction of this SOP's §6 checklist items present in the report | any report | measures documentation, not correctness |
 | `disclosure_gap` | disclosure-event rate on an exposed intermediate channel minus the rate on the final answer, over the same items under one labeling rule fixed before the run | systems with more than one readable output | zero is not compliance — both channels can be silent — and the difference is undefined if the two rates were labeled differently |
 
-*Baselines and positive classes.* Every `auroc` / `aupr` / `aupr_*` number belongs to a named binary task:
-state which class is positive and which way the score points. Package-wide, `aupr` means the
-non-interpolated Average Precision definition in the register, not trapezoidal integration of a
-precision-recall polyline. The no-skill value of a
-precision-recall summary is the prevalence **of that positive class**, so a success-positive and an
-error-positive detector on the same data have different random baselines (`P(L = 1)` and `P(L = 0)`),
-and an OOD-positive or multiplicity-positive task takes `P(OOD)` and `P(multiple-answer)`.
+*Baselines and positive classes.*
 
-A constant-confidence reference row also comes in two kinds, and they are not interchangeable. An
-**oracle diagnostic** sets the constant equal to the measured correctness rate of the very set being
-scored; because that rate is computed from held-out labels, it drives `ece` to 0 by construction and
-can therefore only be used to show a weakness of the metric. A **deployable constant baseline** takes
-its value from a calibration or validation split and freezes it before final testing; it is a fair
-reference row, but with all mass in one bin its final-set `ece` is `|acc(test) − c_frozen|`, which is
-zero only when the frozen value happens to equal final accuracy.
+- Every `auroc` / `aupr` / `aupr_*` number belongs to a named binary task. State which class is
+  positive, and state which way the score points.
+- Package-wide, `aupr` means the non-interpolated Average Precision definition in the register.
+  Trapezoidal integration of a precision-recall polyline is not that definition.
+- The no-skill value of a precision-recall summary is the prevalence **of that positive class**.
+- A success-positive detector and an error-positive detector on the same data have different random
+  baselines. Those baselines are `P(L = 1)` and `P(L = 0)`.
+- An OOD-positive task takes `P(OOD)`, and a multiplicity-positive task takes `P(multiple-answer)`.
 
-*Cost terms.* **Tuning budget** = search space and number of evaluations granted to every compared
-method. **Training overhead** = multiplier on passes/epochs/capacity. **Inference overhead** = added
-cost per prediction. **Query cost** = black-box interactions needed. **Label cost** = extra
-supervision consumed.
+A constant-confidence reference row also comes in two kinds. The two kinds are not interchangeable. An
+**oracle diagnostic** sets the constant equal to the measured correctness rate of the very set that is
+scored. That rate comes from held-out labels, so the oracle diagnostic drives `ece` to 0 by
+construction. The oracle diagnostic can therefore only show a weakness of the metric.
+
+A **deployable constant baseline** takes its value from a calibration or validation split. That
+baseline is frozen before final testing, and is a fair reference row. With all mass in a single bin,
+the final-set `ece` of that baseline is `|acc(test) − c_frozen|`. That value is zero only when the
+frozen value happens to equal the final accuracy.
+
+*Cost terms.*
+
+- **Tuning budget** = the search space and the number of evaluations granted to every compared method.
+- **Training overhead** = multiplier on passes/epochs/capacity.
+- **Inference overhead** = added cost per prediction.
+- **Query cost** = black-box interactions needed.
+- **Label cost** = extra supervision consumed.
 
 ## 5. Procedure
 
 **Core**
 
-1. Assemble the report from the SOP outputs in this order: setting block → split manifest and
-   contamination report → main results with worst-cell view → diagnosis verdicts → confidence
-   battery with trivial controls → stress results with threat model → mitigation decision and cost →
-   explanation usability decision (if any) → validity boundaries.
-2. Compute every metric through one shared implementation for all compared methods, including the
-   corner cases (empty bins, zero-positive thresholds, tie handling). If a corner case is
-   conventionally handled differently in your subfield, state the convention chosen.
-3. Attach a trivial or reference row to every table: constant baseline, random ordering, unmodified
-   model, tuned-simple baseline. Use the frozen deployable constant here, not the oracle constant of
-   §4 — an oracle row is a metric diagnostic and must be labeled as one if it appears at all. A
-   number without a reference row is not evidence.
-4. State the boundaries explicitly as a short list of "does not show" claims, drawn from the checks
-   that failed or were skipped.
-5. Report average *and* failure-oriented views side by side whenever they differ in direction.
+1. Assemble the report from the SOP outputs in this order:
+   - setting block
+   - split manifest and contamination report
+   - main results with worst-cell view
+   - diagnosis verdicts
+   - confidence battery with trivial controls
+   - stress results with threat model
+   - mitigation decision and cost
+   - explanation usability decision (if any)
+   - validity boundaries
+2. Use one shared implementation to compute every metric for all compared methods. Cover the corner
+   cases too: empty bins, zero-positive thresholds, and tie handling. If your subfield handles a corner
+   case by a different convention, state that convention.
+3. Attach a trivial or reference row to every table. The row can be a constant baseline, a random
+   ordering, an unmodified model, or a tuned-simple baseline. Use the frozen deployable constant here,
+   and not the oracle constant of §4. An oracle row is a metric diagnostic. Label an oracle row as a
+   diagnostic if that row appears at all. A number without a reference row is not evidence.
+4. Write the boundaries as a short list of "does not show" claims. Draw each claim from a check that
+   failed or was skipped.
+5. Report the average *and* failure-oriented views side by side whenever the two views differ in
+   direction.
 6. Report cost next to gain, including human label cost.
-7. Record reproducibility facts that affect the numbers: data version/hashes, model family,
-   recalibration status, seeds and number of runs with variability.
+7. Record the reproducibility facts that affect the numbers:
+   - the data version and the data hashes
+   - the model family
+   - the recalibration status
+   - the seeds, and the number of runs with variability
 
-**Extended** — publication-grade or safety-relevant:
+**Extended** — add for publication-grade or safety-relevant reporting:
 
-8. Add the provenance appendix: which results were reused from prior work, whether their settings
-   matched, and any re-implementation difference observed.
-9. Add a sensitivity panel: bin counts, ε values, occlusion operators, ρ, group definitions — one
-   small table per axis that could flip a conclusion.
-10. Add a negative-results section; a mitigation that failed its assumption test is a finding.
+8. Add the provenance appendix. Name the results reused from prior work. State whether the settings of
+   those results matched. Record any re-implementation difference observed.
+9. Add a sensitivity panel. Use one small table per axis that could flip a conclusion. The axes are bin
+   counts, the values of ε, the occlusion operators, ρ, and the group definitions.
+10. Add a negative-results section. A mitigation that failed its assumption test is a finding.
 11. Where you maintain a benchmark, record the refresh policy and the leaderboard exposure policy.
 
 ## 6. Mandatory checks
@@ -122,8 +144,8 @@ supervision consumed.
 - [ ] Every metric name in the report appears in the register above with the definition used.
 - [ ] Every ranking number names its positive class and score orientation, and quotes the no-skill
       value as that class's prevalence.
-- [ ] Every constant-confidence reference row says whether it is a frozen deployable baseline or an
-      oracle diagnostic.
+- [ ] Every constant-confidence reference row says whether that row is a frozen deployable baseline or
+      an oracle diagnostic.
 - [ ] Every table has a reference row and a variability statement.
 - [ ] Every confidence claim carries binning, split provenance, and the trivial-control comparison.
 - [ ] Every robustness claim carries norm, ε, attack configuration, and masking-check outcome.
@@ -137,27 +159,28 @@ supervision consumed.
 - **Do not publish** if a headline number's meaning depends on an undisclosed choice (bins, ε,
   occlusion operator, group definition, ρ direction).
 - **Stop and re-run `SOP-02` checks** if the report shows any selection made on a final-test subset.
-  Report which recovery was taken — a new untouched test, a pre-existing secondary one, or a
-  downgraded claim with the absence of an independent test disclosed. A second pass of the selected
-  system over the same set is not a recovery and may not be printed as one.
-- **Downgrade the claim** to the strongest setting actually evidenced; move stronger-setting results
-  into their own table rather than merging them.
+  Report which recovery you took. The recovery can be a new untouched test or a pre-existing secondary
+  test. Or the recovery is a downgraded claim that discloses the absence of an independent test. A
+  second pass of the selected system over the same set is not a recovery. Do not print that second pass
+  as a recovery.
+- **Downgrade the claim** to the strongest setting that the evidence actually supports. Move the
+  stronger-setting results into their own table. Do not merge those results into the original table.
 
 ## 8. Common methodological failures
 
-- Reporting accuracy only, letting the reader assume calibration and robustness.
-- Different metric implementations per method, so tiny code-level differences become "gains".
+- The report gives accuracy only, and lets the reader assume calibration and robustness.
+- Each method uses a different metric implementation, so tiny code-level differences become "gains".
 - Silent convention choices in degenerate cases (empty-bin precision).
-- Quoting a leaderboard number as independent confirmation.
-- Presenting an oracle-selection or train-on-target row inside the main table without marking it.
+- A leaderboard number is quoted as independent confirmation.
+- An oracle-selection or train-on-target row appears inside the main table with no mark.
 - Judging an error-positive detector against the success-positive prevalence, or reporting two AUPR
   variants that share one stated random baseline when their positives differ.
-- Shipping a model because it reached `ece = 0` with a constant confidence, when that constant was
-  only knowable from the labels of the set it was scored on.
-- Reporting the average while the deployment decision is made on the worst cell.
-- Omitting the cost of the trustworthy component, which is how complicated methods get adopted and
-  then fail at scale.
-- Treating architecture-family differences in calibration as a property of the method being studied.
+- A model is shipped because that model reached `ece = 0` with a constant confidence. That constant was
+  knowable only from the labels of the set that the model was scored on.
+- The report gives the average, while the deployment decision is made on the worst cell.
+- The report omits the cost of the trustworthy component. That omission is what drives the adoption of
+  complicated methods, and their later failure at scale.
+- Architecture-family differences in calibration are treated as a property of the method under study.
 
 ## 9. Required outputs
 
@@ -169,9 +192,17 @@ supervision consumed.
 
 ## 10. Minimum reporting requirements
 
-Minimum viable report: setting block verbatim; split provenance and test-contact count; main table
-with average *and* worst cell; reference rows; per-claim attachments as in §6; cost line; boundary
-list. If any of these is absent, the result is not yet a trustworthy-ML result — it is a number.
+A minimum viable report holds these items:
+
+- the setting block, verbatim
+- the split provenance and the test-contact count
+- the main table with average *and* worst cell
+- the reference rows
+- the per-claim attachments required in §6
+- the cost line
+- the boundary list
+
+If any item is absent, the result is not yet a trustworthy-ML result. That result is a number.
 
 ## 11. Links to relevant Benchmarks
 
@@ -190,51 +221,73 @@ the counterpart of a report assembled here:
 
 ## 12. Source traceability
 
-Setting and resources vocabulary: §2.3.1, Definitions 2.14-2.19 (book pp. 24-25). Split roles:
-§2.3.2, Definitions 2.20-2.22 (pp. 26-27). Test-set spoiling as a spectrum: §2.3.3 (p. 28).
-Cue/ID-OOD/generalization types: §2.1.2, Definitions 2.5-2.8 (pp. 18-19). Spurious correlation,
-underspecification, shortcut bias: §2.7.1, §2.8.2, §2.9, Definitions 2.27-2.29 (pp. 45-50).
-Metric-implementation divergence and the empty-bin precision case; hidden-resources/compute axis;
-train-test contamination; missing-validation-set pathology; shared evaluation server or library:
-§5.1.3 (pp. 335-338). Upper-bound violation must be explained (bug, flawed bound, or different
-ingredients): §5.1.1 (p. 333). Cost of wrong evaluation and the scandal list: §5.1.2 (pp. 333-335).
-Tuned-baseline and weight-decay examples: §5.2.2 (pp. 339-341). Random search with shared budget:
-§5.2.3 (pp. 341-342). Toy-versus-large-scale trade-off: §5.2 (pp. 338-340). Benchmark fairness requires
-equal ingredients: §5.3.1 (pp. 342-343). Metric definitions: ECE/MCE/reliability §4.6.1-§4.6.3,
-Definitions 4.11-4.15 (pp. 254-259); the constant-confidence degeneracy, including that gaming needs
-only the prior probability of correctness rather than labeled validation data, §4.6.2 (p. 256);
-NLL/Brier §4.5.2-§4.5.7 (pp. 245-250); perplexity as the exponentiated NLL with a matched base, and
-the footnote that perplexity is independent of the *common* base, §4.5.9 (p. 252); AUROC/AUPR with
-the random-detector value quoted for the success-positive task and AUPR-Error defined by swapping the
-positive class §4.9.2 (pp. 265-266); risk at coverage and threshold filtering §4.9.1 (pp. 263-264);
-`acc_under_eps` and its reporting table §2.15.3-§2.15.4 and Table 2.8 (pp. 90-92, 103); certified
-accuracy §2.15.15 (pp. 111-113); remove-and-classify §3.7.7, Definition 3.14 (pp. 186-187); sanity
-rank correlation §3.7.5 (pp. 182-185); HITL §3.8.2, Definition 3.15 (pp. 189-193); self-influence
-§3.12.2, Definition 3.16 (pp. 216-217). Worst-group reporting: §2.12.1 (pp. 59-61). Architecture
-family and recalibration status: §4.8.1-§4.8.3 (pp. 259-263). The register format, the "does not
-show" list and the sensitivity panel are repository conventions.
+- Setting and resources vocabulary: §2.3.1, Definitions 2.14-2.19 (book pp. 24-25).
+- Split roles: §2.3.2, Definitions 2.20-2.22 (pp. 26-27).
+- Test-set spoiling as a spectrum: §2.3.3 (p. 28).
+- Cue/ID-OOD/generalization types: §2.1.2, Definitions 2.5-2.8 (pp. 18-19).
+- Spurious correlation, underspecification, shortcut bias: §2.7.1, §2.8.2, §2.9, Definitions 2.27-2.29
+  (pp. 45-50).
+- Metric-implementation divergence and the empty-bin precision case: §5.1.3 (pp. 335-338).
+- The hidden-resources/compute axis, and train-test contamination: §5.1.3 (pp. 335-338).
+- The missing-validation-set pathology, and a shared evaluation server or library: §5.1.3
+  (pp. 335-338).
+- An upper-bound violation needs an explanation (bug, flawed bound, or different ingredients): §5.1.1
+  (p. 333).
+- Cost of wrong evaluation and the scandal list: §5.1.2 (pp. 333-335).
+- Tuned-baseline and weight-decay examples: §5.2.2 (pp. 339-341).
+- Random search with shared budget: §5.2.3 (pp. 341-342).
+- Toy-versus-large-scale trade-off: §5.2 (pp. 338-340).
+- Benchmark fairness requires equal ingredients: §5.3.1 (pp. 342-343).
+- Metric definitions for ECE/MCE/reliability: §4.6.1-§4.6.3, Definitions 4.11-4.15 (pp. 254-259).
+- The constant-confidence degeneracy, including that gaming needs only the prior probability of
+  correctness rather than labeled validation data: §4.6.2 (p. 256).
+- Metric definitions for NLL/Brier: §4.5.2-§4.5.7 (pp. 245-250).
+- Perplexity as the exponentiated NLL with a matched base, and the footnote that perplexity is
+  independent of the *common* base: §4.5.9 (p. 252).
+- AUROC/AUPR, with the random-detector value quoted for the success-positive task, and AUPR-Error
+  defined by swapping the positive class: §4.9.2 (pp. 265-266).
+- Risk at coverage and threshold filtering: §4.9.1 (pp. 263-264).
+- `acc_under_eps` and its reporting table: §2.15.3-§2.15.4 and Table 2.8 (pp. 90-92, 103).
+- Certified accuracy: §2.15.15 (pp. 111-113).
+- Remove-and-classify: §3.7.7, Definition 3.14 (pp. 186-187).
+- Sanity rank correlation: §3.7.5 (pp. 182-185).
+- HITL: §3.8.2, Definition 3.15 (pp. 189-193).
+- Self-influence: §3.12.2, Definition 3.16 (pp. 216-217).
+- Worst-group reporting: §2.12.1 (pp. 59-61).
+- Architecture family and recalibration status: §4.8.1-§4.8.3 (pp. 259-263).
+- The register format, the "does not show" list and the sensitivity panel are repository conventions.
 
-Five statements in §4 go beyond the source wording or numerical convention and are labeled **synthesized / repository convention**: carrying the
-random-detector value over to the error-positive task as `P(L = 0)` (the source gives the value for
-its success-positive task and defines AUPR-Error by relabeling the positive class, but states the
-swap only for the curve, not the baseline); orienting `aupr_success` with score `c` and `aupr_error`
-with score `1 − c` so larger scores always mean "more positive"; using **non-interpolated Average
-Precision** `Σ_n (R_n − R_{n−1})P_n` as the package-wide numerical meaning of `aupr` rather than
-trapezoidal PR integration; separating an oracle constant from a frozen deployable constant,
-including the one-bin identity `ece = |acc(test) − c_frozen|`; and the requirement that every ranking
-task name its positive class and score orientation. The base-matching rule for perplexity is the source's
-own footnote turned into a register constraint.
+Five statements in §4 go beyond the source wording or numerical convention. Those five are labeled
+**synthesized / repository convention**:
+
+- The random-detector value carries over to the error-positive task as `P(L = 0)`. The source gives the
+  value for its success-positive task. The source defines AUPR-Error by relabeling the positive class,
+  but states that swap only for the curve, and not for the baseline.
+- The register orients `aupr_success` with score `c`, and `aupr_error` with score `1 − c`. That choice
+  makes a larger score always mean "more positive".
+- The register uses **non-interpolated Average Precision** as the package-wide numerical meaning of
+  `aupr`. The formula is `Σ_n (R_n − R_{n−1})P_n`. Trapezoidal PR integration is not that meaning.
+- The register separates an oracle constant from a frozen deployable constant. That separation includes
+  the one-bin identity `ece = |acc(test) − c_frozen|`.
+- Every ranking task must name its positive class and its score orientation.
+
+The base-matching rule for perplexity is the source's own footnote, turned into a register constraint.
 
 **Post-2023 material in this file.** The pre-existing §4 register entries are book-derived or earlier
-repository conventions. `disclosure_gap` is the first post-book register addition: it operationalizes
-TML26-L13's comparison between an exposed intermediate channel and the final answer, with the exact
-formula and degeneracy wording treated as a repository convention. Separately, the Spring 2026 project
-rubric provides external confirmation of §6 and §10 rather than a new reporting rule — it asks for
-"appropriate baselines", "tables, figures, error bars where applicable", limitation discussion and an
-interpretation that goes beyond one accuracy figure, which is the same demand this document already makes
-of a report. It is cited as an example of the requirement being enforced elsewhere, under
-`official-course-derived` in
-[`../../Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md`](../../Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md),
-and no wording of §6 or §10 was changed to match it. Where a later cycle does import a post-2023 rule, it
-carries a course locator and a provenance label and never a book section and page, because the course
-page states the same limit this file does: the book "won't cover new topics added to the course".
+repository conventions. `disclosure_gap` is the first post-book register addition. That entry
+operationalizes TML26-L13's comparison between an exposed intermediate channel and the final answer.
+The exact formula and the degeneracy wording of that entry are treated as a repository convention.
+
+The Spring 2026 project rubric gives external confirmation of §6 and §10. That rubric is not a new
+reporting rule. The rubric asks for "appropriate baselines", and for "tables, figures, error bars where
+applicable". The rubric also asks for limitation discussion, and for an interpretation that goes beyond
+one accuracy figure.
+
+A report in this package must meet the same demand. The rubric is cited as an example of that
+requirement enforced elsewhere, under `official-course-derived` in
+[`../../Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md`](../../Validation/Trustworthy-ML-Official-Updates-2024-2026/source_inventory.md).
+No wording of §6 or §10 was changed to match that rubric.
+
+Where a later cycle does import a post-2023 rule, that rule carries a course locator and a provenance
+label. That rule never carries a book section and page. The course page states the same limit this file
+does: the book "won't cover new topics added to the course".

@@ -2,19 +2,22 @@
 
 Reusable standard operating procedures for building and evaluating ML systems whose claims
 (generalization, confidence, explanation, robustness) must survive contact with a changed
-environment. The eight SOPs originate from a concept reconstruction of the 2023 book and now carry selected official-course updates where they extend the same workflow: see
-[`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md)
-for the model these eight documents implement, and
-[`source_coverage.md`](../../Validation/Trustworthy-ML-2023/source_coverage.md) for the audited
-source universe.
+environment. The eight SOPs originate from a concept reconstruction of the 2023 book. The eight SOPs
+now carry selected official-course updates, where those updates extend the same workflow. See
+[`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md) for the
+model that these eight documents implement, and
+[`source_coverage.md`](../../Validation/Trustworthy-ML-2023/source_coverage.md) for the audited source
+universe.
 
-A reader who has not read the book can execute any SOP here end to end.
+A reader who did not read the book can execute any SOP here end to end.
 
-Source attribution, and what may and may not be inferred from it about licensing, is recorded in
-[`SOURCE.md`](../../Validation/Trustworthy-ML-2023/SOURCE.md). This group is a provenance-bearing
-staging unit: its rules carry their citations with them and are expected to be extended, revised,
-superseded or merged as later sources are read, rather than to stay in this package forever — see the
-root README.
+The source attribution of this group is recorded in
+[`SOURCE.md`](../../Validation/Trustworthy-ML-2023/SOURCE.md). That record also states what a reader
+may and what a reader may not infer about licensing.
+
+The group is a provenance-bearing staging unit. The rules of this group carry their own citations.
+Later sources are expected to extend, revise, supersede or merge those rules. Those rules are not
+expected to stay in this package forever. See the root README.
 
 ## Workflow order
 
@@ -45,35 +48,53 @@ group uses the same names.
 
 ## How to use this group with the benchmarks
 
-Each SOP states its links in §11; each benchmark states its execution counterpart in §12. The
+Each SOP states its links in §11. Each benchmark states its execution counterpart in §12. The
 consolidated matrix lives in
 [`acceptance_report.md`](../../Validation/Trustworthy-ML-2023/acceptance_report.md) and is the
 cross-link check used at acceptance.
 
 ## Standing rules for this group
 
-- **Core** is the minimum defensible procedure; **Extended** is required for high-stakes,
-  published, or reused results. Do not fold optional methods into Core.
-- Recurring terms take the SOP-08 register meaning. A metric name may not be redefined locally.
-- Where one SOP depends on another, link it; do not copy the procedure.
-- **Integrity is setting-relative.** A method may use only the information rights its declared setting
-  grants; taking more changes the setting, and with it the class of results it may be compared
-  against. Nothing in this group forbids target-domain supervision as such, and nothing licenses
-  quoting a stricter setting's published results as the competition for a richer one.
-- Numbers quoted as examples come from the source and are labeled with their section and page. The
-  source's numeric values are **experimental regimes**, not general thresholds: where a procedure
-  repeats one, it says which experiment it came from, and no routing decision is made on it.
-- Every SOP retains book traceability for its book-derived rules. Later-source deltas are recorded in the relevant update audit rather than duplicated across every file.
+- **Core** is the minimum defensible procedure. **Extended** is required for high-stakes, published,
+  or reused results. Do not fold optional methods into Core.
+- Recurring terms take their meaning from the SOP-08 register. A local file may not redefine a
+  metric name.
+- Where one SOP depends on another SOP, link to the other SOP. Do not copy the procedure.
+- **Integrity is setting-relative.** A method may use only the information rights that its declared
+  setting grants. A method that takes more information than those rights grant changes the setting.
+  That change also changes the comparison class for the results of that method. Nothing in this
+  group forbids target-domain supervision as such. Nothing in this group licenses quoting a stricter
+  setting's published results as the competition for a richer setting.
+- Numbers quoted as examples come from the source, and each such number carries its section and page.
+  The source's numeric values are **experimental regimes**, not general thresholds. Where a
+  procedure repeats one of those values, that procedure names the experiment the value came from. No
+  routing decision rests on that value.
+- Every SOP retains book traceability for its book-derived rules. Later-source deltas are recorded
+  in the relevant update audit rather than duplicated across every file.
 
 ## Scope note
 
-This group is method-agnostic, application-neutral and **setting-neutral**: it covers distribution
-shift, adversarial stress, uncertainty, and explanation evaluation as evaluation and execution
-practice, and it grants nothing and forbids nothing on its own. A project may declare domain
-adaptation with labeled targets, test-time training, continual or few-shot adaptation, or
-target-informed calibration as its setting — the book catalogs these as first-class learning settings,
-not as violations — provided it then reports against the comparison class that setting implies. What
-the procedures reject is a mismatch between the resources used and the setting named, not the use of
-target information as such. The group does not cover the authors' representation-learning showcase,
-nor their forward-looking research agenda — each is recorded with its disposition in the coverage
-audit.
+The group is method-agnostic, application-neutral and **setting-neutral**. The group covers the
+following as evaluation and execution practice:
+
+- distribution shift
+- adversarial stress
+- uncertainty
+- explanation evaluation
+
+The group grants nothing and forbids nothing on its own.
+
+Provided a project reports against the comparison class that its setting implies, that project may
+declare one of the following as its setting:
+
+- domain adaptation with labeled targets
+- test-time training
+- continual or few-shot adaptation
+- target-informed calibration
+
+The book catalogs those settings as first-class learning settings, not as violations. What the
+procedures reject is a mismatch between the resources used and the setting named, not the use of
+target information as such.
+
+The group does not cover the authors' representation-learning showcase, nor their forward-looking
+research agenda. The coverage audit records each item with its disposition.

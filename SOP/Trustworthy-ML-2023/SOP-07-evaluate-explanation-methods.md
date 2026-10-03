@@ -5,26 +5,28 @@ C6 diagnosis, C9 proxy gap, C10 gaming
 
 ## 1. Purpose
 
-Decide whether a given attribution/explanation output is allowed to serve as evidence about the
-model, for a stated end goal. Explanations are the one place where a trustworthy-ML pipeline can
-pass every aesthetic test and still be vacuous, so the instrument itself has to be evaluated
-before any conclusion drawn from it.
+Decide whether a given attribution/explanation output may serve as evidence about the model, for a
+stated end goal. Explanations are the one place where a trustworthy-ML pipeline can pass every
+aesthetic test and still be vacuous. You must evaluate the instrument itself before you draw any
+conclusion from the instrument.
 
 ## 2. When to use
 
 - Before citing an attribution map, feature importance, influence score, or concept sensitivity as a
   reason for a model's behavior.
-- When choosing among explanation methods for a debugging or auditing workflow.
-- When an explanation is being offered to a decision-maker as grounds for trust.
-- When a claimed explanation-based end goal (debugging, understanding, trust) must be verified.
+- When you choose among explanation methods for a debugging or auditing workflow.
+- When an explanation is offered to a decision-maker as grounds for trust.
+- When a claimed explanation-based end goal (debugging, understanding, trust) needs verification.
 
 ## 3. Inputs / prerequisites
 
-- Models to be explained, including controls: a randomly initialised model, a model trained on
-  randomized labels, and — where available — a model with a *known* dependence from
-  [`SOP-03`](SOP-03-diagnose-learned-evidence.md).
+- Models to be explained, including three controls:
+  - a randomly initialised model
+  - a model trained on randomized labels
+  - where available, a model with a *known* dependence from
+    [`SOP-03`](SOP-03-diagnose-learned-evidence.md)
 - A feature granularity decision (raw inputs, perceptual groups, latent units, semantic parts) and
-  the tooling to realize it.
+  the tooling to realize that decision.
 - An occlusion/filling operator with a stated rationale, or an inpainting/blurring alternative.
 - For human evaluation: a task, participants with relevant expertise, and a measurable outcome.
 - Candidate methods spanning the linearization types (input-space, latent-space, concept-space,
@@ -32,76 +34,92 @@ before any conclusion drawn from it.
 
 ## 4. Definitions needed for execution
 
-- **Explanation** — an answer to a why-question; **interpretability** — a human's degree of
-  understanding of the cause of a decision; **explainability** — the same degree *after* receiving
-  an explanation; **justification** — an account of why a decision is good, which need not be sound.
+- **Explanation** — an answer to a why-question.
+- **Interpretability** — a human's degree of understanding of the cause of a decision.
+- **Explainability** — the same degree of understanding *after* the human receives an explanation.
+- **Justification** — an account of why a decision is good. That account need not be sound.
 - **Attribution** — assigning reasons to factors of one of three kinds: input features, training
   samples, or model parameters.
 - **Soundness (faithfulness)** — the explanation identifies the true causes of the prediction, i.e.
   of *this model's* behavior.
-- **Four separate contracts**, none of which follows from passing the one before it:
-  (i) **model-dependence sanity** — the score responds when the model is randomized or its weights
-  changed; (ii) **attribution ordering** — the ranking tracks perturbation sensitivity under a named
-  occlusion operator and its artifacts; (iii) **end-goal usefulness** — a human, a debugging task, or
-  a data-attribution claim performs better with the explanation; (iv) **causal explanation** — the
-  cited feature is a cause of the outcome in the data-generating sense. This document measures
-  (i)-(iii). (iv) belongs to
-  [`SOP-03`](SOP-03-diagnose-learned-evidence.md) and needs an intervention design on the **data**;
-  an explanation instrument, however faithful to the model, does not supply it.
-- **Completeness / monotonicity axioms** — formal properties some attribution scores satisfy; useful
-  as design constraints, not as proof that an explanation is sound or useful.
+- **Four separate contracts**, and passing one contract does not make the next contract follow:
+  - (i) **model-dependence sanity** — the score responds when the model is randomized, or when its
+    weights change.
+  - (ii) **attribution ordering** — the ranking tracks perturbation sensitivity under a named
+    occlusion operator and the artifacts of that operator.
+  - (iii) **end-goal usefulness** — a human, a debugging task, or a data-attribution claim performs
+    better with the explanation.
+  - (iv) **causal explanation** — the cited feature is a cause of the outcome in the data-generating
+    sense.
+  This document measures (i)-(iii). Contract (iv) belongs to
+  [`SOP-03`](SOP-03-diagnose-learned-evidence.md) and needs an intervention design on the **data**. An
+  explanation instrument, however faithful to the model, does not supply that design.
+- **Completeness / monotonicity axioms** — formal properties that some attribution scores satisfy.
+  Those axioms are useful as design constraints. They are not proof that an explanation is sound or
+  useful.
 - **The soundness–explainability trade-off** — a simplification cannot be both fully faithful and
-  fully understandable; methods sit on a frontier, so none is "correct by construction".
-- **Ground-truth explanation** — does not exist in general; where one is needed, it must be
-  manufactured by construction (simulated inputs, controlled noise, planted dependence).
-- **Remove-and-classify** — occlude features in the order an attribution ranking dictates and
-  measure the accuracy drop relative to a random-occlusion baseline; usually summarized by area
-  under the curve, lower meaning the ranking tracked true importance.
+  fully understandable. Methods sit on a frontier between the two. So no method is "correct by
+  construction".
+- **Ground-truth explanation** — does not exist in general. Where a ground truth is needed, that
+  ground truth comes from a construction: simulated inputs, controlled noise, or a planted dependence.
+- **Remove-and-classify** — occlude features in the order that an attribution ranking dictates, and
+  measure the accuracy drop relative to a random-occlusion baseline. The summary is usually the area
+  under that curve. A lower area means that the ranking tracked the true importance.
 
 ## 5. Procedure
 
 **Core**
 
-1. Fix the end goal first and write it as a falsifiable question: debugging ("will this tell me what
-   to change?"), understanding ("can a human predict the model's behavior from it?"), or
-   trust/approval ("does it change the decision-maker's accuracy or calibration?"). Attribution is
-   an intermediate step; a method may be sound and still not serve the goal.
-2. Choose the attribution target (input features / training samples / parameters) and the
-   granularity. Prefer a *partition* of the input (perceptual groups or semantic parts) over a set of
-   overlapping instance masks, so that every region is accounted for exactly once.
-3. Verify model dependence before interpreting anything: compute the map for the randomly
-   initialised control. The requirement is not that the map be informationless — a random network can
-   still carry structure — but that the map change visibly when the model changes.
-4. Run the label-randomization check: a model trained on randomized labels must not yield maps that
-   highlight the features discriminative for the original task. Score it quantitatively (rank
-   correlation between the true-label and random-label maps), not by eye.
-5. Run an ordering check on a subset where the true dependence is known by construction: simulated
-   inputs with a planted, controllable cue (for example a secondary signal whose agreement rate with
-   the label you set), or the `SOP-03` counterfactual cases. The method must attribute to the planted
-   cue at high agreement and must *stop* doing so when the planted cue becomes uninformative.
-6. Run remove-and-classify with a stated occlusion operator and a random-occlusion baseline; report
-   the curve and its area. Run the occlusion-informativeness check: does the filling value itself
-   carry class information (see §8)?
-7. Compare across at least two methods of different linearization type. Where they disagree, do not
-   average them into a conclusion — record the disagreement as the finding and check which one passed
-   steps 3-5.
-8. Decide and log: usable-as-evidence for this goal / usable-with-caveats / not usable.
+1. Fix the end goal first. Write that goal as a falsifiable question:
+   - debugging: "will this tell me what to change?"
+   - understanding: "can a human predict the model's behavior from it?"
+   - trust or approval: "does it change the decision-maker's accuracy or calibration?"
+   Attribution is an intermediate step. A method may be sound and still not serve the goal.
+2. Choose the attribution target (input features / training samples / parameters) and the granularity.
+   Prefer a *partition* of the input (perceptual groups or semantic parts) over a set of overlapping
+   instance masks. That choice accounts for every region exactly once.
+3. Verify model dependence before you interpret anything. Compute the map for the randomly initialised
+   control. The requirement is not that the map carry no information. A random network can still carry
+   structure. The requirement is that the map change visibly when the model changes.
+4. Run the label-randomization check. A model trained on randomized labels must not yield maps that
+   highlight the features discriminative for the original task. Score that check quantitatively, not
+   by eye. The score is the rank correlation between the true-label maps and the random-label maps.
+5. Run an ordering check on a subset where the true dependence is known by construction. Use either of
+   the two options below:
+   - simulated inputs with a planted, controllable cue (for example a secondary signal whose
+     agreement rate with the label you set)
+   - the `SOP-03` counterfactual cases
+   The method must attribute to the planted cue at high agreement. The method must *stop* that
+   attribution when the planted cue becomes uninformative.
+6. Occlude the features in the order that the attribution ranking dictates. That measurement is the
+   remove-and-classify check defined in §4. Use both the stated occlusion operator and the
+   random-occlusion baseline. Report the curve, and report the area under that curve. Run the
+   occlusion-informativeness check. That check asks whether the filling value itself carries class
+   information (see §8).
+7. Compare across at least two methods of different linearization type. Where the two methods
+   disagree, do not average the two methods into a conclusion. Record the disagreement as the finding.
+   Check which of the two methods passed steps 3-5.
+8. Log one of these three usability decisions: usable-as-evidence for this goal / usable-with-caveats /
+   not usable.
 
-**Extended** — add when the explanation is a deliverable, or when human action depends on it:
+**Extended** — add when the explanation is a deliverable, or when human action depends on that
+explanation:
 
-9. Add a human-grounded study: participants judge explanation quality or predict model behavior with
-   and without the explanation; report the effect size and the task.
+9. Add a human-grounded study. In that study, participants judge explanation quality, or predict model
+   behavior, with and without the explanation. Report the effect size and the task.
 10. Add an application-grounded study on the real task (debugging throughput, expert decision
-    accuracy), accepting that this is the most expensive and the most aligned option.
-11. For training-sample attribution, evaluate against the end goal (find suspicious or mislabeled
-    training items and check retrieval quality with ranking metrics) rather than only against an
-    expensive retraining approximation; state how many mislabels the setup assumes and whether
-    systematic mislabeling is excluded.
-12. For concept-level or latent-space methods, verify the separability assumption the method needs
-    (a concept direction that a linear probe can recover) and report the failure when it does not
-    hold, for example with architectures whose latent geometry the method was not designed for.
-13. Report a cost line: explanations differ by orders of magnitude in added compute and in
-    human review time.
+    accuracy). That study is the most expensive option. That study is also the option most aligned
+    with the goal.
+11. For training-sample attribution, evaluate the method against the end goal. That end goal is to
+    find suspicious or mislabeled training items, and to check retrieval quality with ranking metrics.
+    Do not evaluate only against an expensive retraining approximation. State how many mislabels the
+    setup assumes. State whether the setup excludes systematic mislabeling.
+12. For a concept-level or latent-space method, verify the separability assumption that the method
+    needs. That assumption is a concept direction that a linear probe can recover. Report the failure
+    when the assumption does not hold. Such a failure arises, for example, with architectures whose
+    latent geometry the method was not designed for.
+13. Report a cost line. Explanations differ by orders of magnitude in added compute and in human
+    review time.
 
 ## 6. Mandatory checks
 
@@ -115,20 +133,20 @@ before any conclusion drawn from it.
 - [ ] **No plausibility criterion**: the result line may not rest on "the map looks reasonable".
 - [ ] **Axiom language bounded**: satisfying an axiom is reported as a design property, never as
       proof of soundness or usefulness.
-- [ ] **Goal match**: the evaluation type (functional / human / application grounded) is the one the
-      stated end goal requires; a functional evaluation may not be presented as evidence of
-      human understanding.
+- [ ] **Goal match**: the evaluation type (functional / human / application grounded) is the one that
+      the stated end goal requires. Do not present a functional evaluation as evidence of human
+      understanding.
 - [ ] **Contract boundary respected**: no claim moves from sanity, ordering or usefulness
-      (contracts (i)-(iii)) to causal feature use in the data (contract (iv)) without naming the
-      identification design in `SOP-03` that would license it.
+      (contracts (i)-(iii)) to causal feature use in the data (contract (iv)). A claim that makes that
+      move must name the identification design in `SOP-03` that would license that move.
 
 ## 7. Decision or stop conditions
 
 - **Stop: the instrument is not model-dependent.** If the map barely changes across models, or is
-  essentially an edge/texture detector, it cannot be used as evidence about *this* model.
-- **Stop: no ground truth reachable.** If neither simulated inputs nor a planted dependence is
-  available for your modality, report the attribution as descriptive only and route the decision
-  through counterfactual evaluation (`SOP-03`) instead.
+  essentially an edge/texture detector, the map may not serve as evidence about *this* model.
+- **Stop: no ground truth is reachable.** If neither simulated inputs nor a planted dependence is
+  available for your modality, report the attribution as descriptive only. Route the decision through
+  counterfactual evaluation (`SOP-03`) instead.
 - **Reclassify the claim** from "explains the model" to "explains the prediction pipeline" if only
   functional-grounded evidence exists.
 - **Do not ship an explanation-based assurance** if the human-grounded study shows no effect on the
@@ -139,17 +157,17 @@ before any conclusion drawn from it.
 ## 8. Common methodological failures
 
 - Confirmation bias: grading the explanation against what a human thinks the cause should be.
-- Localization-as-soundness: rewarding maps that cover the object's bounding box even though the
-  model may have decided from background or artifacts.
+- Localization-as-soundness: rewarding maps that cover the object's bounding box. The model may
+  instead decide from background or from artifacts.
 - Cherry-picked qualitative figures standing in for a measurement.
-- Reading a completeness axiom as a soundness proof.
-- Occluding with a constant value that is itself class-informative, so the metric measures the
-  filling artifact rather than importance — and, symmetrically, treating random occlusion as the
-  worst possible baseline when it can add confusing structure.
-- Averaging the four remove-and-classify variants into one number without reporting that the variants
-  can disagree.
-- Reusing an attribution method beyond the architecture family it was defined for.
-- Presenting a functionally-grounded proxy result as an answer to a human-understanding question.
+- A completeness axiom treated as a soundness proof.
+- A metric that occludes with a constant value which is itself class-informative measures the filling
+  artifact rather than the importance. And, symmetrically, a report treats random occlusion as the
+  worst possible baseline, even though random occlusion can add confusing structure.
+- The four remove-and-classify variants are averaged into one number, and the report does not say that
+  those variants can disagree.
+- An attribution method is reused beyond the architecture family for which that method was defined.
+- A functionally-grounded proxy result is presented as an answer to a human-understanding question.
 
 ## 9. Required outputs
 
@@ -163,10 +181,17 @@ before any conclusion drawn from it.
 
 ## 10. Minimum reporting requirements
 
-For every explanation-based claim, report: which method, which target and granularity, which model
-controls it passed, which occlusion operator the metric used, the human/application evidence if the
-claim is about understanding or trust, and the added cost. If the map is offered as evidence for a
-fix, state what changed in the model afterwards and how it was measured.
+For every explanation-based claim, report these items:
+
+- which method produced the claim
+- which target and granularity the method used
+- which model controls the method passed
+- which occlusion operator the metric used
+- the human or application evidence, if the claim is about understanding or trust
+- the added cost
+
+If the map is offered as evidence for a fix, state what changed in the model afterwards. State also how
+that change was measured.
 
 ## 11. Links to relevant Benchmarks
 
@@ -181,22 +206,29 @@ fix, state what changed in the model afterwards and how it was measured.
 
 ## 12. Source traceability
 
-Explanation/interpretability/explainability/justification and attribution targets: §3.1-§3.1.2,
-Definitions 3.1-3.6 (pp. 117-118). Properties of good explanations: §3.3.1 (pp. 122-123).
-Taxonomy and the soundness–explainability trade-off: §3.4-§3.4.1 (pp. 124-127); linearization types
-§3.6.6 (pp. 176-177); no attribution method is fully sound and fully explainable: §3.5.3 (p. 135).
-Why empirical evaluation is required: §3.7.1 (p. 178). Evaluation types and their cost ladder:
-§3.7.2 (pp. 178-179). Confirmation bias and the rejection of qualitative-only evidence: §3.7.3,
-Definition 3.13 (pp. 179-181); the localization fallacy and "we should not evaluate according to our
-expectations": §3.7.3 (p. 181). Necessary conditions and their relaxation: §3.7.4 (pp. 181-182).
-Sanity checks (cascading randomization, label randomization, rank correlation) and the explicit
-conflict with completeness axioms: §3.7.5 (pp. 182-185). Simulated inputs with controllable ground
-truth: §3.7.6 (pp. 185-186). Remove-and-classify and its variants: §3.7.7, Definition 3.14
-(pp. 186-187). Missingness bias and the occlusion-operator caveat: §3.7.8 (pp. 187-188). End goals
-and the absence of a demonstrated debugging use case: §3.8-§3.8.1 (pp. 190-193). Human-in-the-loop
-evaluation: §3.8.2, Definition 3.15 (pp. 189-193). Feature granularity and partition preference:
-§3.5.1, Definition 3.7 (pp. 128-130). Method-specific assumptions (concept separability,
-architecture transfer): §3.5.13, §3.5.14, §3.5.16-§3.5.19 (pp. 153-174). Training-sample attribution
-and its end-goal evaluation with self-influence: §3.11.1, §3.12.1-§3.12.2, Definition 3.16
-(pp. 203, 214-217). Axioms are not necessities: §3.5.10 (p. 150). Control-first ordering and the
-usability log are repository conventions.
+- Explanation/interpretability/explainability/justification and attribution targets: §3.1-§3.1.2,
+  Definitions 3.1-3.6 (pp. 117-118).
+- Properties of good explanations: §3.3.1 (pp. 122-123).
+- Taxonomy and the soundness–explainability trade-off: §3.4-§3.4.1 (pp. 124-127).
+- Linearization types: §3.6.6 (pp. 176-177).
+- No attribution method is fully sound and fully explainable: §3.5.3 (p. 135).
+- Why empirical evaluation is required: §3.7.1 (p. 178).
+- Evaluation types and their cost ladder: §3.7.2 (pp. 178-179).
+- Confirmation bias and the rejection of qualitative-only evidence: §3.7.3, Definition 3.13
+  (pp. 179-181).
+- The localization fallacy and "we should not evaluate according to our expectations": §3.7.3 (p. 181).
+- Necessary conditions and their relaxation: §3.7.4 (pp. 181-182).
+- Sanity checks (cascading randomization, label randomization, rank correlation) and the explicit
+  conflict with completeness axioms: §3.7.5 (pp. 182-185).
+- Simulated inputs with controllable ground truth: §3.7.6 (pp. 185-186).
+- Remove-and-classify and its variants: §3.7.7, Definition 3.14 (pp. 186-187).
+- Missingness bias and the occlusion-operator caveat: §3.7.8 (pp. 187-188).
+- End goals and the absence of a demonstrated debugging use case: §3.8-§3.8.1 (pp. 190-193).
+- Human-in-the-loop evaluation: §3.8.2, Definition 3.15 (pp. 189-193).
+- Feature granularity and partition preference: §3.5.1, Definition 3.7 (pp. 128-130).
+- Method-specific assumptions (concept separability, architecture transfer): §3.5.13, §3.5.14,
+  §3.5.16-§3.5.19 (pp. 153-174).
+- Training-sample attribution and its end-goal evaluation with self-influence: §3.11.1,
+  §3.12.1-§3.12.2, Definition 3.16 (pp. 203, 214-217).
+- Axioms are not necessities: §3.5.10 (p. 150).
+- The control-first ordering and the usability log are repository conventions.

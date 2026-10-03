@@ -5,18 +5,19 @@ C10 gaming under attack, C14 cost
 
 ## 1. Purpose
 
-Measure what happens to the model under an explicitly bounded worst case, and make sure the number
-you report describes the model rather than the failure of your attack. Worst-case evaluation is the
-only place where a *guarantee* is on the table, and also the place where evaluation is most easily
-fooled into reporting one that does not exist.
+Measure what happens to the model under an explicitly bounded worst case. Make sure the number you
+report describes the model rather than the failure of your attack. Worst-case evaluation is the only
+place where a *guarantee* is on the table. Worst-case evaluation is also the place most easily fooled
+into reporting a guarantee that does not exist.
 
 ## 2. When to use
 
-- Whenever the deployment claim is adversarial, or the environment could be actively shaped to make
-  the model fail (camouflage, spoofed inputs, manipulation of the acquisition path).
-- When evaluating a defense, including a preprocessing or randomization "defense".
-- When a robustness number from the literature is being used to justify a choice.
-- When semantic perturbations (corruptions, viewpoint, style, geometry) must be bounded even though
+- Whenever the deployment claim is adversarial.
+- Whenever there is a possibility of active shaping of the environment to make the model fail
+  (camouflage, spoofed inputs, manipulation of the acquisition path).
+- When you evaluate a defense, including a preprocessing or randomization "defense".
+- When a robustness number from the literature is used to justify a choice.
+- When semantic perturbations (corruptions, viewpoint, style, geometry) require a bound, even though
   no adversary is assumed.
 
 ## 3. Inputs / prerequisites
@@ -25,11 +26,11 @@ fooled into reporting one that does not exist.
   probabilities only, or labels only (black-box).
 - A baseline attack implementation with a shared code path for all evaluated models (see
   [`SOP-08`](SOP-08-report-evidence-and-validity-boundaries.md) on shared metric code).
-- Compute allowance: adversarial evaluation multiplies forward/backward passes per sample; budget it
-  before starting.
-- For the certification branch: the inputs the *chosen* bound requires — the source's construction
-  needs a loss model and architecture its relaxation can carry, which is a condition of that method
-  rather than of certification in general.
+- Compute allowance. Adversarial evaluation multiplies the forward/backward passes per sample. Set the
+  budget before you start.
+- For the certification branch: the inputs that the *chosen* bound requires. The source's construction
+  needs a loss model and an architecture that its relaxation can carry. That condition belongs to that
+  method, not to certification in general.
 
 ## 4. Definitions needed for execution
 
@@ -38,139 +39,154 @@ fooled into reporting one that does not exist.
   **knowledge** (what the adversary knows about the model). Leaving any one unspecified means the
   reported robustness has no referent.
 - **Worst-case framing** — the target quantity is model performance under the worst allowed
-  perturbation inside the declared strategy space. An empirical attack only probes this quantity and
-  may miss stronger failures; a valid certificate can provide a provable guarantee under its own
-  assumptions. The three line up in one direction, and only when the same model, test set, threat
-  model and a correctly implemented attack and bound are all in play:
-  **certified robust accuracy ≤ exact finite-sample robust accuracy ≤ empirical attacked accuracy under attack suite A**. Saying "this attack left 62 % unbroken"
-  therefore does not bound the worst case from below, and a certificate at 40 % does not say the true
-  worst case is 40 % — it says no failure exists below that figure inside its assumptions. The
-  ordering is meaningless across different threat models, samples or definitions, so never compare a
-  certificate under one norm bound with an attack under another. The worst-case target may also be
-  unrealistically pessimistic relative to the true deployment distribution.
+  perturbation inside the declared strategy space. An empirical attack only probes this quantity, and
+  the attack may miss stronger failures. A valid certificate can provide a provable guarantee under its
+  own assumptions. The three quantities line up in one direction. That line-up needs the same model,
+  the same test set and the same threat model. That line-up also needs a correctly implemented attack
+  and a correctly implemented bound. The line-up is then **certified robust accuracy ≤ exact
+  finite-sample robust accuracy ≤ empirical attacked accuracy under attack suite A**. The statement
+  "this attack left 62 % unbroken" therefore does not bound the worst case from below. A certificate at
+  40 % does not say that the true worst case is 40 %. The certificate says only that no failure exists
+  below that figure inside its assumptions. The ordering is meaningless across different threat models,
+  samples or definitions. Never compare a certificate under one norm bound with an attack under another
+  norm bound. The worst-case target may also be unrealistically pessimistic relative to the
+  true deployment distribution.
 - **ε** — the radius bound of the strategy space, always norm-qualified (`ℓ∞`, `ℓ2`, or a total
   variation budget for flow-style transforms).
 - **Gradient masking (obfuscated gradients)** — a defense that breaks the gradient path, so a
   gradient-based attack reports safety that is not there. Three mechanisms: shattering, stochasticity,
   exploding/vanishing gradients.
-- **Certified evaluation** — establishes a provable robustness guarantee within a specified
-  threat model under the assumptions of the chosen certificate. The source illustrates one
-  relaxation-based route through first-order, LP, and SDP bounds; that is an example of certification,
-  not the definition of the field.
-- **Empirical attack evaluation** — attempts to find violating inputs and therefore provides
-  evidence about robustness, not a proof that the worst case has been solved. A single gradient step
-  is a weak diagnostic in the source's setting; iterative projected attacks are stronger references
-  there, but adequacy depends on the threat model, the defense, and whether the attack is adaptive.
+- **Certified evaluation** — establishes a provable robustness guarantee within a specified threat
+  model under the assumptions of the chosen certificate. The source illustrates one relaxation-based
+  route through the first-order, LP and SDP bounds. That route is an example of certification, not the
+  definition of the field.
+- **Empirical attack evaluation** — attempts to find violating inputs, and therefore gives evidence
+  about robustness. The result is not a proof that the attack found the worst case. A single gradient
+  step is a weak diagnostic in the source's setting. Iterative projected attacks are stronger
+  references there. Adequacy still depends on the threat model, the defense, and whether the attack is
+  adaptive.
 
 ## 5. Procedure
 
 **Core**
 
 1. Write the threat model as three sentences: goal, strategy space with norm and radius, knowledge.
-   Re-read it against the deployment scenario from
-   [`SOP-01`](SOP-01-specify-deployment-setting.md): if the strategy space does not contain the
-   changes you actually expect, the evaluation will answer a different question.
-2. Fix ε early, keep it small, and keep it *identical across all methods compared*; record the norm
-   it is expressed in. Below a visibility threshold the perturbations stop being humanly meaningful,
-   so also record whether the perturbed samples remain plausible.
-3. Run an attack suite appropriate to the declared threat model, reporting each component
-   separately:
-   - a single-step attack as a fast sensitivity diagnostic where applicable;
-   - a multi-step projected attack as a reference for gradient-following norm-bounded settings, with
-     step size, iteration count, restarts, projection, clipping, and loss reported;
-   - an adaptive attack against the actual defense mechanism and full deployed pipeline;
-   - complementary or targeted variants when the threat model makes them relevant.
+   Re-read the threat model against the deployment scenario from
+   [`SOP-01`](SOP-01-specify-deployment-setting.md). If the strategy space does not contain the changes
+   you actually expect, the evaluation answers a different question.
+2. Fix the value of ε early. Keep the value of ε small. Record the norm in which ε is expressed. Keep ε
+   *identical across all methods compared*. Perturbations below a visibility threshold stop being
+   humanly meaningful. Also record whether the perturbed samples remain plausible.
+3. Run the attack suite that is appropriate to the declared threat model. Report each component
+   separately. For the multi-step projected attack, report step size, iteration count, restarts,
+   projection, clipping, and loss. Include these four components:
+   - a single-step attack, as a fast sensitivity diagnostic where applicable
+   - a multi-step projected attack, as a reference for gradient-following norm-bounded settings
+   - an adaptive attack against the actual defense mechanism and against the full deployed pipeline
+   - complementary or targeted variants, when the threat model makes those variants relevant
 4. If any part of the system is non-gradient-friendly (cropping, resizing, quantization,
-   randomization), attack the **joint pipeline** rather than the differentiable core: compose the
-   transforms, use a straight-through estimator for quantizing steps, and average gradients over
-   sampled transforms when a single sampled gradient is too noisy to optimize.
-5. For black-box settings, state the access level and count the queries: an estimation-of-gradient
-   attack pays a per-coordinate cost and may additionally require logits rather than labels.
-6. Report robustness as a curve or matrix, not a scalar: accuracy versus ε, and the
-   training-condition × evaluation-condition matrix, so transferability gaps become visible.
+   randomization), attack the **joint pipeline** rather than the differentiable core. Attack that
+   pipeline in these three ways:
+   - Compose the transforms.
+   - Use a straight-through estimator for quantizing steps.
+   - Average the gradients over sampled transforms when a single sampled gradient is too noisy to
+     optimize.
+5. In a black-box setting, state the access level. Count the queries that the attack makes. An
+   estimation-of-gradient attack pays a per-coordinate cost. That attack may also require logits
+   rather than labels.
+6. Report robustness as a curve or a matrix, not as a scalar. Report accuracy versus ε, and the
+   training-condition × evaluation-condition matrix. That matrix makes transferability gaps visible.
 7. Record the compute ledger: passes per training step, number of epochs added, capacity change, and
    inference overhead (which for attack-time training is typically zero at inference).
 8. Run the masking checks in §6 before believing any high robust accuracy.
 
 **Extended** — add for publication-grade robustness claims or safety-relevant deployment:
 
-9. Add the certification branch where the *chosen* certificate's assumptions admit your model and
-   task; report which relaxation was used, what assumptions it needs, and how loose it may be. The
-   source demonstrates its bound on a shallow network and a binary task — record that as the scope of
-   the method described there, and state the scope of whichever method you actually used instead of
-   inheriting the first as a field limit. A post-hoc certificate can be arbitrarily loose, and a loss
-   trained with a plain classification objective can inflate the quantity being bounded — if you
-   certify, train for the bound.
-10. Add a semantic-stress branch for the non-adversarial case: corruptions and geometry/style
-    transforms with the same reporting discipline (severity sweep, not a single point).
-11. Add a plausibility filter to the strategy space where the deployment only ever sees realistic
-    inputs, and report both the pessimistic and the realistic variant.
-12. Add a defense-progress report: for each defense, the attack that broke it, or an explicit
-    "not broken by X, Y, Z at configuration C".
+9. Add the certification branch where the *chosen* certificate's assumptions admit your model and task.
+   Report which relaxation you used. Report the assumptions that relaxation needs. Report how loose the
+   resulting bound may be. The source states its construction for a shallow network and a binary task.
+   Record that fact as the scope of the method described there. State the scope of whichever method you
+   actually used. Do not inherit the source's scope as a field limit. A post-hoc certificate can
+   be arbitrarily loose. A loss trained with a plain classification objective can inflate the quantity
+   that the certificate bounds. If you certify, train for the bound.
+10. Add a semantic-stress branch for the non-adversarial case. Use corruptions and geometry/style
+    transforms there. Keep the same reporting discipline: a severity sweep, not a single point.
+11. Add a plausibility filter to the strategy space when the deployment only ever sees realistic
+    inputs. Report both the pessimistic variant and the realistic variant.
+12. Add a defense-progress report. For each defense, name the attack that broke that defense. Or record
+    the explicit statement "not broken by X, Y, Z at configuration C".
 
 ## 6. Mandatory checks
 
-- [ ] **Three-part threat model present**; no field implicit.
-- [ ] **Strategy-space/goal alignment**: the declared space contains the perturbations the goal
-      calls worst; if the goal is semantic and the space is a pixel ball, say so in the result line.
+- [ ] **Three-part threat model present**, with no field left implicit.
+- [ ] **Strategy-space/goal alignment**: the declared space contains the perturbations that the goal
+      calls worst. If the goal is semantic and the space is a pixel ball, say so in the result line.
 - [ ] **Masking check**: robust accuracy that rises when the attack is *weakened* or when gradients
       are made unavailable is an artifact. Re-run the joint-pipeline attack (step 4) and compare.
-- [ ] **Attack adequacy argued, not counted**: the attack family matches the declared threat model
-      and the defense mechanism; against a defense, the attack is **adaptive** (it is run against the
-      full deployed pipeline, with the defense's own parameters known to it); complementary families
-      are run where one could be blind; and the strength claim is supported by the configuration —
-      restarts, step count, loss form, gradient handling — not by iteration count alone. Reporting the
-      strongest affordable PGD is a useful floor for one threat model, not a sufficient adversarial
-      evaluation in general.
-- [ ] **Strongest-attack check**: the reported attack configuration is at least as strong as the one
-      used to establish the baseline being beaten; iteration count is not silently reduced.
+- [ ] **Attack adequacy argued, not counted**: check these four points.
+
+    - The attack family matches the declared threat model and the defense mechanism.
+    - Against a defense, the attack is **adaptive**. The attack runs against the full deployed
+      pipeline, and the defense's own parameters are known to the attack.
+    - Complementary families are run where one family could be blind.
+    - The strength claim rests on the configuration — restarts, step count, loss form, gradient
+      handling — and not on the iteration count alone.
+
+    Reporting the strongest affordable PGD is a useful floor for one threat model. That report is not
+    a sufficient adversarial evaluation in general.
+- [ ] **Strongest-attack check**: the reported attack configuration is at least as strong as the
+      configuration that established the baseline being beaten. Do not silently reduce the iteration
+      count.
 - [ ] **ε parity** across all methods, including prior work you quote.
 - [ ] **Query accounting** present for every black-box number.
-- [ ] **Guarantee wording discipline**: "no attack found within configuration C" is never written as
-      "robust"; only a certificate supports the existential claim, and only inside its assumptions.
-- [ ] **Transform-defense check, conditioned on the defense being claimed**: state the training-time
-      and inference-time transformations separately, then test whether the *definition* of the defense
-      requires train-time exposure — some do, several do not. What is mandatory is evaluating the full
-      deployed pipeline adaptively and checking for masking or broken-gradient effects, not having
-      trained with the transform.
+- [ ] **Guarantee wording discipline**: the phrase "no attack found within configuration C" never
+      becomes the word "robust". Only a certificate supports the existential claim, and only inside
+      that certificate's assumptions.
+- [ ] **Transform-defense check, conditioned on a defense that is claimed**: state the training-time
+      transformation and the inference-time transformation separately. Then test whether the
+      *definition* of that defense requires train-time exposure. Some definitions do. Several
+      definitions do not. What is mandatory is the adaptive evaluation of the full deployed pipeline,
+      and a check for masking or broken-gradient effects. Training with the transform is not mandatory.
 
 ## 7. Decision or stop conditions
 
 - **Stop and rebuild the evaluation** if masking is suspected (high apparent robustness plus a
-  benign-looking PGD output on samples the model should fail on). The model being safe is not
-  equivalent to no gradient-based attack being able to find a failure.
-- **Drop that certificate** if the model violates an assumption of the specific relaxation you
-  planned to use. The source's construction is stated for a simple architecture and a binary task,
-  and that is a property of **that method**, not a limit on certified robustness as a field — so the
-  correct stop is "no guarantee from this bound", never "certification is impossible for my model".
-  Before writing either sentence, list the certificate families you considered and why each was
-  admitted or rejected; families outside this source may be used, but they must be cited as their own
-  methods with their own assumptions and marked as not source-derived here.
-- **Reclassify the claim** from adversarial robustness to corruption robustness if the strategy
-  space was changed to semantic transforms — different capability, different comparison class. The
-  two may share a reporting table, never a headline number: a model can be robust to one and
-  defenseless against the other, and an ε-ball result says nothing about natural distribution shift.
+  benign-looking PGD output on samples the model should fail on). The safety of the model is not
+  equivalent to the inability of a gradient-based attack to find a failure.
+- **Drop that certificate** if the model violates an assumption of the specific relaxation you planned
+  to use. The source states its construction for a simple architecture and a binary task. That
+  limitation is a property of **that method**, not a limit on certified robustness as a field. So the
+  correct stop is "no guarantee from this bound". That stop is never "certification is impossible for
+  my model". Before you write either sentence, list the certificate families you considered. Give why
+  you admitted or rejected each family. You may use families outside this source. Cite such a family as
+  its own method, with its own assumptions, and mark that family as not source-derived here.
+- **Reclassify the claim** from adversarial robustness to corruption robustness if the strategy space
+  changes to semantic transforms. That reclassification changes the capability claim. It also changes
+  the comparison class. The two claims may share a reporting table. The two claims never share a
+  headline number. A model can be robust to one of those classes and defenseless against the other
+  class. An ε-ball result says nothing about natural distribution shift.
 - **Accept a null result** where the only configurations that survive are ones the adversary cannot
   afford: state the cost asymmetry rather than the margin.
 
 ## 8. Common methodological failures
 
-- Reporting single-step-attack accuracy as "adversarial robustness".
-- Leaving the norm implicit (a number without `ℓ∞` or `ℓ2` cannot be compared).
-- Changing ε between your method and the baseline.
-- Defending by non-differentiable preprocessing and evaluating with a naive gradient attack.
-- Presenting a defense whose theoretical optimum is a full failure, justified by implementation
-  imperfection.
-- Combining a defense with adversarial training and reporting the combination under the defense's
-  own name.
-- Certifying on a relaxed bound that is loose in exactly the region of interest, without checking
-  looseness.
-- Ignoring the cost of the robustness you are claiming, or transferring it to inference time in the
-  narrative.
-- Dating nothing. A robustness or safety figure is an observation about one model revision against one
-  attack family at one time; without the revision and the attack date the same claim can be true in the
-  report and false in the deployment, and a defense that was already broken when the measurement was
-  taken cannot be repaired by quoting it.
+- A report presents single-step-attack accuracy as "adversarial robustness".
+- A report leaves the norm implicit. A number without `ℓ∞` or `ℓ2` is not comparable.
+- The evaluation changes ε between your method and the baseline.
+- The report defends with non-differentiable preprocessing. The evaluation then uses a naive gradient
+  attack.
+- The report presents a defense whose theoretical optimum is a full failure. Implementation
+  imperfection is then given as the justification.
+- The report combines a defense with adversarial training. The combination then appears under the
+  defense's own name.
+- The certification uses a relaxed bound that is loose in exactly the region of interest. The looseness
+  is not checked.
+- The narrative ignores the cost of the claimed robustness. Or the narrative transfers that cost to
+  inference time.
+- Dating nothing. A robustness figure or a safety figure is an observation about one model revision,
+  against one attack family, at one time. Without the revision date and the attack date, the same claim
+  can be true in the report and false in the deployment. A defense that was already broken when the
+  measurement was taken is not repaired by a quotation of the old figure.
 
 ## 9. Required outputs
 
@@ -179,13 +195,20 @@ fooled into reporting one that does not exist.
 - Robustness curves (accuracy versus ε) and the train × evaluation-condition matrix.
 - Query-cost record for black-box settings.
 - Masking-check outcome, pass or fail, with the evidence.
-- Compute ledger; certificate statement with its assumptions if the certification branch ran.
+- Compute ledger, and the certificate statement with its assumptions if the certification branch ran.
 
 ## 10. Minimum reporting requirements
 
-Every robustness number must carry: dataset, norm, ε, attack used and its configuration, whether the
-attack was run end-to-end through preprocessing, and the compute cost. Comparative tables must keep
-the distance column norm-qualified and must mark which rows combine adversarial training.
+Every robustness number must carry these items:
+
+- the dataset
+- the norm, and the value of ε
+- the attack used, and that attack's configuration
+- whether the attack ran end-to-end through preprocessing
+- the compute cost
+
+Comparative tables must keep the distance column norm-qualified. The tables must also mark which rows
+combine adversarial training.
 
 ## 11. Links to relevant Benchmarks
 
@@ -197,36 +220,49 @@ the distance column norm-qualified and must mark which rows combine adversarial 
   confidence score notices stressed inputs.
 - [`BM-08`](../../Benchmark/Trustworthy-ML-2023/BM-08-evaluation-integrity-audit.md) — audits ε
   parity, configuration reporting, and guarantee wording.
-- [`BM-09`](../../Benchmark/Trustworthy-ML-2023/BM-09-disclosure-of-training-data-and-context.md) —
-  reuses this SOP's access-level ladder and query accounting for a different adversary goal: disclosure
-  rather than misbehavior.
+- [`BM-09`](../../Benchmark/Trustworthy-ML-2023/BM-09-disclosure-of-training-data-and-context.md)
+  reuses this SOP's access-level ladder and its query accounting. That reuse serves a different
+  adversary goal, which is disclosure rather than misbehavior.
 
 ## 12. Source traceability
 
-Educated-guess versus worst-case framing and its pessimism caveat: §2.15 (pp. 86-87). Threat-model
-parts and the "missing critical ingredients" statement: §2.15.1, Definitions 2.36-2.40
-(pp. 87-88). Attack formulations for the single-step and projected attacks, non-convexity caveat,
-and optimiser dependence: §2.15.2-§2.15.3 (pp. 89-91). Strength ordering and the ε policy:
-§2.15.4 (pp. 91-92). Strategy spaces beyond pixel norms and the total-variation definition:
-§2.15.5-§2.15.7, Definition 2.41 (pp. 92-97). White-box versus black-box, substitute models and
-zeroth-order access requirements with query cost: §2.15.8-§2.15.10, Definitions 2.42-2.43
-(pp. 93-100). Adversarial-training objective, cost ledger, and transferability observation:
-§2.15.11 (pp. 101-102). Gradient masking, its three mechanisms, the "7 of 9 defenses" evidence, the
-joint-pipeline / straight-through / expectation-over-transforms progression, and the bit-depth and
-estimator definitions: §2.15.12, Definitions 2.44-2.46 (pp. 102-107). Effectiveness and limits of
-adversarial training: §2.15.13 (pp. 107-108). Transform-based defense applied at both train and
-inference: §2.15.14 (pp. 108-110). Certification, the bound chain, looseness of post-hoc bounds and
-the joint training objective, and the two-layer/binary scope: §2.15.15, Definition 2.47
-(pp. 111-113). Reporting table conventions with norm-qualified distance columns and footnoted
-combined defenses: Table 2.8 (p. 103). The attack-ladder step numbering and the guarantee-wording
-rule are repository conventions built on the masking discussion above.
+- Educated-guess versus worst-case framing and its pessimism caveat: §2.15 (pp. 86-87).
+- Threat-model parts and the "missing critical ingredients" statement: §2.15.1, Definitions 2.36-2.40
+  (pp. 87-88).
+- Attack formulations for the single-step and projected attacks, non-convexity caveat, and optimiser
+  dependence: §2.15.2-§2.15.3 (pp. 89-91).
+- Strength ordering and the ε policy: §2.15.4 (pp. 91-92).
+- Strategy spaces beyond pixel norms and the total-variation definition: §2.15.5-§2.15.7,
+  Definition 2.41 (pp. 92-97).
+- White-box versus black-box, substitute models and zeroth-order access requirements with query cost:
+  §2.15.8-§2.15.10, Definitions 2.42-2.43 (pp. 93-100).
+- Adversarial-training objective, cost ledger, and transferability observation: §2.15.11
+  (pp. 101-102).
+- Gradient masking and its three mechanisms, and the "7 of 9 defenses" evidence: §2.15.12,
+  Definitions 2.44-2.46 (pp. 102-107).
+- The joint-pipeline / straight-through / expectation-over-transforms progression, and the bit-depth
+  and estimator definitions: §2.15.12 (pp. 102-107).
+- Effectiveness and limits of adversarial training: §2.15.13 (pp. 107-108).
+- Transform-based defense applied at both train and inference: §2.15.14 (pp. 108-110).
+- Certification, the bound chain, looseness of post-hoc bounds and the joint training objective, and
+  the two-layer/binary scope: §2.15.15, Definition 2.47 (pp. 111-113).
+- Reporting table conventions with norm-qualified distance columns and footnoted combined defenses:
+  Table 2.8 (p. 103).
+- The attack-ladder step numbering and the guarantee-wording rule are repository conventions built on
+  the masking discussion above.
 
 **Scope correction.** The two-layer network and binary-task conditions in §2.15.15 belong to the
-construction analyzed there. This SOP reads them as conditions on *that* bound, which is why step 9,
-§6 and §7 require the family considered, its assumptions, and a statement that other certificates were
-or were not applicable. The corresponding requirements — argument-based attack adequacy, adaptive
-attacks against the mechanism, and train-time exposure only where the defense's definition needs it —
-are **synthesized**; the source supplies the masking progression, the attack ladder and the
-train-and-inference transform example, but no general rule of those forms. The ordering in §4,
-`certified ≤ true ≤ empirical`, is likewise ours: it follows from what the two rows are defined to
-measure, and the book reports them separately without lining them up.
+construction analyzed there. This SOP reads those conditions as conditions on *that* bound. That
+reading is why step 9, §6 and §7 require the family considered and its assumptions. Those sections also
+require a statement that other certificates were, or were not, applicable.
+
+The corresponding requirements are **synthesized**:
+
+- argument-based attack adequacy
+- adaptive attacks against the mechanism
+- train-time exposure only where the defense's definition needs that exposure
+
+The source supplies the masking progression, the attack ladder and the train-and-inference transform
+example. The source states no general rule of those forms. The ordering in §4,
+`certified ≤ true ≤ empirical`, is likewise ours. That ordering follows from what the two rows are
+defined to measure. The book reports the two rows separately. The book does not line the two rows up.
