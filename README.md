@@ -89,20 +89,32 @@ The SOP and Benchmark corpus is also published as readable volumes, built from t
 conversion pipeline kept outside Git. Each release names its build branch and commit, so a PDF can always
 be traced back to the markdown it came from.
 
-- **`handbook-v1`** — *Trustworthy ML Handbook*, Vol. 1 SOP and Vol. 2 Benchmark, English and Chinese.
-  Built from `plan/trustworthy-ml-official-updates`. The source book is **CC BY 4.0**, so these volumes are
-  published as attributed adaptations, and each carries the license link and a note that the material was
-  changed.
-- **`deep-learning-handbook-v1`** — *Deep Learning: Procedures and Benchmark Checks*, one combined English
-  volume of 146 pages holding the nine procedures and eleven checks of the Deep Learning lineage, with the
-  2017–2026 update layer marked in place. Built from `plan/deep-learning-modern-update`. **This volume is
-  framed differently, on purpose**: its principal source states no adaptation licence, so it is published as
-  original methodology notes that *cite* their sources — not an authorized adaptation, translation, edition
-  or derivative of any of them, and it reproduces no source text and ships no source PDF. The rights status
-  of every cited work, including the one that could not be accessed at all, is printed inside the volume.
+- **`handbook-v2`** — *Trustworthy ML Handbook*, Vol. 1 SOP and Vol. 2 Benchmark, English, 56 and 55 pages.
+  Built from `plan/deep-learning-modern-update` at `4ca8271`. The English text of both volumes was
+  restructured against ASD-STE100 Issue 9: sentences inside the length limit, one instruction per sentence,
+  the imperative and the condition first in numbered steps, no semicolon in prose, a vertical list where one
+  sentence carried several parallel facts. The controlled dictionary was deliberately not applied, so
+  research vocabulary stays as the field writes it. No claim, citation, table or number changed. The Chinese
+  volumes are not re-issued here; they follow once the restructured English text is confirmed. The source
+  book is **CC BY 4.0**, so these volumes are published as attributed adaptations, and each carries the
+  license link and a note that the material was changed.
+- **`deep-learning-handbook-v2`** — *Deep Learning: Procedures and Benchmark Checks*, one combined English
+  volume, 161 pages, holding the nine procedures and eleven checks of the Deep Learning lineage, with the
+  2017–2026 update layer marked in place. Built from `plan/deep-learning-modern-update` at `4ca8271`, under
+  the same ASD-STE100 sentence rules as `handbook-v2`. **This volume is framed differently, on purpose**:
+  its principal source states no adaptation licence, so it is published as original methodology notes that
+  *cite* their sources — not an authorized adaptation, translation, edition or derivative of any of them,
+  and it reproduces no source text and ships no source PDF. The rights status of every cited work, including
+  the one that could not be accessed at all, is printed inside the volume.
+- **`handbook-v1`** and **`deep-learning-handbook-v1`** — the first editions: 48 and 49 pages in English, 66
+  and 68 in Chinese, and 146 pages for the combined Deep Learning volume. They hold the same content in the
+  pre-restructured English text, and they stay downloadable.
 
-A future volume inherits that rule rather than the wording of the last one: the framing a release uses is
-set by what the source's licence permits, not by how the previous volume was described.
+A future volume inherits two rules rather than the wording of the last one. The framing a release uses is
+set by what the source's licence permits, not by how the previous volume was described. And a reissue gets a
+new tag instead of replacing the old asset, because a reader who cited a page of the first edition must
+still be able to open it. The second edition also renders nested lists correctly: the pipeline's markdown
+parser changed to a CommonMark one, which reads the two- and three-space nesting these files use.
 
 ## Development Principle
 
