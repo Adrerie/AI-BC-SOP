@@ -7,19 +7,25 @@
 
 ## 1. Capability / failure under test
 
-Reconstruction error alone does not establish that a representation is good, and the book says why in two
-directions: with a linear decoder and mean squared error, an undercomplete autoencoder simply recovers the
-**PCA subspace** (§14.1, pp. 511–512; §13.5, p. 509); and if capacity is too large the autoencoder learns the
-**identity** and captures nothing (§14.1, p. 512). The code must reflect the training set's distinctive
-statistical structure rather than acting as an identity function (§14.2, p. 512).
+Reconstruction error alone does not establish that a representation is good. The book gives that reason in
+two directions. With a linear decoder and mean squared error, an undercomplete autoencoder simply recovers the
+**PCA subspace** (§14.1, pp. 511–512; §13.5, p. 509).
 
-The claims under test are the criteria the book actually supplies. **Each arm carries its own control.** PCA
-is the right comparator only where the book itself makes a linear or undercomplete-autoencoder comparison —
-arms a and g — because that is exactly the regime in which the book proves a linear encoder–decoder with mean
-squared error recovers the PCA subspace (§13.5, p. 509; §14.1, pp. 511–512). Outside that regime PCA is not a
-control for the claim being made: manifold sensitivity is judged against orthogonal-direction response,
-contractiveness against the untrained spectrum, the distributed-representation counting argument against the
-book's own non-distributed contrast class, and one-hot against a distributed encoding of the same variable.
+If the capacity is too large, the autoencoder learns the **identity** and captures nothing (§14.1, p. 512).
+The code must reflect the distinctive statistical structure of the training set, rather than act as an identity
+function (§14.2, p. 512).
+
+The claims under test are the criteria the book actually supplies. **Each arm carries its own control.** PCA is
+the right comparator only where the book itself makes a linear or undercomplete-autoencoder comparison, which
+is arms a and g. That is exactly the regime where the book proves the equivalence: a linear encoder–decoder
+with mean squared error recovers the PCA subspace (§13.5, p. 509; §14.1, pp. 511–512).
+
+Outside that regime, PCA is not a control for the claim under test. Each criterion has its own comparator:
+
+- manifold sensitivity, against the orthogonal-direction response
+- contractiveness, against the untrained spectrum
+- the distributed-representation counting argument, against the book's own non-distributed contrast class
+- one-hot, against a distributed encoding of the same variable
 
 | Arm | Claim | Locator |
 | --- | --- | --- |
@@ -36,37 +42,40 @@ book's own non-distributed contrast class, and one-hot against a distributed enc
 
 ## 2. Data and comparison conditions
 
-- **Matched code dimension wherever a code is compared to another code.** This applies to the arms that
-  actually make a code-to-code comparison (a, g, j) — without it the comparison is confounded by capacity. It
-  does not apply to the within-model criteria (c, d, e, f), which compare directions, spectra or two
-  quantities of the same trained encoder, nor to the counting argument (h) or the encoding contrast (i).
-- **PCA control, restricted.** Run the PCA comparison for arms a and g only, at matched dimension. Do not use
-  it as the yardstick for arms c, d, e, f, h, i or j; each of those has the control named below.
-- **Linearity control (arm a).** A linear encoder and decoder trained on reconstruction error, checked against
-  the covariance's principal eigenvectors.
-- **Capacity sweep (arm b).** Code dimension and network capacity swept from undercomplete through
+- **Matched code dimension wherever a code is compared to another code.** That requirement applies to the
+  arms that actually make a code-to-code comparison (a, g, j). Without that requirement, capacity confounds
+  the comparison. The requirement does not apply to the within-model criteria (c, d, e, f). Those criteria
+  compare directions, spectra, or two quantities of the same trained encoder. The requirement also does not
+  apply to the counting argument (h) or to the encoding contrast (i).
+- **PCA control, restricted.** Run the PCA comparison for arms a and g only, at matched dimension. Arms c, d,
+  e, f, h, i and j each have the control named below. PCA is not the yardstick for those arms.
+- **Linearity control (arm a).** Train a linear encoder and a linear decoder on reconstruction error. Check the
+  learned weights against the covariance's principal eigenvectors.
+- **Capacity sweep (arm b).** Sweep the code dimension and the network capacity from undercomplete through
   overcomplete, with and without regularization (sparsity penalty, denoising, contractive penalty). Control:
   the identity function.
-- **Perturbation protocol (arms c, d).** Inputs perturbed along estimated manifold-tangent directions and
-  orthogonally to them, recording the induced change in the code; and the encoder Jacobian's singular-value
-  spectrum recorded per example. Controls: the **orthogonal-direction response** for arm c, and a
-  orthogonal to them. The control is the orthogonal-direction response of the same encoder; no extra representation baseline is required by the book.
-- **Noise-scale sweep (arm e).** Denoising autoencoder trained at decreasing Gaussian noise scales, with the
-  reconstruction error and the contractive penalty compared as the noise becomes small. Control: the two
-  quantities against each other — this is a self-comparison, not a comparison to PCA.
-- **Tying condition (arm f).** Contractive autoencoder with tied and untied decoder weights. Control: the tied
-  variant.
-- **Downstream tasks (arm g).** A linear classifier on the frozen code, and a semantic-similarity retrieval
-  task, both at matched code dimension against PCA — this is the book's own comparison (§14.9, p. 531), so PCA
-  is in scope here.
-- **Representation-family contrast (arm h).** A distributed code versus the book's non-distributed contrast
-  class — k-means, k-nearest-neighbours, decision trees, Gaussian and mixture-of-experts models, kernel
-  machines with local kernels, n-gram models — measured in parameters and in the number of input regions
-  distinguished. Control: the contrast class itself, not a linear subspace method.
-- **Encoding contrast (arm i).** One-hot versus a distributed encoding of the same categorical variable.
-  Control: the one-hot encoding.
-- **Sparse-coding arm (arm j).** An optimization-based encoder against a parametric linear-sigmoid
-  autoencoder at matched dictionary size, including a very-low-labels-per-class condition. Control: the
+- **Perturbation protocol (arms c, d).** Perturb the inputs along the estimated manifold-tangent directions,
+  and perturb the inputs orthogonally to those directions. Record the change that each perturbation induces in
+  the code. Record the singular-value spectrum of the encoder Jacobian, per example. The control for arm c is
+  the **orthogonal-direction response** of the same encoder, and no extra representation baseline is required
+  by the book.
+- **Noise-scale sweep (arm e).** Train a denoising autoencoder at Gaussian noise scales that become smaller in
+  steps. Compare the reconstruction error with the contractive penalty as the noise becomes small. The control
+  is the two quantities against each other. That comparison is a self-comparison, not a comparison to PCA.
+- **Tying condition (arm f).** Train a contractive autoencoder with tied decoder weights, and again with
+  untied decoder weights. Control: the tied variant.
+- **Downstream tasks (arm g).** Run a linear classifier on the frozen code, and run a semantic-similarity
+  retrieval task. Use both at a matched code dimension against PCA. That is the book's own comparison
+  (§14.9, p. 531), so PCA is in scope for arm g.
+- **Representation-family contrast (arm h).** Compare a distributed code with the book's non-distributed
+  contrast class. That class holds k-means, k-nearest-neighbours, decision trees, Gaussian and
+  mixture-of-experts models, kernel machines with local kernels, and n-gram models. Measure each family in
+  parameters, and in the number of input regions that the family distinguishes. The control is the contrast
+  class itself, not a linear subspace method.
+- **Encoding contrast (arm i).** Compare a one-hot encoding with a distributed encoding of the same categorical
+  variable. Control: the one-hot encoding.
+- **Sparse-coding arm (arm j).** Compare an optimization-based encoder with a parametric linear-sigmoid
+  autoencoder at a matched dictionary size. Include a condition with very few labels per class. Control: the
   parametric autoencoder.
 
 ## 3. Baselines
@@ -86,79 +95,84 @@ Each arm has the control that fits its own claim. There is no single baseline fo
 | i | **The one-hot encoding of the same variable** | The claim is that one-hot distance is constant at 2, so no similarity is expressible (§15.1.1, p. 537) |
 | j | **A parametric linear-sigmoid autoencoder at matched dictionary size** | The claimed advantage comes from the encoder being obtained by optimization rather than learned (§13.4, p. 507) |
 
-Using PCA outside arms a and g is a **mis-specified baseline**, not a stricter test: it compares a nonlinear
-manifold or counting claim against a linear subspace method that the book never offered as the comparator for
-it.
+PCA used outside arms a and g is a **mis-specified baseline**, not a stricter test. That choice compares a
+nonlinear manifold claim, or a counting claim, against a linear subspace method. The book never offered that
+linear method as the comparator for those claims.
 
 ## 4. Metrics
 
-1. **Reconstruction error**, reported at matched code dimension and — for the linear and undercomplete
-   configurations of arms a and g — alongside the PCA control. Never reported alone (§14.1, p. 511). For the
-   nonlinear arms the reconstruction number is context, not the verdict.
-2. **Encoder Jacobian singular-value spectrum**: the fraction below 1, and the alignment of the
-   largest-singular-value directions with estimated manifold tangents (arm d).
+1. **Reconstruction error**, reported at a matched code dimension. For the linear and undercomplete
+   configurations of arms a and g, report the reconstruction error alongside the PCA control. Never report the
+   reconstruction error alone (§14.1, p. 511). For the nonlinear arms, the reconstruction number is context,
+   not the verdict.
+2. **Encoder Jacobian singular-value spectrum** (arm d). Report the fraction of singular values below 1.
+   Report the alignment of the largest-singular-value directions with the estimated manifold tangents
+   (arm d).
 3. **Code displacement under perturbation**: ‖Δh‖ along tangent directions versus orthogonal directions
    (arm c).
 4. **Cosine similarity between the learned linear decoder subspace and the covariance's principal
    eigenvectors** (arm a).
 5. **Contractive penalty versus denoising reconstruction error** across the noise-scale sweep (arm e).
 6. **Downstream linear-classifier accuracy and semantic-retrieval quality** on frozen codes (arm g).
-7. **Parameters versus distinguished regions** for the representation-family contrast, and the number of
-   concepts describable by n features with k values (arm h).
+7. **Parameters versus distinguished regions** for the representation-family contrast (arm h). Also report the
+   number of concepts that n features with k values can describe.
 8. **Labels-per-class sensitivity** for arm j.
 
-Arm b is a validity check, not a separate invented metric: an overcomplete unregularized autoencoder can realize the identity map, so low reconstruction error by itself cannot establish representation quality.
+Arm b is a validity check, not a separate invented metric. An overcomplete, unregularized autoencoder can
+realize the identity map. So a low reconstruction error, by itself, cannot establish representation quality.
 
 The book gives no threshold for "most singular values below 1", no acceptable ‖Δh‖ ratio and no target
-downstream margin; these are evaluator choices and must be declared.
+downstream margin. Those three values are evaluator choices, and the evaluator must declare each value.
 
 ## 5. How to interpret failure
 
-- **The learned code does not beat PCA at matched dimension in arm a or g** ⇒ no representational gain has
-  been demonstrated *for that criterion*; the book's control exists precisely to catch this (§13.5, p. 509;
-  §14.9, p. 531). It does **not** by itself refute arms c, d, e, f, h, i or j, which are decided by their own
-  controls — a code can fail to lower reconstruction error and still be tangent-aligned, contractive, or more
+- **The learned code does not beat PCA at matched dimension in arm a or g** ⇒ no representational gain stands
+  *for that criterion*. The book's control exists precisely to catch that outcome (§13.5, p. 509; §14.9,
+  p. 531). That null result does **not** by itself refute arms c, d, e, f, h, i or j. Their own controls decide
+  those arms. A code can fail to lower reconstruction error and still be tangent-aligned, contractive, or more
   statistically efficient per parameter.
 - **Reconstruction error falls while downstream accuracy does not improve** ⇒ reconstruction is not the
-  criterion; the book's own example is a 30-unit bottleneck that beats 30-dimensional PCA on reconstruction
-  *and* on interpretability and class separation (§14.9, p. 531). Report both.
-- **Code equals the input under an overcomplete configuration** ⇒ identity degeneration, i.e. the
-  autoencoder captured nothing (§14.1, p. 512). Add regularization rather than capacity.
-- **Jacobian singular values mostly above 1** ⇒ the contractive penalty is not doing its job; check its weight
-  and, for arm f, whether the decoder was tied — untied weights admit the degenerate small-constant solution
-  (§14.7, p. 530).
-- **Sensitivity is uniform across tangent and orthogonal directions** ⇒ the manifold criterion fails; the code
-  has not aligned with the data's local structure (§14.6, pp. 523–524).
+  criterion. The book's own example is a 30-unit bottleneck that beats 30-dimensional PCA on reconstruction
+  *and* on interpretability and class separation (§14.9, p. 531). Report both numbers.
+- **Code equals the input under an overcomplete configuration** ⇒ the autoencoder degenerated to the identity,
+  and captured nothing (§14.1, p. 512). Add regularization rather than capacity.
+- **Jacobian singular values mostly above 1** ⇒ the contractive penalty fails. Check the weight of the
+  penalty. For arm f, check the tied variant, because untied weights admit the degenerate small-constant
+  solution (§14.7, p. 530).
+- **Sensitivity is uniform across tangent and orthogonal directions** ⇒ the manifold criterion fails. The code
+  does not align with the local structure of the data (§14.6, pp. 523–524).
 - **Denoising error and the contractive penalty diverge at small noise** ⇒ the equivalence is an asymptotic
-  statement in the small-Gaussian-noise limit; check the noise scale before treating a mismatch as a
+  statement about the small-Gaussian-noise limit. Check the noise scale before you treat a mismatch as a
   refutation (§14.7, p. 528).
 - **One-hot encoding matches the distributed one** ⇒ the categorical variable had no similarity structure to
-  exploit; arm i's point is that one-hot distance is constant at 2 for any two distinct values, so no
-  similarity can be expressed (§15.1.1, p. 537).
-- **Sparse coding shows no advantage at very low labels per class** ⇒ differs from the cited result; report the
-  dictionary size and the encoder type, since the claimed advantage comes from the encoder being obtained by
-  optimization rather than learned as parameters (§13.4, p. 507).
+  exploit. Arm i's point is that the one-hot distance is constant at 2 for any two distinct values. So the
+  encoding expresses no similarity (§15.1.1, p. 537).
+- **Sparse coding shows no advantage at very low labels per class** ⇒ that result differs from the cited
+  result. Report the dictionary size and the encoder type. The claimed advantage comes from the encoder that
+  optimization supplies, rather than from an encoder that training learns as parameters (§13.4, p. 507).
 
 ## 6. Validity limits and source traceability
 
-- **The PCA equivalence is a theorem about a specific configuration**, not a universal yardstick: linear
-  encoder and decoder, mean squared error, undercomplete code (§14.1, pp. 511–512; §13.5, p. 509). Applying it
-  to nonlinear manifold, contractive, counting or encoding claims is outside its scope, and any such
-  comparison must be labeled as the evaluator's addition rather than the book's control.
-- Arm h's counting argument is a **statistical-efficiency** statement about regions and parameters; the book
-  also notes the VC dimension of deep linear-threshold networks is only O(w log w), and that a strong
-  representation with a weak classifier is itself a strong regularizer. These are capacity arguments, not
-  measured accuracies, and the geometric interpretation is offered as such (§15.4, pp. 550–554).
-- Interpretability evidence in the book is observational — hidden units in networks trained on large image
-  collections are interpretable, and directions in a face-generating model separate gender from eyeglasses
-  (§15.4, pp. 554–555). It supports the existence of distributed factors, not a metric.
+- **The PCA equivalence is a theorem about a specific configuration**, not a universal yardstick. The
+  configuration is a linear encoder and decoder, mean squared error, and an undercomplete code (§14.1,
+  pp. 511–512; §13.5, p. 509). A use of that equivalence on nonlinear manifold, contractive, counting or
+  encoding claims falls outside that scope. The evaluator must label any such comparison as an addition of the
+  evaluator, rather than as the book's control.
+- Arm h's counting argument is a **statistical-efficiency** statement about regions and parameters. The book
+  also notes that the VC dimension of deep linear-threshold networks is only O(w log w). The book also notes
+  that a strong representation with a weak classifier is itself a strong regularizer. Those three items are
+  capacity arguments, not measured accuracies. The book offers the geometric interpretation as such (§15.4,
+  pp. 550–554).
+- Interpretability evidence in the book is observational. Hidden units in networks trained on large image
+  collections are interpretable. Directions in a face-generating model separate gender from eyeglasses
+  (§15.4, pp. 554–555). That evidence supports the existence of distributed factors, not a metric.
 - Arm e's equivalence holds only in the small-noise limit.
 - Arm j's generalization claims are cited results on particular tasks and label budgets, not universal
   rankings.
-- The manifold criterion depends on an estimate of the tangent directions; the book notes that extracting
-  manifold coordinates is itself very challenging (§5.11.3, p. 190), so arm c inherits that difficulty.
-- Display equations are images in this copy, so the exact contractive penalty form and the exact
-  singular-value condition are cited at prose level.
+- The manifold criterion depends on an estimate of the tangent directions. The book notes that extracting
+  manifold coordinates is itself very challenging (§5.11.3, p. 190). Arm c therefore inherits that difficulty.
+- Display equations are images in this copy. So the exact form of the contractive penalty, and the exact
+  singular-value condition, are cited at prose level.
 
 | Claim | Locator |
 | --- | --- |
@@ -173,10 +187,20 @@ downstream margin; these are evaluator choices and must be declared.
 | One-hot distance 2 | §15.1.1, p. 537 |
 | Manifold hypothesis and the difficulty of extracting manifold coordinates | §5.11.3, pp. 187–190 |
 
-**Historical boundary.** The 30-unit bottleneck result, the semantic-hashing example, the image-collection
-and face-model interpretability observations, the sparse-coding generalization results and their very-low-label
-conditions, and the named baseline implementations are all cited 2016-era or earlier work, reported as such.
-The criteria themselves are stated as general and are retained: in the linear / undercomplete regime beat PCA
-at matched dimension; do not degenerate to the identity; be sensitive along manifold tangents and insensitive
-orthogonally; keep the encoder Jacobian contractive; and demonstrate downstream utility. No post-2016
-representation-learning metric is introduced.
+**Historical boundary.** These items are all cited 2016-era or earlier work, reported as such:
+
+- the 30-unit bottleneck result
+- the semantic-hashing example
+- the image-collection and face-model interpretability observations
+- the sparse-coding generalization results, and their very-low-label conditions
+- the named baseline implementations
+
+The criteria themselves are general, and this benchmark retains those criteria:
+
+- In the linear / undercomplete regime, beat PCA at matched dimension.
+- Do not degenerate to the identity.
+- Be sensitive along manifold tangents, and insensitive along orthogonal directions.
+- Keep the encoder Jacobian contractive.
+- Demonstrate downstream utility.
+
+No post-2016 representation-learning metric is introduced.

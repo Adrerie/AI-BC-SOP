@@ -8,75 +8,85 @@ data · **Executed by:**
 
 ## 1. Capability / failure under test
 
-The book gives two reasons why a machine-learning system cannot be debugged by watching its outputs, and
-this benchmark tests the instruments that get around them (§11.5, p. 450):
+The book gives two reasons why watching the outputs cannot debug a machine-learning system. This benchmark
+tests the instruments that get around those reasons (§11.5, p. 450):
 
-1. **Expected behaviour is unknown in advance.** A classifier reaching 5% test error may be at the
-   achievable optimum or badly suboptimal; the number alone does not say which.
-2. **Adaptive parts compensate for one another.** The book's worked example: an incorrectly implemented
-   bias update that ignores the gradient (`b ← b − α` instead of a gradient step) drives all biases
-   negative during training, yet the weights can adaptively compensate depending on the input
-   distribution, so inspecting model outputs does not reveal the bug.
+1. **Expected behaviour is unknown in advance.** A classifier that reaches 5% test error may sit at the
+   achievable optimum. The classifier may instead be badly suboptimal. The number alone does not say which
+   case holds.
+2. **Adaptive parts compensate for one another.** The book gives a worked example. An incorrectly implemented
+   bias update ignores the gradient (`b ← b − α` instead of a gradient step). That update drives all biases
+   negative during training. Even so, the weights can compensate adaptively, depending on the input
+   distribution. So inspecting the model outputs does not reveal the bug.
 
-Consequently the instruments below are constructed to be *self-referential*: each creates a situation
-whose correct answer is known in advance, or checks one part of the implementation independently of the
-others (§11.5, p. 450).
+The instruments below are therefore *self-referential*. Each creates a situation whose correct answer is known
+in advance. Alternatively each checks one part of the implementation independently of the other parts
+(§11.5, p. 450).
 
-Four instruments are tested:
+This benchmark tests four instruments:
 
-- **I1 — tiny-dataset fit.** "Even a small model can fit a small enough dataset": a classifier with one
-  training example can be fit by setting the output-layer bias alone; an autoencoder must reproduce one
-  example; a generative model must consistently generate one example. Failure of any of these is very
-  likely a software bug preventing successful optimization on the training set. The test extends to a
-  small number of examples (§11.5, p. 451).
-- **I2 — back-prop vs numerical derivative.** Required whenever gradients are implemented by hand or a new
-  operation is added to an autodifferentiation library; an incorrect gradient expression is named as a
-  common cause of failure (§11.5, p. 452).
-- **I3 — activation and gradient histograms.** Pre-activation saturation, dead units, gradient growth or
-  decay across depth, and the ratio of parameter-update magnitude to parameter magnitude (§11.5, p. 453).
-- **I4 — per-step guarantee tests.** Many algorithms promise properties such as a non-increasing
-  objective across iterations, exactly-zero derivatives for certain variables at every step, or all
-  gradients zero at convergence (§11.5, p. 453).
+- **I1 — tiny-dataset fit.** The reading is "Even a small model can fit a small enough dataset". Setting the
+  output-layer bias alone can fit a classifier with one training example. An autoencoder must reproduce one example. A generative model must consistently generate one example. Failure of any of these
+  tests is very likely a software bug. That bug prevents successful optimization on the training set. The
+  test extends to a small number of examples (§11.5, p. 451).
+- **I2 — back-prop vs numerical derivative.** Run this check whenever you implement gradients by hand. Run
+  the check whenever you add a new operation to an autodifferentiation library. The book names an incorrect
+  gradient expression as a common cause of failure (§11.5, p. 452).
+- **I3 — activation and gradient histograms.** Read the pre-activation saturation, the dead units, and the
+  gradient growth or decay across depth. Read the ratio of parameter-update magnitude to parameter magnitude
+  (§11.5, p. 453).
+- **I4 — per-step guarantee tests.** Many algorithms promise properties. One property is a non-increasing
+  objective across iterations. Another is exactly-zero derivatives for certain variables at every step.
+  Another is that all gradients are zero at convergence (§11.5, p. 453).
 
 ## 2. Data and comparison conditions
 
-**I1.** A subset of the training data reduced to one example, then to k examples. Three problem shapes
-are specified by the book and each needs its own pass criterion: classification (correct label on the
-single example), autoencoding (reproduction of the single example), generation (consistent generation of
-the single example). The comparison condition is the model at its *production* size — the instrument's
-point is that capacity is not the binding constraint at n = 1.
+**I1.** Reduce a subset of the training data to one example, then to k examples. The book specifies three
+problem shapes, and each needs its own pass criterion:
 
-**I2.** Any differentiable function in the stack, evaluated at the current parameters. Conditions the
-book fixes:
-- use **centered differences** for accuracy rather than one-sided differences;
-- choose the perturbation ε **large enough** that finite precision does not turn it into rounding error;
-- for a vector-valued g whose full Jacobian would cost mn finite-difference evaluations, test the scalar
-  projection `f(x) = uᵀ g(v x)` with random vectors u and v, and **repeat over several draws**, because a
-  single projection can miss errors orthogonal to it;
-- where complex arithmetic is available, complex-step differentiation permits ε as small as 10⁻¹⁵⁰ with
+- classification: the classifier gives the correct label on the single example
+- autoencoding: the autoencoder reproduces the single example
+- generation: the generative model consistently generates the single example
+
+The comparison condition is the model at its *production* size. The instrument's point is that capacity is
+not the binding constraint at n = 1.
+
+**I2.** Take any differentiable function in the stack. Evaluate the function at the current parameters. The
+book fixes the conditions below:
+
+- Use **centered differences**, for accuracy rather than one-sided differences.
+- Choose the perturbation ε **large enough** that finite precision does not turn ε into rounding error.
+- Test the scalar projection `f(x) = uᵀ g(v x)` with random vectors u and v, and **repeat over several
+  draws**. A single projection can miss errors that are orthogonal to that projection. A full Jacobian for a
+  vector-valued g would cost mn finite-difference evaluations.
+- Where complex arithmetic is available, complex-step differentiation permits ε as small as 10⁻¹⁵⁰ with
   negligible error, because no cancellation occurs (Squire and Trapp, 1998, as cited).
 
-**I3.** Statistics collected after many training iterations — the book's suggested point is about one
-epoch. Per activation family: for rectifiers, how often units switch off and whether any are permanently
-off; for tanh units, the mean absolute pre-activation as a saturation indicator. Across depth: gradient
-magnitude per layer. Per parameter group: update magnitude divided by parameter magnitude, with the
-sparse-data caveat that some parameters are legitimately updated rarely (natural language is the book's
-example) and must not be scored as stalled.
+**I3.** Collect the statistics after many training iterations. The book's suggested point is about one epoch.
+Take the readings in three ways:
 
-**I4.** One run per algorithm in the stack that makes a per-step promise, with a tolerance parameter set
+- For each activation family, take two readings. For rectifiers, record how often units switch off, and
+  whether any unit is permanently off. For tanh units, record the mean absolute pre-activation as a
+  saturation indicator.
+- Across the depth of the network, record the gradient magnitude per layer.
+- For each parameter group, record the update magnitude divided by the parameter magnitude. Note the
+  sparse-data caveat. Training legitimately updates some parameters rarely. Do not score those parameters as
+  stalled. Natural language is the book's example.
+
+**I4.** Run one pass for each algorithm in the stack that makes a per-step promise. Set a tolerance parameter
 in advance, because rounding means the promised conditions never hold exactly on a computer.
 
 ## 3. Baselines
 
 - **I2's reference arm is the numerical derivative** (centered finite difference, or complex step where
   available) compared against the back-propagated value from the implementation under test.
-- **I1's reference is the analytically known trivial solution**: for a single-example classifier the
-  output bias alone suffices, so the pass criterion is not "good accuracy" but "the loss can be driven to
+- **I1's reference is the analytically known trivial solution.** For a single-example classifier the output
+  bias alone suffices. So the pass criterion is not "good accuracy". It is whether "the loss can be driven to
   its floor at all".
-- **I3's reference values are the book's cited targets**: an update of roughly **1% of the parameter
-  magnitude** per minibatch step is healthy, while **50%** and **0.001%** are the two named pathologies —
-  too fast and too slow respectively (Bottou, 2015, as cited) (§11.5, p. 453).
-- **I4's baseline is the algorithm's own stated guarantee**; there is no external reference.
+- **I3's reference values are the book's cited targets** (Bottou, 2015, as cited) (§11.5, p. 453). An update
+  of roughly **1% of the parameter magnitude** per minibatch step is healthy. **50%** and **0.001%** are the
+  two named pathologies. **50%** is too fast, and **0.001%** is too slow.
+- **I4's baseline is the algorithm's own stated guarantee.** There is no external reference.
 
 ## 4. Metrics
 
@@ -88,58 +98,60 @@ in advance, because rounding means the promised conditions never hold exactly on
 | I4 | Count of guarantee violations per run; tolerance used | Zero violations beyond tolerance |
 
 The book supplies no tolerance for I2, no k for I1, no saturation thresholds for I3 and no violation
-tolerance for I4. Each must be fixed and reported by the evaluator; none may be inferred from the
-absence of a number in the source.
+tolerance for I4. The evaluator must fix each value and report each one. Do not infer any of these values
+from the absence of a number in the source.
 
 ## 5. How to interpret failure
 
-- **I1 fails** ⇒ a software bug is preventing successful optimization on the training set; the book's
-  reading is explicit. Do **not** attribute the result to underfitting or to insufficient capacity, and
-  do not enlarge the model (§11.5, p. 451). Proceed to I2.
-- **I2 fails** ⇒ an incorrect gradient expression — the named common cause when implementing gradients or
-  extending an autodiff library (§11.5, p. 452).
-- **I2 passes but I1 fails** ⇒ the defect is elsewhere in the training loop: data routing, loss
-  reduction, the update rule, or the save/reload path. The book's other named cause of a
-  low-train/high-test signature is a mis-measured test error from a save-reload bug or from test data
-  preprocessed differently from training data (§11.5, p. 451).
-- **I2 shows large deviation only for small ε** ⇒ rounding error, not a gradient bug: ε was too small
-  (§11.5, p. 452).
-- **I2 shows deviation that disappears when more projections are drawn** ⇒ the first projection was
-  nearly orthogonal to the error; the single-projection result was a false pass (§11.5, p. 452).
-- **I3 shows permanently-off units or heavy saturation** ⇒ an activation/init/optimization problem;
-  route to `SOP-DL-04`, since rapidly growing or vanishing gradients through depth can block
+- **I1 fails** ⇒ a software bug prevents successful optimization on the training set. The book's reading is
+  explicit. Do **not** attribute the result to underfitting or to insufficient capacity. Do not enlarge the
+  model (§11.5, p. 451). Proceed to I2.
+- **I2 fails** ⇒ an incorrect gradient expression is the cause. The book names that cause as common when you
+  implement gradients, or when you extend an autodiff library (§11.5, p. 452).
+- **I2 passes but I1 fails** ⇒ the defect is elsewhere in the training loop. Check the data routing, the loss
+  reduction, the update rule, and the save/reload path. The book names one other cause of a
+  low-train/high-test signature. A save-reload bug can mis-measure the test error. Test data that is
+  preprocessed differently from training data can give the same mis-measurement (§11.5, p. 451).
+- **I2 shows large deviation only for small ε** ⇒ rounding explains the deviation, and a gradient bug does
+  not. That ε was too small (§11.5, p. 452).
+- **I2 shows deviation that disappears when you draw more projections** ⇒ the first projection was nearly
+  orthogonal to the error. The single-projection result was a false pass (§11.5, p. 452).
+- **I3 shows permanently-off units or heavy saturation** ⇒ the cause is an activation, init or optimization
+  problem. Route the case to `SOP-DL-04`. Rapidly growing or vanishing gradients through depth can block
   optimization (§11.5, p. 453).
-- **I3 update ratio near 50%** ⇒ steps are far too large; consistent with a learning rate above the
-  optimum, where gradient descent can increase rather than decrease training error (§11.4.1, p. 443,
-  Fig. 11.1). **Near 0.001%** ⇒ parameters move too slowly to make progress in the budget.
-- **I3 flags some parameters as stalled** ⇒ check data sparsity first; rarely-updated parameters are
-  expected under sparse inputs (§11.5, p. 453).
-- **I4 violations within tolerance** ⇒ rounding, not a defect. **Beyond tolerance** ⇒ the algorithm is
-  not implementing the property it claims (§11.5, p. 453).
-- **All four instruments pass and the metric is still bad** ⇒ the implementation is exonerated; the
-  residual belongs to the model or the data, and routing continues in `SOP-DL-02` (train error high ⇒
-  capacity or data quality; gap high ⇒ regularization or more data, §11.3, pp. 440–442). Note the
-  converse is not licensed: a healthy-looking output metric is **not** evidence of a healthy
-  implementation, because adaptive parts compensate (§11.5, p. 450).
+- **I3 update ratio near 50%** ⇒ the steps are far too large. That reading is consistent with a learning rate
+  above the optimum. At such a rate gradient descent can increase training error rather than decrease
+  training error (§11.4.1, p. 443, Fig. 11.1). **Near 0.001%** ⇒ the parameters move too slowly to make
+  progress in the budget.
+- **I3 flags some parameters as stalled** ⇒ check data sparsity first. Under sparse inputs you expect some
+  parameters to update rarely (§11.5, p. 453).
+- **I4 violations within tolerance** ⇒ rounding explains the violations, and a defect does not. **Beyond
+  tolerance** ⇒ the algorithm does not implement the property that the algorithm claims (§11.5, p. 453).
+- **All four instruments pass and the metric is still bad** ⇒ the implementation is exonerated. The residual
+  belongs to the model or to the data. Continue the routing in `SOP-DL-02` (train error high ⇒ capacity or
+  data quality; gap high ⇒ regularization or more data, §11.3, pp. 440–442). Do not draw the converse
+  conclusion. A healthy-looking output metric is **not** evidence of a healthy implementation, because
+  adaptive parts compensate (§11.5, p. 450).
 
 ## 6. Validity limits and source traceability
 
-- **I1 is a necessary-condition instrument.** Passing it shows that optimization can succeed on a
-  trivially fittable problem; it does not show the implementation is correct at production scale.
+- **I1 is a necessary-condition instrument.** A pass shows that optimization can succeed on a trivially
+  fittable problem. A pass does not show that the implementation is correct at production scale.
 - **I2's projection variant trades completeness for cost.** Finite differences yield one derivative at a
-  time, so a full Jacobian costs mn evaluations; the random-projection test checks a scalar function
-  instead and can miss errors orthogonal to the projection. Repeating over several u and v *reduces*
-  that probability — the book's own framing — without eliminating it (§11.5, p. 452).
+  time, so a full Jacobian costs mn evaluations. The random-projection test checks a scalar function instead,
+  and can miss errors orthogonal to the projection. Repeating the test over several u and v *reduces* that
+  probability, which is the book's own framing. The repetition does not eliminate the probability
+  (§11.5, p. 452).
 - **Complex-step differentiation requires complex arithmetic** to be available in the stack
   (§11.5, pp. 452–453).
-- **The ~1% figure is a cited recommendation, not a derived bound** (Bottou, 2015, as cited); 50% and
-  0.001% are illustrative pathologies. It is an order-of-magnitude target and must not be used as a hard
-  acceptance threshold.
+- **The ~1% figure is a cited recommendation, not a derived bound** (Bottou, 2015, as cited). The book names
+  50% and 0.001% as illustrative pathologies. Do not use the ~1% figure as a hard acceptance threshold,
+  because the figure is an order-of-magnitude target.
 - **I4 applies only to algorithms that make per-step promises.** The book's examples are the
-  approximate-inference algorithms of Part III that solve optimization problems algebraically
-  (§11.5, p. 453); an algorithm with no stated guarantee has nothing to test.
-- **None of these instruments measures generalization.** They localize cause; the fitting-regime read is
-  a separate step (`SOP-DL-02`).
+  approximate-inference algorithms of Part III that solve optimization problems algebraically (§11.5, p. 453).
+  An algorithm with no stated guarantee has nothing to test.
+- **None of these instruments measures generalization.** The instruments localize cause. The fitting-regime
+  read is a separate step (`SOP-DL-02`).
 
 | Claim | Locator |
 | --- | --- |
@@ -154,7 +166,7 @@ absence of a number in the source.
 | Routing of the residual: data-quality branch when a larger model and tuned optimization still fail | §11.3, pp. 440–442 |
 | Learning rate above optimum can increase training error | §11.4.1, p. 443, Fig. 11.1 |
 
-**Historical boundary.** Bottou (2015) and Squire and Trapp (1998) are citations made by the book and are
-reported as such. The four instruments are stated as general practice and are not tied to any 2016
-framework, library or hardware; no framework-specific test is added here. The sparse-data example
-(natural language) is the book's own.
+**Historical boundary.** Bottou (2015) and Squire and Trapp (1998) are the book's own citations, and are
+reported as such. The book states the four instruments as general practice. The four instruments are not tied
+to any 2016 framework, library or hardware. This benchmark adds no framework-specific test. The sparse-data
+example (natural language) is the book's own.

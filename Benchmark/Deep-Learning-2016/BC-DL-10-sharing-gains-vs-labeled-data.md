@@ -8,15 +8,15 @@ semi-supervised, multi-task and transfer gains · **Executed by:**
 
 ## 1. Capability / failure under test
 
-The central claim is a **conditional** one, and it is the book's own operational rule (§15.1.1, p. 540):
+The central claim is a **conditional** one, and the claim is the book's own operational rule (§15.1.1, p. 540):
 
 - On **large** labeled datasets, supervised regularization techniques — the book names dropout and batch
   normalization — reach human-level performance.
-- On **medium** datasets, its examples being CIFAR-10 and MNIST with roughly 5000 labeled samples per class,
+- On **medium** datasets, whose examples are CIFAR-10 and MNIST with roughly 5000 labeled samples per class,
   those supervised techniques **beat** unsupervised pretraining.
-- On **very small** data, its example being the splice dataset, **Bayesian** methods beat pretraining.
+- On **very small** data, whose example is the splice dataset, **Bayesian** methods beat pretraining.
 
-Supporting claims to be tested alongside it:
+The benchmark also tests the supporting claims in the table below:
 
 | # | Claim | Locator |
 | --- | --- | --- |
@@ -32,26 +32,34 @@ Supporting claims to be tested alongside it:
 
 ## 2. Data and comparison conditions
 
-- **Labeled-data ladder.** At least three regimes corresponding to the book's branches — very small, medium
-  (on the order of a few thousand labels per class) and large — obtained by subsampling one corpus so that
-  everything else is held fixed.
-- **Technique arms** at each ladder point: no extra information; greedy layer-wise unsupervised pretraining
-  per Algorithm 15.1 (each layer pretrained on the previous layer's output, lower layers held fixed, then
-  joint supervised fine-tuning); dropout; batch normalization; a Bayesian treatment; semi-supervised training
-  using the unlabeled pool; multi-task training with a second task; transfer from a data-rich source task.
-- **Unlabeled-pool sweep.** For the semi-supervised and pretraining arms, vary the number of unlabeled
-  samples independently of the labeled count, since claim 1 makes the gain depend on both.
+- **Labeled-data ladder.** Use at least three regimes, one for each branch of the book's rule. The regimes
+  are very small, medium and large. The medium regime is on the order of a few thousand labels per class.
+  Obtain each regime by subsampling one corpus, so that every other factor stays fixed.
+- **Technique arms** at each ladder point:
+  - no extra information
+  - Greedy layer-wise unsupervised pretraining per Algorithm 15.1. That algorithm pretrains each layer on the
+    output of the previous layer, holds the lower layers fixed, and then applies joint supervised
+    fine-tuning.
+  - dropout
+  - batch normalization
+  - a Bayesian treatment
+  - semi-supervised training that uses the unlabeled pool
+  - multi-task training with a second task
+  - transfer from a data-rich source task
+- **Unlabeled-pool sweep.** For the semi-supervised arm and the pretraining arm, vary the number of unlabeled
+  samples independently of the labeled count. Claim 1 makes the gain depend on both counts.
 - **Depth sweep for the pretraining arm**, to test claim 2's "deeper ⇒ larger reduction in mean and variance".
-- **p(x) structure conditions** for claim 6: one dataset whose class-conditional distributions form
-  well-separated clusters, and one constructed or selected so that p(x) carries little information about y.
-- **Multi-task condition** for claim 7: a task pair with a plausible common factor pool, and a pair
-  constructed to be unrelated.
-- **Transfer condition** for claim 8: a data-rich source and a data-poor target sharing input structure; and a
-  zero-shot arm in which the task variable is represented two ways — one-hot and a generalizable
-  representation.
-- **Hyperparameter selection rule**: pretraining hyperparameters must be selected by validation error in the
-  **supervised** stage, per the book's recommended practice (§15.1, p. 539). Selecting them in the
-  unsupervised stage is a separate arm and is expected to be worse.
+- **p(x) structure conditions** for claim 6. Use one dataset whose class-conditional distributions form
+  well-separated clusters. Use a second dataset, built or chosen so that p(x) carries little information
+  about y.
+- **Multi-task condition** for claim 7: a task pair with a plausible common factor pool, and a pair built to
+  be unrelated.
+- **Transfer condition** for claim 8. Use a data-rich source task and a data-poor target task that share
+  input structure. Add a zero-shot arm. In that arm the task variable takes two representations: one-hot, and
+  a generalizable representation.
+- **Hyperparameter selection rule**: Select the pretraining hyperparameters by validation error in the
+  **supervised** stage. That is the book's recommended practice (§15.1, p. 539). Run a separate arm that
+  selects the pretraining hyperparameters in the unsupervised stage. Expect that arm to do worse.
 
 ## 3. Baselines
 
@@ -62,69 +70,75 @@ Supporting claims to be tested alongside it:
 - For semi-supervised, the same labeled data without the unlabeled pool.
 - For multi-task, each task trained alone with the same total compute.
 - For transfer, the target task trained from scratch on its own data.
-- For the representation claims, the linear control: an undercomplete autoencoder with a linear decoder and
-  MSE recovers the PCA subspace, so any claim of learning beyond PCA must beat PCA at matched code dimension
+- For the representation claims, use the linear control. An undercomplete autoencoder with a linear decoder and
+  MSE recovers the PCA subspace. So any claim of learning beyond PCA must beat PCA at matched code dimension
   (§14.1, pp. 511–512; §13.5, p. 509).
 
 ## 4. Metrics
 
 1. **Test error mean and variance** across seeds or folds — claim 2 is specifically about both quantities.
 2. **Training error** alongside test error, to verify claim 4: pretraining should not lower training error.
-3. **Region-of-function-space measure** for claim 3: the dispersion of final parameter configurations or of
-   predictions across seeds, which is the observable proxy for "consistently stopping in a smaller region".
-4. **Gain versus labeled-data size**, plotted so that the crossover between the branches can be located;
-   report the ladder points used rather than a fitted threshold.
+3. **Region-of-function-space measure** for claim 3. Use the dispersion of the final parameter
+   configurations, or the dispersion of predictions across seeds. That dispersion is the observable proxy for
+   "consistently stopping in a smaller region".
+4. **Gain versus labeled-data size**. Plot the series so that the crossover between the branches appears.
+   Report which ladder points you used, rather than a fitted threshold.
 5. **Gain versus unlabeled-pool size** for the semi-supervised and pretraining arms.
 6. **Labels needed per class** in the separated-mixture condition, against claim 6's one-sample-per-class
    statement.
-7. **Task-pair contrast** for claim 7: the multi-task gain on the related pair minus the gain on the unrelated
-   pair.
+7. **Task-pair contrast** for claim 7. Take the multi-task gain on the related pair, and subtract the gain on
+   the unrelated pair.
 8. **Zero-shot transfer success** under one-hot versus generalizable task representations (claim 8).
-9. **Cost**: pretraining adds a stage, and the book notes the two-stage drawbacks — no single knob controlling
-   regularization strength, and delayed hyperparameter feedback between stages (§15.1, p. 539). Report both
-   stages' cost.
+9. **Cost**: pretraining adds a stage. The book notes two drawbacks of that two-stage design. No single knob
+   controls the regularization strength, and hyperparameter feedback between the stages arrives late
+   (§15.1, p. 539). Report the cost of both stages.
 
 ## 5. How to interpret failure
 
-- **Pretraining loses at every ladder point** ⇒ consistent with the book's own verdict that it is no longer
-  necessary to train fully-connected deep structures and that most algorithms no longer use it, except in
-  natural language processing where words are one-hot vectors carrying no similarity and huge unlabeled
-  corpora exist (§15.1, p. 534; §15.1.1, p. 540). Report the domain.
+- **Pretraining loses at every ladder point** ⇒ that result agrees with the book's own verdict. The book
+  states that fully-connected deep structures no longer need pretraining, and that most algorithms no longer
+  use pretraining. The book names one exception: natural language processing. In that domain, words are
+  one-hot vectors that carry no similarity, and huge unlabeled corpora exist (§15.1, p. 534; §15.1.1,
+  p. 540). Report the domain.
 - **Pretraining wins on the medium dataset** ⇒ check whether the supporting comparison predates current
-  methods: the book states that the cited experiments predate ReLU units, dropout and batch normalization and
-  that little is known about combining unsupervised pretraining with them (§15.1.1, p. 539). A win is
-  evidence about this configuration, not a refutation of the size rule.
-- **Pretraining lowers training error** ⇒ do not read this as either confirmation or refutation on its own:
-  a lower training error is equally consistent with pretraining acting as a capacity or optimization change
-  rather than as the regularizer the book describes (§15.1, p. 535). Report both errors separately and check
-  the capacity and optimization confounders before attributing the gain.
-- **Semi-supervised gain appears on the uninformative-p(x) dataset** ⇒ the gain is not coming from the
-  unlabeled structure; check for leakage between the unlabeled pool and the evaluation split.
-- **Multi-task gain appears on the unrelated pair** ⇒ the gain is compute or regularization, not shared
-  factors; the book makes the gain conditional on a reasonable statistical relationship (§7.7, p. 270).
-- **Zero-shot transfer works with one-hot task variables** ⇒ contradicts claim 8; verify that the evaluated
-  tasks were actually unseen, since one-hot encodings carry no similarity information — the squared L2
+  methods. The book states that the cited experiments predate ReLU units, dropout and batch normalization. The
+  book also states that researchers know little about a combination of unsupervised pretraining with those
+  methods (§15.1.1, p. 539). A win is evidence about that configuration, not a refutation of the size rule.
+- **Pretraining lowers training error** ⇒ do not read that result as either confirmation or refutation
+  standing alone. A lower training error is equally consistent with a different explanation. Pretraining may
+  act as a capacity change, or as an optimization change, rather than as the regularizer the book describes
+  (§15.1, p. 535). Report both errors separately. Before you attribute the gain, check the capacity
+  confounders and the optimization confounders.
+- **Semi-supervised gain appears on the uninformative-p(x) dataset** ⇒ the gain does not come from the
+  unlabeled structure. Check for leakage between the unlabeled pool and the evaluation split.
+- **Multi-task gain appears on the unrelated pair** ⇒ the gain comes from compute or from regularization, not
+  from shared factors. The book makes that gain conditional on a reasonable statistical relationship
+  (§7.7, p. 270).
+- **Zero-shot transfer works with one-hot task variables** ⇒ that result contradicts claim 8. Verify that the
+  evaluated tasks were in fact unseen. One-hot encodings carry no similarity information: the squared L2
   distance between any two distinct one-hot vectors is 2 (§15.1.1, p. 537).
-- **Dropout helps below ~5000 samples** ⇒ differs from the cited comparison, where a Bayesian neural network
-  won in that regime (§7.12, p. 290); report the dataset and the Bayesian arm.
-- **Any arm whose hyperparameters were selected in the unsupervised stage** cannot be compared with the rest;
-  re-run with supervised-stage selection (§15.1, p. 539).
+- **Dropout helps below ~5000 samples** ⇒ that result differs from the cited comparison, where a Bayesian
+  neural network won in that regime (§7.12, p. 290). Report the dataset and the Bayesian arm.
+- **Any arm whose hyperparameters were selected in the unsupervised stage** cannot enter a comparison with the
+  rest. Re-run that arm with supervised-stage selection (§15.1, p. 539).
 
 ## 6. Validity limits and source traceability
 
 - The three branches are anchored to **named 2016-era datasets** (CIFAR-10, MNIST at roughly 5000 labels per
-  class, the splice dataset). They locate the regimes; they are not thresholds to be reused on other data.
+  class, and the splice dataset). Those datasets locate the regimes. Those datasets are not thresholds for
+  reuse on other data.
 - Claim 5 is part of the record: the book reports a cited study where pretraining was on average slightly
-  negative. A null or negative result is therefore within the book's own expectations and must be reported,
-  not discarded.
-- Claim 3's mechanism is stated as an interpretation of a cited visualization; the observable proxy here
-  (dispersion across seeds) is an evaluator's choice, not a quantity the book names.
-- Claims 6 and 7 are **licensing conditions**, not effect sizes: the book gives no numeric gain for
-  semi-supervised or multi-task learning, so none may be inferred.
-- Claim 8's extremes (one-shot, zero-shot) carry extra requirements — zero-shot needs an additional task
-  variable and a model estimating p(y | x, T) (§15.2, p. 543).
-- Nothing here licenses a general claim that unsupervised learning helps: the book records a domain asymmetry,
-  with natural language processing benefiting greatly and computer vision showing no benefit at the time
+  negative. A null or negative result is therefore within the book's own expectations. Report such a result
+  rather than discard that result.
+- The book states Claim 3's mechanism as an interpretation of a cited visualization. The observable proxy in
+  this benchmark (dispersion across seeds) is an evaluator's choice. That proxy is not a quantity the book
+  names.
+- Claims 6 and 7 are **licensing conditions**, not effect sizes. The book gives no numeric gain for
+  semi-supervised learning or for multi-task learning. So no reader may infer a numeric gain.
+- Claim 8's extremes (one-shot, zero-shot) carry extra requirements. Zero-shot needs an additional task
+  variable, and a model that estimates p(y | x, T) (§15.2, p. 543).
+- Nothing here licenses a general claim that unsupervised learning helps. The book records a domain
+  asymmetry. Natural language processing benefits greatly. Computer vision shows no benefit at that time,
   except in semi-supervised settings with very few labels (§11.2, p. 440).
 
 | Claim | Locator |
@@ -142,11 +156,14 @@ Supporting claims to be tested alongside it:
 | Domain asymmetry in the first baseline | §11.2, p. 440 |
 | Linear autoencoder recovers the PCA subspace | §14.1, pp. 511–512; §13.5, p. 509 |
 
-**Historical boundary.** This benchmark is the most era-bound in the package, by design: the dataset-size
-rule, the 2011 transfer-learning competitions won by unsupervised pretraining on tasks with a few to a few
-dozen labels per class, the named datasets and the then-current verdicts (semi-supervised and multi-task gains
-real but assumption-dependent and hard to predict; supervised ImageNet pretraining as the popular successor in
-transfer learning) are all 2016 statements and are reported as such. The conditional structure of the claims —
-that sharing pays only under stated assumptions about latent factors, task relatedness and label budget — is
-general and is retained. No post-2016 pretraining paradigm is introduced, and no modern self-supervised
-result is substituted for the book's word-embedding example.
+**Historical boundary.** This benchmark is the most era-bound in the package, by design. The dataset-size rule
+is one such 2016 statement. The 2011 transfer-learning competitions are another. There, the best result on
+tasks with a few to a few dozen labels per class came from unsupervised pretraining. The named datasets and the
+then-current verdicts are others (semi-supervised and multi-task gains real but assumption-dependent and hard
+to predict; supervised pretraining on ImageNet as the popular successor in transfer learning). This benchmark
+reports those statements as 2016 statements.
+
+The conditional structure of the claims is general, and this package retains that structure. The structure is
+that sharing pays only under stated assumptions about latent factors, about task relatedness and about the
+label budget. No post-2016 pretraining paradigm is introduced. No modern self-supervised result is
+substituted for the book's word-embedding example.

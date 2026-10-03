@@ -1,75 +1,79 @@
 # BC-DL-02 — Do the capacity and data-size curves behave as the fitting theory predicts?
 
-**Tests:** whether training error, generalization error and the gap respond to capacity and to training-set
-size in the way the book's account requires · **Executed by:**
+**Tests:** whether the capacity and data-size curves behave as the book predicts · **Executed by:**
 [`SOP-DL-02`](../../SOP/Deep-Learning-2016/SOP-DL-02-diagnose-fitting-regime-and-capacity.md) ·
 **Source package:** *Deep Learning* (2016), Chinese edition — see
 [`SOURCE.md`](../../Validation/Deep-Learning-2016/SOURCE.md)
 
 ## 1. Capability / failure under test
 
-The book's account of fitting makes six directional predictions that can be checked with two curves. If a
-researcher cannot reproduce them in a setting where the optimum is computable, then any capacity story told
-about the real model is unsupported.
+The book's account of fitting makes six directional predictions. Two curves test the predictions. Unless a
+researcher reproduces a prediction, a capacity story about the real model has no support. The reproduction
+needs a setting where the optimum is computable.
 
-1. **Training error decreases monotonically with capacity**, until it asymptotes at the smallest achievable
-   value (§5.2, p. 145).
-2. **Generalization error is U-shaped in capacity**: at the left end both errors are high (underfitting
-   regime); as capacity rises, training error falls while the gap widens; once the growth of the gap
-   outpaces the fall in training error the system is in the overfitting regime, past the optimal capacity
-   (§5.2, pp. 145–146, Fig. 5.3).
+1. **Training error decreases monotonically with capacity** (§5.2, p. 145). The decrease ends at the
+   smallest achievable value, where the curve asymptotes.
+2. **Generalization error is U-shaped in capacity** (§5.2, pp. 145–146, Fig. 5.3). Read the curve in three
+   parts.
+   - At the left end both errors are high. That part is the underfitting regime.
+   - As capacity rises, training error falls while the gap widens.
+   - Once the growth of the gap outpaces the fall in training error, the system is in the overfitting
+     regime. That part lies past the optimal capacity.
 3. **Expected generalization error never increases when training samples are added** (§5.2, p. 146).
-4. **A fixed-capacity model below optimal capacity asymptotes above Bayes error**, while **training error
-   can fall below Bayes error** because the learner can memorize particular training examples; as the
-   training set grows without bound, the training error of any fixed-capacity model rises to at least Bayes
-   error (§5.2, pp. 146–147, Fig. 5.4).
-5. **Optimal capacity itself increases with training-set size**, then stops increasing once it is
-   sufficient to capture the true complexity (§5.2, p. 147, Fig. 5.4).
-6. **Regularization traverses the same curve from the other side**: for a high-capacity model, a very large
-   weight-decay coefficient forces a constant function (underfitting), an appropriate coefficient recovers
-   the true curvature, and a coefficient approaching zero produces severe overfitting (§5.2.2,
-   pp. 149–150, Fig. 5.5).
+4. **A fixed-capacity model below optimal capacity asymptotes above Bayes error** (§5.2, pp. 146–147,
+   Fig. 5.4). **Training error can fall below Bayes error**, because the learner can memorize particular
+   training examples. As the training set grows without bound, training error for any fixed-capacity model
+   rises to at least Bayes error.
+5. **Optimal capacity itself increases with training-set size** (§5.2, p. 147, Fig. 5.4). Optimal capacity
+   stops increasing once the capacity suffices to capture the true complexity.
+6. **Regularization traverses the same curve from the other side** (§5.2.2, pp. 149–150, Fig. 5.5). Take a
+   high-capacity model. A very large weight-decay coefficient forces a constant function, which is
+   underfitting. An appropriate coefficient recovers the true curvature. A coefficient approaching zero
+   produces severe overfitting.
 
-The failure mode under test is the *misdiagnosis* this machinery exists to prevent: calling a result
-"overfitting" or "underfitting" without having located it on the curve, and consequently moving the wrong
-lever.
+The failure mode under test is the *misdiagnosis* this machinery exists to prevent. A researcher calls a
+result "overfitting" or "underfitting" without locating the result on the curve. The researcher then moves
+the wrong lever.
 
 ## 2. Data and comparison conditions
 
-The book supplies its own construction, and reproducing it is the cheapest way to make the optimum
-computable (Fig. 5.4, p. 147):
+The book supplies its own construction. Reproducing that construction is the cheapest way to make the
+optimum computable (Fig. 5.4, p. 147):
 
-- **Synthetic regression problem**: generate y from a 5th-degree polynomial with noise of appropriate
-  magnitude; generate a **single** test set; then generate training sets of several different sizes.
-- **Replication**: for each training-set size, generate 40 different training sets, so that 95%
-  confidence-interval error bars can be drawn. The book's figure reports exactly this.
-- **Two model arms**, both fitted in **closed form**: a quadratic model (fixed, deliberately insufficient
-  capacity), and a model whose polynomial degree is chosen by minimizing test error (the "optimal
-  capacity" arm).
-- **Overfitting reference arm** (Fig. 5.2, p. 144): training data generated by sampling x and computing y
-  *deterministically* from a quadratic function — noiseless — then fitting a 9th-degree polynomial whose
-  parameter count exceeds the sample count, solved with the Moore-Penrose pseudoinverse on the
-  underdetermined normal equation. The predicted pathology: the solution passes exactly through every
-  training point, has a deep valley between two data points that the true function does not have, and grows
-  sharply on the left where the true function falls.
-- **Regularization arm** (Fig. 5.5, pp. 149–150): the same 9th-degree model at three settings of the
-  weight-decay coefficient λ — very large, appropriate, and approaching zero.
+- **Synthetic regression problem**. Generate y from a 5th-degree polynomial, with noise of appropriate
+  magnitude. Generate a **single** test set. Then generate training sets of several different sizes.
+- **Replication**. For each training-set size, generate 40 different training sets. Then draw 95%
+  confidence-interval error bars. The book's figure reports exactly this design.
+- The benchmark uses **two model arms**, both fitted in **closed form**. The first arm is a quadratic
+  model, with fixed and deliberately insufficient capacity. The second arm chooses its polynomial degree by
+  minimizing test error, and is the "optimal capacity" arm.
+- **Overfitting reference arm** (Fig. 5.2, p. 144). Generate the training data by sampling x and computing
+  y *deterministically* from a quadratic function. That construction is noiseless. Fit a 9th-degree
+  polynomial whose parameter count exceeds the sample count. Solve the underdetermined normal equation with
+  the Moore-Penrose pseudoinverse. The predicted pathology has three parts. The fitted function passes
+  exactly through every training point. The fitted function has a deep valley between two data points, and
+  the true function has no such valley. The fitted function grows sharply on the left, where the true
+  function falls.
+- **Regularization arm** (Fig. 5.5, pp. 149–150). This arm runs the same 9th-degree model at three
+  settings of the weight-decay coefficient λ: very large, appropriate, and approaching zero.
 
-Two conditions must be stated explicitly in any report:
+Any report must state two conditions explicitly:
 
 - The noiseless construction (Fig. 5.2) and the noisy construction (Fig. 5.4) are **different experiments**.
-  Bayes error is zero in the first and positive in the second; claims 3–5 are only meaningful in the noisy
-  one.
-- The degree-selection arm chooses its degree by minimizing **test** error. That makes it an **oracle upper
-  bound**, not a deployable procedure, and it must be labelled as such: the book's own rule is that test
-  samples may not participate in model selection in any form (§5.3, p. 151). Report it as an upper-bound
-  row and, if a deployable arm is wanted, add one that selects degree on validation material.
+  Bayes error is zero in the noiseless construction and positive in the noisy construction. Claims 3–5 are
+  meaningful only in the noisy construction.
+- The degree-selection arm chooses its degree by minimizing **test** error. That choice makes the arm an
+  **oracle upper bound**, not a deployable procedure, and the report must label the arm as such. The book's
+  own rule is that test samples may not participate in model selection in any form (§5.3, p. 151). Report
+  the arm as an upper-bound row. If a deployable arm is wanted, add one that selects degree on validation
+  material.
 
-Extension condition for deep models: the qualitative claims 1–2 are what `SOP-DL-02` relies on when it
-moves architecture size, so a second pass on the real model — capacity ladder by layers and units per
-layer, same metric, same splits — is required before the diagnosis is transferred. Report the two passes
-separately; the book warns that capacity bounds are rarely usable for deep learning because they are too
-loose and because effective capacity depends on the optimizer (§5.2, p. 145).
+Extension condition for deep models: claims 1–2 are what `SOP-DL-02` relies on when the SOP moves
+architecture size. A second pass on the real model is required before the diagnosis is transferred. That
+pass uses a capacity ladder by layers and units per layer, the same metric, and the same splits.
+
+Report the two passes separately. The book warns that capacity bounds are rarely usable for deep learning.
+The bounds are too loose, and effective capacity depends on the optimizer (§5.2, p. 145).
 
 ## 3. Baselines
 
@@ -88,79 +92,83 @@ loose and because effective capacity depends on the optimizer (§5.2, p. 145).
 All are quantities the book itself uses:
 
 1. **MSE on the training set** and **MSE on the test set**, per capacity point and per training-set size.
-2. **The gap** (test MSE − train MSE), which is the quantity the regime classification is made on
-   (§5.2, p. 142).
+2. **The gap** (test MSE minus train MSE). The regime classification is made on this quantity (§5.2, p. 142).
 3. **95% confidence-interval error bars** over the 40 training sets per size (Fig. 5.4's construction).
-4. **Location of the minimum of the test-error curve** along the capacity ladder — the empirical optimal
-   capacity — plotted against training-set size, to test claim 5.
-5. **Bayes error**, known by construction in the synthetic setting; used to test claims 4 (train MSE below
-   it, fixed-capacity test MSE above it).
-6. For the overfitting arm, **the function's behaviour between and outside training points** (valley depth
-   between adjacent samples, growth at the domain edge), since the book's diagnosis of the 9th-degree fit
-   is about exactly these regions rather than about training error, which is zero by construction
-   (Fig. 5.2, p. 144).
+4. **Location of the minimum of the test-error curve** along the capacity ladder. That location is the
+   empirical optimal capacity. Plot the location against training-set size, to test claim 5.
+5. **Bayes error**, known by construction in the synthetic setting. Use the known Bayes error to test
+   claim 4. Claim 4 predicts train MSE below the Bayes error, and fixed-capacity test MSE above the Bayes
+   error.
+6. For the overfitting arm, **the function's behaviour between and outside training points**. Take the
+   valley depth between adjacent samples, and the growth at the domain edge. The book's diagnosis of the
+   9th-degree fit concerns exactly these regions. The diagnosis does not concern training error, which is
+   zero by construction (Fig. 5.2, p. 144).
 
-The book gives no numeric threshold for "significant" curvature of the U, no capacity-ladder spacing and no
-minimum replication count beyond the 40 used in its own figure; those are the evaluator's choices and must
-be reported.
+The book gives no numeric threshold for "significant" curvature of the U. The book gives no capacity-ladder
+spacing, and no minimum replication count beyond the 40 used in its own figure. Those items are the
+evaluator's choices, and the evaluator must report the chosen values.
 
 ## 5. How to interpret failure
 
 - **Test error monotone in capacity with no U** ⇒ the ladder did not span the transition. Many capacity
-  knobs are discrete, so only a few points on the curve are reachable (§11.4.1, p. 443); extend the range
-  before concluding that the account is wrong.
-- **Training error not monotone decreasing** ⇒ this is not a capacity result. Effective capacity is limited
-  by the optimizer's ability to minimize the training cost, not only by representational capacity
-  (§5.2, p. 144; §11.4.1, p. 442), so route to `SOP-DL-04`. In the closed-form arms this outcome means a
-  solver error, not a modelling finding.
-- **Generalization error increasing with more training data** ⇒ an assumption violation, not a capacity
-  finding: the i.i.d. assumption or the shared data-generating distribution has been broken (§5.2, p. 142).
-  Check the sampling code before anything else.
-- **Insufficient-capacity arm reaching Bayes error** ⇒ the arm is not insufficient; the construction is
-  wrong (claim 4 requires capacity below optimal).
-- **Training error below Bayes error** ⇒ expected and not a defect: memorization (§5.2, p. 147).
+  knobs are discrete, so only a few points on the curve are reachable (§11.4.1, p. 443). Extend the range
+  before you conclude that the account is wrong.
+- **Training error not monotone decreasing** ⇒ the result is not a capacity result. Effective capacity is
+  limited by the optimizer's ability to minimize the training cost. Representational capacity is not the
+  only limit (§5.2, p. 144; §11.4.1, p. 442). Route the run to `SOP-DL-04`. In the closed-form arms, that
+  outcome means a solver error, not a modelling finding.
+- **Generalization error increasing with more training data** ⇒ the result is an assumption violation, not
+  a capacity finding. The code breaks either the i.i.d. assumption or the shared data-generating
+  distribution (§5.2, p. 142). Check the sampling code before anything else.
+- **Insufficient-capacity arm reaching Bayes error** ⇒ the arm is not insufficient, and the construction is
+  wrong. Claim 4 requires capacity below the optimal capacity.
+- **Training error below Bayes error** ⇒ the outcome is expected and is not a defect. The cause is
+  memorization (§5.2, p. 147).
 - **Optimal capacity flat in training-set size** ⇒ either the true function is simpler than the ladder
-  assumes, or the ladder is too coarse to resolve the shift; the book predicts growth followed by
-  saturation, not constancy (§5.2, p. 147).
-- **Large λ recovering the true function while λ → 0 does not** ⇒ claim 6 reproduced: regularization, not
-  capacity reduction, is the operative lever, and the correct reading is that the preference over
-  hypotheses — not the size of the hypothesis space — controls the outcome (§5.2.2, pp. 148–150).
-- **Deep-model pass failing where the closed-form pass succeeded** ⇒ do not conclude the theory is wrong.
-  The book states that capacity bounds are rarely applied to deep learning because they are too loose and
-  because the capacity of a deep learning algorithm is hard to determine (§5.2, p. 145); the deep pass is
-  evidence about the diagnosis, not about the bound.
+  assumes. The alternative is that the ladder is too coarse to resolve the shift. The book predicts growth
+  followed by saturation, not constancy (§5.2, p. 147).
+- **Large λ recovering the true function while λ → 0 does not** ⇒ the run reproduces claim 6.
+  Regularization, not capacity reduction, is the operative lever. The correct reading is that the
+  preference over hypotheses controls the outcome, and not the size of the hypothesis space (§5.2.2,
+  pp. 148–150).
+- **Deep-model pass failing where the closed-form pass succeeded** ⇒ do not conclude that the theory is
+  wrong. Capacity bounds are rarely applied to deep learning. The book gives the reasons: the bounds are
+  too loose, and the capacity of a deep learning algorithm is hard to determine (§5.2, p. 145). The deep
+  pass is evidence about the diagnosis, not about the bound.
 - **No-free-lunch over-reading**: none of these results license a claim about algorithms averaged over all
   distributions. The theorem says every classification algorithm has the same error rate on unobserved
-  points when averaged over all possible data-generating distributions; it holds only under that
-  averaging, and the book's conclusion is to characterize the distributions that matter rather than to
+  points, under an average over all possible data-generating distributions. The theorem holds only under
+  that averaging. The book's conclusion is to characterize the distributions that matter, rather than to
   abandon method choice (§5.2.1, pp. 147–148).
 
 > **Modern update (2017–2026) — a rising right branch is no longer a confirmation by itself.** The first
-> bullet above reads a monotone test error as evidence the ladder did not span the transition, and the claim
-> under test reads a U as confirmation. Both remain correct for the 2016 account, and neither is withdrawn.
-> What is added is a third reading, required before either conclusion is reported:
+> bullet above reads a monotone test error as evidence that the ladder did not span the transition. The
+> claim under test reads a U as confirmation. Both readings remain correct for the 2016 account, and neither
+> is withdrawn. A third reading is required before either conclusion is reported:
 >
-> - **A U that turns back down is not a failed replication.** The modern account distinguishes three regimes
->   and reports a **second descent** beyond the interpolation threshold. If the capacity ladder spans that
->   threshold and error falls again, the report identifies *which* regime boundary was crossed, rather than
->   calling the U-curve falsified. **Predeclare** a ladder covering the proposed regimes before measuring
->   its held-out test curve. Any adaptive extension or capacity selection must use development/validation
->   data; a test-selected arm remains an explicitly labelled oracle, as specified in §2.
-> - **Whether a second descent appears must be measured on the data actually in use.** The source is explicit
->   that the phenomenon is dataset-dependent: present on MNIST with the original labels, but emerging or
->   becoming prominent under label noise and on MNIST-1D and CIFAR-100. It is therefore a property of this
->   benchmark's data construction, not a constant to import — and a synthetic construction with no label noise
->   is a legitimate place for it to be absent.
-> - **No mechanism is asserted and no interpolation threshold is computed.** The modern source states its own
->   explanation as putative, and the threshold's location is a property of the run. This benchmark supplies
->   neither.
-> - **A flat or absent right branch is not evidence about parameter count.** Separately from the curve's
->   shape, the modern evidence is that state-of-the-art performance on complex datasets almost never comes
->   from models with significantly fewer parameters than training data points, that pruned networks remain
->   over-parameterized after pruning, and that distillation has not provided convincing evidence that
->   under-parameterized models perform well — with the question left open whether small models fundamentally
->   cannot perform or training merely cannot find good solutions for them. Read a capacity-ladder result as a
->   statement about *this* ladder and *this* optimizer, not about how many parameters the problem needs.
+> - **A U that turns back down is not a failed replication.** The modern account distinguishes three
+>   regimes. It reports a **second descent** beyond the interpolation threshold. Suppose the capacity ladder
+>   spans that threshold and the error falls again. The report then names *which* regime boundary the run
+>   crossed, rather than calling the U-curve falsified. **Predeclare** a ladder that covers the proposed
+>   regimes, before you measure its held-out test curve. Any adaptive extension or capacity selection must
+>   use development/validation data. A test-selected arm remains an explicitly labelled oracle (§2).
+> - **The run must measure whether a second descent appears.** The measurement uses the data actually in
+>   use. The source is explicit that the phenomenon is dataset-dependent. The phenomenon is present on MNIST
+>   with the original labels. Under label noise, and on MNIST-1D and CIFAR-100, the phenomenon emerges or
+>   becomes prominent. The second descent is therefore a property of this benchmark's data construction, not
+>   a constant to import. A synthetic construction with no label noise is a legitimate case. That case may
+>   show no second descent.
+> - **This benchmark asserts no mechanism and computes no interpolation threshold.** The modern source
+>   states its own explanation as putative. The location of the threshold is a property of the run. This
+>   benchmark supplies neither.
+> - **A flat or absent right branch is not evidence about parameter count.** That point stands apart from
+>   the shape of the curve. The modern evidence concerns model size. State-of-the-art performance on complex
+>   datasets almost never comes from models with significantly fewer parameters than training data points.
+>   Pruned networks remain over-parameterized after pruning. Distillation provides no convincing evidence
+>   that under-parameterized models perform well. One question stays open: whether small models
+>   fundamentally cannot perform, or training merely cannot find good solutions for the small models. Read a
+>   capacity-ladder result as a statement about *this* ladder and *this* optimizer, not about how many
+>   parameters the problem needs.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §1.4, §1.5. Sources:
 > `UDL` §8.4 fol. 127–132, §8.5 fol. 132, §20.5 fol. 415–418.*
@@ -170,29 +178,34 @@ be reported.
 - The closed-form arms are **linear/polynomial regression**: the curves are demonstrated where the optimum
   is computable. Transferring the qualitative shape to deep non-convex models is an extrapolation, and the
   book itself limits how far capacity theory reaches (§5.2, p. 145).
-- **Bayes error is known only by construction** here. In a real dataset it is not observable, so claims 4
-  cannot be tested outside the synthetic setting.
-- **VC dimension is not a metric in this benchmark.** It is defined as the largest number of training
-  points a binary classifier can label arbitrarily, and it underwrites bounds in which the gap grows with
-  capacity and shrinks with more samples — but the book states those bounds are rarely applied to practical
-  deep learning because they are too loose and because effective capacity depends on the optimizer
-  (§5.2, pp. 144–145). No bound is computed or reported here.
+- **Bayes error is known only by construction** in this benchmark. A real dataset exposes no Bayes error, so
+  no evaluation can test claim 4 outside the synthetic setting.
+- **VC dimension is not a metric in this benchmark.** The VC dimension is defined as the largest number of
+  training points that a binary classifier can label arbitrarily. The VC dimension underwrites bounds in
+  which the gap grows with capacity and shrinks with more samples. The book states that those bounds rarely
+  apply to practical deep learning. The book gives the reasons: the bounds are too loose, and effective
+  capacity depends on the optimizer (§5.2, pp. 144–145). This benchmark computes and reports no bound.
 - The oracle arm is an **upper bound row** only (§5.3, p. 151).
-- Results are conditional on the assumed data-generating family; the no-free-lunch theorem bounds any
-  generalization beyond it (§5.2.1, p. 148).
-- The data-size decision that this benchmark informs — plot training-set size against generalization error
-  and extrapolate, reasoning on a log scale and doubling the sample count between experiments — is a
-  procedure, and adding a small fraction of the current total is expected to change little (§11.3, p. 441).
+- Results are conditional on the assumed data-generating family. The no-free-lunch theorem bounds any
+  generalization beyond that family (§5.2.1, p. 148).
+- This benchmark informs the data-size decision. The decision is a procedure: plot training-set size
+  against generalization error, then extrapolate. Reason on a log scale, and double the sample count
+  between experiments. The book expects that adding a small fraction of the current total changes little
+  (§11.3, p. 441).
 
-**Modern update (2017–2026) — one further validity limit (`delta_map.md` §1.3).** The capacity axis and the data-size
-axis are each treated here as a single countable quantity, which is what makes a curve plottable. Under a
-modern construction that assumption can fail: once augmentation or tokenization enters, "number of data
-points" is a choice rather than a measurement. The worked case in the modern anchor is that a 60M-parameter
-network trained on ~1M examples had each example augmented with 2048 transformations, while a 175B-parameter
-network was trained on 300B tokens — and its conclusion is that "there is not a clear-cut case that either
-model was overparameterized." This benchmark's arms are unaffected, because its synthetic constructions fix
-the training-set size directly and apply no augmentation. But any transfer of these curve shapes to a real
-dataset must state **what was counted as a data point** — raw examples, augmented views, or tokens — and must
+**Modern update (2017–2026) — one further validity limit (`delta_map.md` §1.3).** The capacity axis and the
+data-size axis are each treated here as a single countable quantity. That treatment is what makes a curve
+plottable. Under a modern construction that assumption can fail: once augmentation or tokenization enters,
+"number of data points" is a choice rather than a measurement.
+
+The modern anchor gives a worked case. The anchor describes a 60M-parameter network trained on ~1M examples.
+That network applied 2048 transformations to each example. A 175B-parameter network was trained on 300B
+tokens. The conclusion of the anchor is that "there is not a clear-cut case that either model was
+overparameterized."
+
+The arms of this benchmark are unaffected, because their synthetic constructions fix the training-set size
+directly and apply no augmentation. Any transfer of these curve shapes to a real dataset must state **what
+the run counts as a data point**. The choice is raw examples, augmented views, or tokens. The transfer must
 not switch definitions between the capacity arm and the data-size arm. A curve whose two axes use different
 counting conventions is not a curve.
 
@@ -212,23 +225,26 @@ counting conventions is not a curve.
 | Effective capacity's three limits; discrete/bounded knobs sample few points | §11.4.1, pp. 442–443 |
 | Log-scale data-size reasoning and doubling | §11.3, p. 441 |
 
-**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. The
-modern-update block in §5 and the added validity limit in §6 are sourced outside the 2016 book and recorded
-in [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
-§1.3, §1.4, §1.5, with source keys defined in
+**Modern-update provenance.** Every row above is a 2016-book locator, and no row was altered. The
+modern-update block in §5 and the added validity limit in §6 are sourced outside the 2016 book. Both are
+recorded in
+[`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
+§1.3, §1.4, §1.5.
+
+The source keys are defined in
 [`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §8.4 fol. 127–132,
-§8.5 fol. 132, §20.1.1 fol. 403, §20.5 fol. 415–418. No new claim, arm, metric or threshold was added to
-the benchmark: the claim under test, the comparison conditions, the baselines and the metrics are unchanged.
+§8.5 fol. 132, §20.1.1 fol. 403, §20.5 fol. 415–418. The benchmark gained no new claim, arm, metric or
+threshold. The claim under test, the comparison conditions, the baselines and the metrics are unchanged.
 
-**Historical boundary.** Figures 5.2–5.5 are the book's own synthetic illustrations; their constructions
+**Historical boundary.** Figures 5.2–5.5 are the book's own synthetic illustrations. Their constructions
 (polynomial degrees, 40 replications, 95% intervals, closed-form fitting) are reproduced here as the
-cheapest testbed, not as a claim that this is how deep models should be evaluated. Nothing in this
-benchmark depends on 2016-era datasets, architectures or benchmark scores. The nearest-neighbour
-regression arm is the book's example of a practical non-parametric model whose complexity tracks the
-training set (§5.2, p. 146).
+cheapest testbed. That reproduction is not a claim about how to evaluate deep models. Nothing in this
+benchmark depends on 2016-era datasets, architectures or benchmark scores. The nearest-neighbour regression
+arm is the book's example of a practical non-parametric model whose complexity tracks the training set
+(§5.2, p. 146).
 
-The **U-shape itself** is now partly era-scoped, and this sentence was added by the modern update: the
-curve's left branch and the underfitting/optimal/overfitting regime definitions are general, but the
-expectation that generalization error rises monotonically past the optimum is a 2016 default — see the
-modern-update block in §5. The benchmark still tests the shape the 2016 account predicts; what changed is
-that a different shape is no longer automatically a falsification.
+The **U-shape itself** is now partly era-scoped. The modern update added this sentence. The curve's left
+branch and the underfitting/optimal/overfitting regime definitions are general. The expectation that
+generalization error rises monotonically past the optimum is a 2016 default (see the modern-update block in
+§5). The benchmark still tests the shape that the 2016 account predicts. What changed is that a different
+shape is no longer automatically a falsification.

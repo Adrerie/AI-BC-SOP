@@ -7,8 +7,8 @@
 
 ## 1. Capability / failure under test
 
-Each structural bias encodes an assumption. This benchmark tests the assumptions and the costs the book
-attaches to violating them.
+Each structural bias encodes an assumption. This benchmark tests those assumptions, and the costs the book
+attaches to breaking an assumption.
 
 | Arm | Claim under test | Locator |
 | --- | --- | --- |
@@ -25,158 +25,176 @@ attaches to violating them.
 
 ## 2. Data and comparison conditions
 
-- **a**: a trained convolutional layer and inputs shifted by a known δ, with the output feature maps compared
-  after the same shift. Boundary handling, stride and padding must be declared, since they are what can break
-  exactness.
-- **b**: the same layer under scaling and rotation, and a comparison against a network that replicates
+- **a**: Run a trained convolutional layer on inputs shifted by a known δ, and compare the output feature
+  maps after the same shift. Declare the boundary handling, the stride and the padding, because each can
+  break exactness.
+- **b**: Run the same layer under scaling and rotation. Compare the layer against a network that replicates
   detectors over the transformation group and pools across channels.
-- **c**: three pooling conditions — no pooling, pooling on all channels, and pooling on a subset of channels —
-  on a task that requires precise spatial information (the book's example is a corner defined by two edges).
-  Training error is the primary readout, since the book predicts the prior itself causes **underfitting**.
-- **d**: convolution versus a dense layer versus a locally connected ("unshared convolution") layer versus a
-  tiled convolution, all with the **same adjacency structure**, measuring parameter storage, floating-point
-  operations and validation error. Per-position bias versus per-channel bias is measured as edge-versus-centre
-  accuracy under zero padding.
-- **e**: a dataset with position-dependent semantics (centred objects whose parts occupy predictable rows)
-  versus one with translation-invariant statistics, under shared and unshared connectivity.
-- **f**: a convolutional model and a non-convolutional model of comparable parameter count evaluated on the
-  same benchmark, plus a **pixel-permuted** version of the benchmark. The benchmark's symmetry class must be
-  declared before the comparison.
-- **g**: a depth sweep at **matched parameter count**, with a width-only arm as the null condition.
-- **h**: several candidate convolutional architectures ranked by training only the last layer on random or
-  k-means features, then the ranking compared against full supervised training of each.
-- **i**: a padding sweep between valid and same convolution.
-- **j**: several activation functions, including at least one unconventional choice, compared on the same task.
+- **c**: Run three pooling conditions on a task that requires precise spatial information. The conditions are
+  no pooling, pooling on all channels, and pooling on a subset of channels. The book's example of such a task
+  is a corner defined by two edges. Training error is the primary readout, because the book predicts that the
+  prior itself causes **underfitting**.
+- **d**: Compare four connectivities: convolution, a dense layer, a locally connected ("unshared convolution")
+  layer, and a tiled convolution. Build all four with the **same adjacency structure**. Measure parameter
+  storage, floating-point operations and validation error. Compare per-position bias with per-channel bias, as
+  edge-versus-centre accuracy under zero padding.
+- **e**: Compare a dataset with position-dependent semantics, where centred objects have parts that occupy
+  predictable rows, against a dataset with translation-invariant statistics. Run each dataset under shared
+  connectivity and under unshared connectivity.
+- **f**: Evaluate a convolutional model and a non-convolutional model of comparable parameter count on the
+  same benchmark. Add a **pixel-permuted** version of the benchmark. Declare the benchmark's symmetry class
+  before the comparison.
+- **g**: Run a depth sweep at **matched parameter count**. Use a width-only arm as the null condition.
+- **h**: Rank several candidate convolutional architectures by training only the last layer on random or
+  k-means features. Then compare that ranking against full supervised training of each architecture.
+- **i**: Run a padding sweep between valid and same convolution.
+- **j**: Compare several activation functions on the same task, including at least one unconventional choice.
 
 > **Modern update (2017–2026) — one added comparison condition on arms a/b, and no new arm.** Arms a–j are
 > the 2016 book's own tests and are unchanged. Arms a and b test whether a network has translation
-> equivariance and whether other group equivariances must be learned by replicating detectors and pooling
-> across channels. The modern material makes a distinction those arms can now be run with, using the same
-> metric and the same baseline:
+> equivariance. The arms also test whether the network must learn other group equivariances by replicating
+> detectors and pooling across channels. The modern material adds a distinction that arms a and b can now
+> use. The metric and the baseline stay the same:
 >
 > - **a/b, added condition: given versus learned.** A convolutional layer is equivariant to spatial
->   translation at every layer and takes the 2D structure of the image into account by construction; in an
->   attention-based network that equivariance "**must be learned**". Run the existing equivariance-error
->   metric (metric 1) on both a model that has the prior built in and one that must acquire it, **at matched
->   data**, and report the data budget at which the comparison was made. The two are not comparable without
->   that budget, because the modern account is explicit about what closes the gap: the strong convolutional
->   inductive bias "can only be superseded by employing extremely large amounts of training data". The
->   primary vision source for this states the same condition from the other side — pre-trained on large data
->   and transferred to mid-sized or small benchmarks the low-bias architecture does very well at
->   substantially lower training cost, while trained only on ImageNet-scale data it self-reports accuracies
->   below comparable convolutional networks.
-> - **Why this is a condition and not an arm.** It changes nothing about what is measured, what the baseline
->   is, or what counts as failure; it adds the second subject the equivariance claim is now made about. The
->   arm structure, the baseline set in §3 and the metrics in §4 are untouched.
-> - **No architecture is specified.** Consistent with the plan governing this lineage and with the 2016
->   package's rule that a model family is not a benchmark, no transformer or vision-transformer entry is
->   created here. What is tested is the *prior* — whether equivariance is given or learned — which is exactly
->   the quantity arms a and b already measure.
+>   translation at every layer. Such a layer takes the 2D structure of the image into account by
+>   construction. In an attention-based network that equivariance "**must be learned**". Run the existing
+>   equivariance-error metric (metric 1) on two models. One model has the prior built in, and the other model
+>   must acquire the prior. Run the two models **at matched data**. The two measurements are not comparable
+>   unless you report the data budget with both. The modern account is explicit about what closes the gap. The
+>   account states that the strong convolutional inductive bias "can only be superseded by employing extremely
+>   large amounts of training data". So the informative quantity is *equivariance error as a function of data
+>   budget*, not either endpoint alone. The primary vision source states the same condition from the other
+>   side. That source reports the low-bias architecture with pre-training on large data. On transfer to
+>   mid-sized or small benchmarks, the architecture does very well at substantially lower training cost. On
+>   ImageNet-scale data only, the same architecture self-reports accuracies below comparable convolutional
+>   networks. Say whether the data budget of a comparison is plausibly in the regime where the gap should
+>   close. Report that budget with the result.
+> - **Why this is a condition and not an arm.** The condition changes nothing about what is measured, about
+>   the baseline, or about what counts as failure. The condition adds a second subject. Arms a and b now make
+>   the equivariance claim about that second subject. The arm structure, the baseline set in §3 and the
+>   metrics in §4 are untouched.
+> - **No architecture is specified.** The plan governing this lineage says that a model family is not a
+>   benchmark. The 2016 package says the same. So this benchmark creates no transformer entry, and no
+>   vision-transformer entry. The quantity under test is the *prior*: whether equivariance is given or
+>   learned. Arms a and b already measure exactly that quantity.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §2.3. Sources: `UDL`
 > §12.10 fol. 229–230; `VIT` (abstract, introduction, conclusion).*
 
 ## 3. Baselines
 
-- Arm a/b: the identity transform (δ = 0) and, for b, a translation-only control.
-- Arm c: the no-pooling network at matched parameter count.
-- Arm d: the dense layer at the same input and output size, and the locally connected layer at the same
-  adjacency — the book's own control triad.
+- Arms a/b use the identity transform (δ = 0). Arm b also uses a translation-only control.
+- Arm c uses the no-pooling network at matched parameter count.
+- Arm d uses the dense layer at the same input and output size, and the locally connected layer at the same
+  adjacency. These arms form the book's own control triad.
 - Arm f: the pixel-permuted benchmark is the control that separates "the prior helped" from "the benchmark
   rewards the prior".
-- Arm g: the width-only arm.
-- Arm h: full supervised training of each candidate.
-- Arm j: the default piecewise-linear unit.
+- Arm g uses the width-only arm.
+- Arm h uses full supervised training of each candidate.
+- Arm j uses the default piecewise-linear unit.
 
 ## 4. Metrics
 
-1. **Equivariance error**: the distance between the shifted output and the output of the shifted input, as a
-   function of δ (arm a), and under scaling and rotation (arm b).
-2. **Training error and validation error** with and without pooling, plus localization accuracy (arm c).
-3. **Parameter storage, floating-point operations and validation error** across the connectivity triad (arm d).
-4. **Edge-versus-centre accuracy** for per-position versus per-channel bias (arm d).
-5. **Validation error versus depth at matched parameter count**, and the parameter count at which the shallow
-   arm begins to overfit (arm g).
-6. **Rank correlation between the last-layer-only screening and full training** (arm h).
-7. **Validation error versus padding amount** (arm i).
-8. **Validation error per activation function**, reported with the publication-bias caveat (arm j).
+1. Measure the **equivariance error**, the distance between the shifted output and the output of the shifted
+   input. Take the distance as a function of δ (arm a). Take the distance also under scaling and rotation
+   (arm b).
+2. Measure **training error and validation error** with pooling and without pooling. Also record
+   localization accuracy (arm c).
+3. Measure **parameter storage, floating-point operations and validation error** across the connectivity
+   triad (arm d).
+4. Take **edge-versus-centre accuracy** for per-position bias versus per-channel bias (arm d).
+5. Record **validation error versus depth at matched parameter count**. Also record the parameter count at
+   which the shallow arm begins to overfit (arm g).
+6. Record the **rank correlation between the last-layer-only screening and full training** (arm h).
+7. Record **validation error versus padding amount** (arm i).
+8. Record **validation error per activation function** (arm j). Report the result with the publication-bias
+   caveat.
 
 The book supplies no tolerance for equivariance error, no parameter-count ladder and no screening-accuracy
-threshold; those are evaluator choices.
+threshold. Each of the three is an evaluator choice.
 
 ## 5. How to interpret failure
 
-- **Arm a fails** ⇒ the layer is not a pure convolution: pooling, stride, padding or boundary handling
-  intervenes. Report which, since equivariance is a property of convolution alone (§9.2, p. 360).
-- **Arm b fails for translation but holds for rotation** ⇒ the transformation group was learned by replication
-  and channel pooling; that is the book's prescribed mechanism, not a contradiction (§9.2, p. 360; Fig. 9.9,
-  p. 363).
-- **Arm c: training error rises with pooling** ⇒ the infinite prior is wrong for this task, which is exactly
-  the book's prediction; the remedy is to pool fewer channels or not at all (§9.4, p. 366).
-- **Arm d shows a runtime saving from sharing** ⇒ the implementation is not exploiting sparsity in the dense
-  arm, or it is comparing different adjacency structures; with only non-zeros stored the flops are the same
-  (§9.2, p. 360).
-- **Arm e shows no penalty for sharing on position-dependent data** ⇒ the position semantics were not actually
-  position-dependent in this dataset; verify with the per-position bias arm.
-- **Arm f: the convolutional model wins on the original benchmark and loses on the permuted one** ⇒ the
-  benchmark embeds spatial knowledge and the comparison class was incommensurable. Declare the benchmark's
+- **Arm a fails** ⇒ the layer is not a pure convolution. Pooling, stride, padding or boundary handling
+  intervenes. Report which one intervenes, because equivariance is a property of convolution alone (§9.2,
+  p. 360).
+- **Arm b fails for translation but holds for rotation** ⇒ the network learned the transformation group by
+  replication and channel pooling. The result is the book's prescribed mechanism, not a contradiction (§9.2,
+  p. 360; Fig. 9.9, p. 363).
+- **Arm c: training error rises with pooling** ⇒ the infinite prior is wrong for this task. The rise is
+  exactly the book's prediction. The remedy is to pool fewer channels, or to pool no channels at all (§9.4,
+  p. 366).
+- **Arm d shows a runtime saving from sharing** ⇒ the implementation does not exploit sparsity in the dense
+  arm. Or the comparison uses different adjacency structures. If only non-zeros are stored, the flops are the
+  same (§9.2, p. 360).
+- **Arm e shows no penalty for sharing on position-dependent data** ⇒ the position semantics in the dataset
+  were not actually position-dependent. Verify the dataset with the per-position bias arm.
+- **Arm f: the convolutional model wins on the original benchmark and loses on the permuted version** ⇒ the
+  benchmark embeds spatial knowledge. The comparison class was incommensurable. Declare the benchmark's
   symmetry class in the report (§9.4, pp. 366–367).
-- **Arm g: width-only matches depth at equal parameter count** ⇒ the depth claim is not reproduced for this
-  task; the book's own caveat is that we cannot guarantee the target function class has the property the
-  expressivity results require (§6.4, p. 225).
-- **Arm h: the screening ranking disagrees with full training** ⇒ the screening heuristic is invalid here; the
-  book offers it as a heuristic and adds that the benefit of unsupervised or random feature learning remains
-  unclear — regularization, or merely enabling larger architectures (§9.9, p. 383).
-- **Arm j: an unconventional activation matches the default** ⇒ consistent with the book's publication-bias
-  warning; a new unit matters only if it demonstrably improves (§6.3, pp. 220–221).
+- **Arm g: width-only matches depth at equal parameter count** ⇒ the test does not reproduce the depth claim
+  for this task. The book's own caveat applies. We cannot guarantee that the target function class has the
+  property the expressivity results require (§6.4, p. 225).
+- **Arm h: the screening ranking disagrees with full training** ⇒ the screening heuristic is invalid here. The
+  book offers the ranking as a heuristic. The book adds that the benefit of unsupervised or random feature
+  learning remains unclear. The unclear benefit is either regularization, or merely the enabling of larger
+  architectures (§9.9, p. 383).
+- **Arm j: an unconventional activation matches the default** ⇒ the result is consistent with the book's
+  publication-bias warning. A new unit matters only if the unit demonstrably improves (§6.3, pp. 220–221).
 
-> **Modern update (2017–2026) — two interpretation rules, no change to any arm.** The bullets above stand.
-> Two readings are added, both about how a result is *reported* rather than what is measured.
+> **Modern update (2017–2026) — two interpretation rules, no change to any arm.** The bullets above stand. The
+> modern update adds two readings. Both readings are about how a result is *reported*, not about what is
+> measured.
 >
-> - **Arms a/b, given-versus-learned condition.** Where the added condition in §2 was run, a large
->   equivariance error in the model that must **learn** the equivariance is not a failure of that model and is
->   not comparable to the same measurement on a model that has it built in — unless the data budget is
->   reported with it. The modern account states the gap closes only with extremely large amounts of training
->   data, so the informative quantity is *equivariance error as a function of data budget*, not either
->   endpoint alone. Report the budget at which the two were compared and say whether it is plausibly in the
->   regime where the gap should have closed.
-> - **Arm g, the depth claim is contested in both directions.** Arm g's existing caveat — that we cannot
->   guarantee the target function class has the property the expressivity results require — is necessary but no
->   longer sufficient. The modern anchor's own verdict is that "the balance of evidence suggests that depth is
->   critical; even the shallowest networks with good image classification performance require >10 layers.
->   However, there is no definitive explanation for why", and it records substantial counter-evidence:
->   wider-shallower residual networks matching deeper ones; a 12-layer parallel-channel network; and the
->   finding that predominantly **shorter** paths of 5–17 layers drive performance in residual networks. The
->   depth-separation results are qualified by the finding that some cannot easily be fit in practice and that
->   there is "little evidence that the real-world functions that we are approximating have these pathological
->   properties". The direction that does support depth is distillation: shallow students could not replicate a
->   deeper teacher, and student performance increased with depth at a **constant parameter budget** — which is
->   arm g's own matched-parameter design, so it is the closest modern analogue this benchmark has.
+> - **Arms a/b, given-versus-learned condition.** Where you ran the added condition in §2, use the reading
+>   below. A large equivariance error in the model that must **learn** the equivariance is not a failure of
+>   that model. That error is not comparable to the same measurement on a model that has the prior built in.
+>   The two measurements are not comparable unless you report the data budget with both. The modern account
+>   states that the gap closes only with extremely large amounts of training data. So the informative quantity
+>   is *equivariance error as a function of data budget*, not either endpoint alone. Say whether the data
+>   budget of a comparison is plausibly in the regime where the gap should close. Report that budget with
+>   the result.
+> - **Arm g, the depth claim is contested in both directions.** Arm g carries an existing caveat. The caveat
+>   is that we cannot guarantee the target function class has the property the expressivity results require.
+>   That caveat is necessary, but no longer sufficient. The modern anchor gives its own verdict on depth. "the
+>   balance of evidence suggests that depth is critical; even the shallowest networks with good image
+>   classification performance require >10 layers. However, there is no definitive explanation for why" — that
+>   is the anchor's verdict. The anchor also records substantial counter-evidence. Wider and shallower
+>   residual networks match deeper networks. A 12-layer parallel-channel network is the second piece of
+>   counter-evidence. The third is the finding that predominantly **shorter** paths of 5–17 layers drive
+>   performance in residual networks. The depth-separation results carry a qualification. Some of those
+>   results cannot easily be fit in practice. The anchor also states that there is "little evidence that the
+>   real-world functions that we are approximating have these pathological properties". One direction does
+>   support depth: distillation. Shallow students could not replicate a deeper teacher. Student performance
+>   increased with depth at a **constant parameter budget**. Distillation matches arm g's own
+>   matched-parameter design. So distillation is the closest modern analogue this benchmark has.
 >
 >   Read an arm-g result as evidence about *this* task, *this* optimizer and *this* parameter ladder. Do not
->   report it as settling depth against width: the 2016 package already declined to make that a benchmark
->   claim, and the modern evidence does not overturn that decision — it confirms the question is open.
+>   report an arm-g result as settling depth against width. The 2016 package already declined to make that a
+>   benchmark claim. The modern evidence does not overturn that decision. That evidence confirms the question
+>   is open.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §2.3, §2.5. Sources:
 > `UDL` §12.10 fol. 229–230, §20.6 fol. 418–419, §20.6.1–§20.6.2; `VIT`.*
 
 ## 6. Validity limits and source traceability
 
-- Arm a's exactness holds for pure convolution; any stride, padding or pooling changes the statement.
-- Arm f restricts the comparison class by construction: the book states a convolutional model can only be
-  compared against other convolutional models in the benchmark, and that image benchmarks split into
-  permutation-invariant ones and ones where the designer embedded spatial knowledge (§9.4, pp. 366–367).
-  Results do not transfer across those two classes.
-- Arm g's numbers (20 million, 60 million) come from one 2016-era study on address-photo digit transcription;
-  they are an illustration of the matched-parameter-count method, not thresholds.
-- Arm d's worked arithmetic (a 2-tap edge detector on a 320 × 280 image: 267,960 flops versus more than 16
-  billion dense) is the book's own example and is undercut by its own non-zero-storage caveat; use it as a
-  scale illustration only.
-- Architecture rankings are unstable: a new best structure was published every few months or weeks, and at the
-  time of writing it was hard to say which was best (§9 intro, p. 350). No arm here may be reported as a
-  standing ranking.
-- Arm j cannot be settled by theory: the book states there are not many clear guiding principles for hidden
-  units and that the winner cannot be predicted in advance (§6.3, p. 216).
+- Arm a's exactness holds for pure convolution. Any stride, padding or pooling changes the statement.
+- Arm f restricts the comparison class by construction. The book states that you can compare a convolutional
+  model in a benchmark only against other convolutional models. The book also states that image benchmarks
+  split into two kinds: permutation-invariant ones, and ones where the designer embedded spatial knowledge
+  (§9.4, pp. 366–367). Results do not transfer across those two classes.
+- Arm g's numbers (20 million, 60 million) come from one 2016-era study on address-photo digit transcription.
+  The numbers are an illustration of the matched-parameter-count method, not thresholds.
+- Arm d's worked arithmetic is the book's own example. The example is a 2-tap edge detector on a 320 × 280
+  image: 267,960 flops versus more than 16 billion dense. The book's own non-zero-storage caveat undercuts
+  that example. Use the example as a scale illustration only.
+- Architecture rankings are unstable. A new best structure was published every few months or weeks. At the
+  time of writing the book, the field could hardly say which structure was best (§9 intro, p. 350). Report no
+  arm here as a standing ranking.
+- Theory cannot settle arm j. The book states that there are not many clear guiding principles for hidden
+  units. The book also states that no one can predict the winner in advance (§6.3, p. 216).
 
 | Claim | Locator |
 | --- | --- |
@@ -190,26 +208,32 @@ threshold; those are evaluator choices.
 | Hidden units: absence of guiding theory; publication-bias warning; admissibility split between feedforward and recurrent/probabilistic models | §6.3, pp. 216–222 |
 | Architecture rankings unstable; no architecture-selection advice given | §9 intro, p. 350 |
 
-**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Two
-modern-update blocks were added: the given-versus-learned comparison condition on arms a/b in §2, and the two
-interpretation rules in §5. They are sourced outside the 2016 book and recorded in
+**Modern-update provenance.** Every row above is a 2016-book locator, and none was altered. Two
+modern-update blocks were added. The first is the given-versus-learned comparison condition on arms a/b in §2.
+The second block holds the two interpretation rules in §5. The two blocks are sourced outside the 2016 book.
+The blocks are recorded in
 [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
-§2.3 and §2.5, with source keys defined in
+§2.3 and §2.5. The source keys are defined in
 [`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `UDL` §12.10 fol. 229–230 and
-§20.6 fol. 418–419; `VIT`. The claim under test, the arm list, the baselines in §3 and the metrics in §4 are
-unchanged: no arm was added, and no metric was introduced that a source does not name.
+§20.6 fol. 418–419, and `VIT`. The claim under test, the arm list, the baselines in §3 and the metrics in §4
+are unchanged. No arm was added, and no metric was introduced that a source does not name.
 
-**Historical boundary.** The 20M/60M observation comes from address-photo digit transcription work cited by
-the book; the named component menus (Leaky ReLU, PReLU, maxout, softplus, hard tanh, RBF; locally connected,
-tiled, grouped and strided convolution; valid/same/full padding as MATLAB terminology) and the deployment
-examples (AT&T check reading, Microsoft OCR and handwriting) are book-era. The 2016 verdict that most
-convolutional networks are by then trained in a purely supervised way, after unsupervised or patch-wise feature
-learning was popular roughly 2007–2013, is recorded as a period statement (§9.9, p. 383).
+**Historical boundary.** The 20M/60M observation comes from a study of digit transcription on address
+photographs, cited by the book. The named component menus are book-era: the activations (Leaky ReLU, PReLU,
+maxout, softplus, hard tanh, RBF), the convolution variants (locally connected, tiled, grouped and strided
+convolution), and the padding names (valid/same/full padding as MATLAB terminology). The deployment examples
+(AT&T check reading, Microsoft OCR and handwriting) are book-era too.
 
-The closing sentence of this note was amended by the modern update. It previously stated that no post-2016
-architecture is introduced. That remains true in substance and is now stated precisely: **no architecture is
-introduced**, post-2016 or otherwise. What §2's added condition and §5's added rules introduce is a *prior*
-and its acquisition cost — whether translation equivariance is given at every layer or must be learned, and
-what data budget that difference requires. Consistent with the plan governing this lineage, and with the
-standing rule in this package's README that a model family is not a benchmark, no architecture entry, variant
-catalogue or family ranking is created here.
+The 2016 verdict is recorded as a period statement (§9.9, p. 383). The verdict is that purely supervised
+training was by then the norm for most convolutional networks. Before that verdict, unsupervised or
+patch-wise feature learning was popular roughly 2007–2013.
+
+The modern update amended the closing sentence of this note. That sentence previously said that this benchmark
+introduces no post-2016 architecture. The statement remains true in substance, and is now stated precisely:
+**no architecture is introduced**, post-2016 or otherwise.
+
+§2's added condition and §5's added rules introduce a *prior* and its acquisition cost. The first part is
+whether translation equivariance is given at every layer, or must be learned. The second part is what data
+budget that difference requires. The plan governing this lineage says that a model family is not a benchmark.
+The standing rule in this package's README says the same. So this benchmark creates no architecture entry, no
+variant catalogue and no family ranking.
