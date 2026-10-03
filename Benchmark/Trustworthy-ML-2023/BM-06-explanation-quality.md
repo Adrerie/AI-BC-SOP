@@ -4,27 +4,30 @@
 
 ## 1. Target capability / failure mode
 
-**Capability.** An explanation method's output is evidence about *this model* (soundness), and it
-moves a human or a process toward the stated end goal (understanding, debugging, trust).
+**Capability.** An explanation method's output is evidence about *this model* (soundness). The output
+also moves a human or a process toward the stated end goal (understanding, debugging, trust).
 
-**Failure mode under test.** Explanations that are stable artifacts of the input rather than of the
-model; metrics that measure the occlusion operator instead of importance; and evaluations that grade
-plausibility against human expectations — confirmation bias — instead of the model's behavior.
+**Failure mode under test.** Three failure modes are under test:
+
+- Explanations that are stable artifacts of the input rather than of the model.
+- Metrics that measure the occlusion operator instead of importance.
+- Evaluations that grade plausibility against human expectations — confirmation bias — instead of the
+  model's behavior.
 
 ## 2. Evaluation hypothesis
 
 - **H-sound** — the attribution changes when the model changes, and tracks the dependence that a
   counterfactual edit detects, under that edit's stated intervention assumptions.
-- **H-order** — features ranked most important really are the ones whose removal most changes the
-  prediction, relative to a random and to a ground-truth ordering.
+- **H-order** — the features ranked most important really are the ones whose removal changes the
+  prediction most. Compare the ranking against a random ordering and against a ground-truth ordering.
 - **H-goal** — a human or process performs measurably better with the explanation.
 
-Each hypothesis is separate; satisfying H-order does not establish H-goal, and satisfying an axiom
-establishes neither. None of the three establishes **causal feature use in the data-generating sense**:
-that reading belongs to
-[`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md) and needs an
-identification design on the inputs, which an instrument fitted to the model cannot supply — see the
-four contracts in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md) §4.
+Each hypothesis is separate. Satisfying H-order does not establish H-goal. Satisfying an axiom
+establishes neither. None of the three establishes **causal feature use in the data-generating sense**.
+That reading belongs to [`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md),
+and it needs an identification design on the inputs. An instrument fitted to the model cannot supply
+such a design — see the four contracts in
+[`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md) §4.
 
 ## 3. Required data and split assumptions
 
@@ -33,25 +36,27 @@ four contracts in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-expla
   [`BM-02`](BM-02-spurious-cue-dependence.md)).
 - A feature granularity definition that partitions the input (perceptual groups or semantic parts),
   with each region assigned exactly once.
-- Evaluation samples drawn from the same split used for the model's task metrics — no separate
-  explanation-only subset, or the comparison is confounded.
-- For human studies: participant population with the relevant expertise, a task with a measurable
-  outcome, and the sample sizes needed for an effect to be detectable.
+- Draw the evaluation samples from the same split used for the model's task metrics. Do not use a
+  separate explanation-only subset, because a separate subset confounds the comparison.
+- For human studies: name the participant population and its relevant expertise. Name a task with a
+  measurable outcome. Name the sample sizes needed for an effect to be detectable.
 
 ## 4. Shift or stress construction
 
-- **Model stress (cascading randomization)**: randomize weights from the output layers backwards;
-  a sound method's map must change visibly. Report the change quantitatively.
-- **Label stress (data randomization)**: train on randomized labels; maps must stop highlighting the
-  original task's discriminative regions. Score by rank correlation between the two maps.
-- **Planted-dependence stress**: build inputs where the correct attribution is known by
-  construction — for example a secondary signal (caption, marker, watermark) whose agreement rate p
-  with the label is set by the experimenter. At low noise, attribution must concentrate on the
-  planted cue; as it becomes uninformative, attribution must move away from it.
+- **Model stress (cascading randomization)**: randomize the weights from the output layers backwards.
+  A sound method's map must change visibly. Report the change quantitatively.
+- **Label stress (data randomization)**: train the model on randomized labels. The maps must stop
+  highlighting the original task's discriminative regions. Score the result by the rank correlation
+  between the two maps.
+- **Planted-dependence stress**: build inputs where the correct attribution is known by construction.
+  One example is a secondary signal (caption, marker, watermark) whose agreement rate p with the label
+  is set by the experimenter. At low noise, the attribution must concentrate on the planted cue. As
+  the planted cue becomes uninformative, the attribution must move away from the planted cue.
 - **Occlusion-operator stress**: repeat the ordering check with several filling operators (constant
   value, blur, inpainting), since the operator is a hyper-parameter of the metric.
-- **Cross-method stress**: at least two methods from different linearization families (input-space,
-  latent/concept-space, activation-based, training-data attribution), reporting their disagreement.
+- **Cross-method stress**: use at least two methods from different linearization families
+  (input-space, latent/concept-space, activation-based, training-data attribution). Report the
+  disagreement between those methods.
 
 ## 5. Required baselines
 
@@ -71,16 +76,18 @@ four contracts in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-expla
 
 - `sanity_rankcorr` — rank correlation of attributions between the target model and its randomized
   controls (label and weight), reported per method.
-- `remove_classify_auc` — area under the accuracy-versus-removed-features curve, relative to random
-  occlusion, lower being a better ordering; reported with the occlusion operator named.
+- `remove_classify_auc` — the area under the accuracy-versus-removed-features curve, relative to
+  random occlusion. A lower value is a better ordering. Report the metric with the occlusion operator
+  named.
 
 ## 7. Secondary / diagnostic metrics
 
 - Change magnitude of the map under cascading randomization (a curve over randomized layers).
 - Planted-cue recovery: fraction of attribution mass on the planted cue as a function of the noise
   level p.
-- `hitl_delta` — human accuracy or behavior change with versus without the explanation; and, for the
-  understanding goal, how well a human predicts the model's decision given the explanation.
+- `hitl_delta` — the change in human accuracy or behavior, with versus without the explanation. For
+  the understanding goal, also report how well a human predicts the model's decision given the
+  explanation.
 - `self_influence_auroc` — for training-sample attribution, retrieval quality on suspicious or
   mislabeled items, with its assumption count stated.
 - Cross-method agreement (how often two methods name the same top-k regions).
@@ -88,12 +95,13 @@ four contracts in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-expla
 
 ## 8. Aggregation and uncertainty reporting
 
-Report the ordering metric as a curve plus its area, with the baseline curve in the same figure, and
-with the number of samples behind each point. Do not average the four remove-and-classify variants
-(most-versus-least important, occlude-versus-inpaint) into one number without also reporting their
-spread — they can disagree, and the average hides which convention produced the claim. Human results
-are reported with effect size, participant count and variance, not with a preference percentage
-alone.
+Report the ordering metric as a curve plus its area. Put the baseline curve in the same figure, and
+give the number of samples behind each point.
+
+Do not average the four remove-and-classify variants (most-versus-least important,
+occlude-versus-inpaint) into one number without also reporting the spread of those variants. The four
+variants can disagree, and one average hides which convention produced the claim. Report human
+results with effect size, participant count and variance, not with a preference percentage alone.
 
 ## 9. Failure interpretation
 
@@ -109,46 +117,57 @@ alone.
 
 ## 10. Computational reporting
 
-Per method: passes or samples per explanation, whether it needs retraining or architecture access
-(which limits it to white-box settings), the cost of the inpainting or generation machinery behind
-the occlusion operator, and — for human-grounded tracks — participant hours. Split each of those into
-what is paid once and what is paid per case, since two methods with the same total cost are not
-comparable when one amortizes it and the other repeats it on every prediction. Report explanation cost
-alongside explanation quality, since a per-sample optimization loop is often the reason a method is
-not usable at deployment scale.
+Report these items per method:
+
+- the passes or the samples per explanation
+- whether the method needs retraining or architecture access, which limits the method to white-box
+  settings
+- the cost of the inpainting or generation machinery behind the occlusion operator
+- for human-grounded tracks, the participant hours
+
+Split each item into what is paid once and what is paid per case. Two methods with the same total cost
+are not comparable when one method amortizes the cost and the other repeats the cost per prediction.
+
+Report explanation cost alongside explanation quality. A per-sample optimization loop is often the
+reason that a method is not usable at deployment scale.
 
 ## 11. Validity limits
 
-- There is no ground-truth explanation in general; every quantitative check here is a proxy or a
+- There is no ground-truth explanation in general. Every quantitative check here is a proxy or a
   manufactured case, and a passing score is not proof of soundness.
-- Necessary-condition and sanity checks are filters, not certifications: they can disqualify but not
-  validate.
-- Satisfying a formal axiom (completeness, monotonicity) is a design property; the source explicitly
+- Necessary-condition and sanity checks are filters, not certifications. The checks can disqualify a
+  method but cannot validate the method.
+- Satisfying a formal axiom (completeness, monotonicity) is a design property. The source explicitly
   declines to treat these axioms as necessities.
 - Localization against object boxes measures agreement with human expectations about where objects
   are, not what the model used — a model may legitimately decide from elsewhere.
 - Architecture assumptions bound transfer: a method defined through convolutional structure may be
   meaningless for other families.
-- Human-grounded results are study designs, not laws: the task, participants and outcome define what
-  was shown.
-- A demonstrated debugging use is not established by an attribution map; the source records that no
-  specialized, successful explanation-based debugging tool is known.
+- Human-grounded results are study designs, not laws. The task, the participants and the outcome
+  define what the study showed.
+- An attribution map does not establish a demonstrated debugging use. The source records that the
+  field knows no specialized, successful explanation-based debugging tool.
 
 ## 12. Related SOPs
 
-Executed by [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md);
-planted-dependence cases supplied by
-[`BM-02`](BM-02-spurious-cue-dependence.md) via
-[`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md); reporting through
-[`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
+- Execution: [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md).
+- Planted-dependence cases: supplied by [`BM-02`](BM-02-spurious-cue-dependence.md) through
+  [`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md).
+- Reporting: [`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
 
 
 ## 13. Source traceability
 
-The instrument itself is audited in [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md)
-§12, which carries the full source anchor list for the vocabulary (§3.1-§3.4.1), the method
-catalogue and its assumptions (§3.5-§3.6.6, §3.10-§3.11), the axioms discussion (§3.5.10), and the
-human-in-the-loop framing (§3.8.2). Anchors specific to this benchmark's measurements:
+The instrument itself is audited in
+[`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md) §12. That section
+carries the full source anchor list for:
+
+- the vocabulary (§3.1-§3.4.1)
+- the method catalogue and its assumptions (§3.5-§3.6.6, §3.10-§3.11)
+- the axioms discussion (§3.5.10)
+- the human-in-the-loop framing (§3.8.2)
+
+Anchors specific to this benchmark's measurements:
 
 - Pass/fail scoring of model dependence and the rank-correlation readout: §3.7.5
   (book pp. 182-185).

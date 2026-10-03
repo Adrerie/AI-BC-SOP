@@ -4,62 +4,71 @@
 
 ## 1. Target capability / failure mode
 
-**Capability.** Predicting from the cue the whitelist designates as legitimate evidence, when the
-training data also offer an easier cue that correlates with the label during development only.
+**Capability.** The model predicts from the cue that the whitelist designates as legitimate evidence.
+The training data also offer an easier cue, one that correlates with the label during development
+only. The benchmark tests whether the model still predicts from the legitimate cue.
 
-**Failure mode under test.** Misspecification: the model answers a different question than the task
-states. Underlying mechanisms named by the source: spurious correlation (development-only
-co-occurrence), underspecification (several cues each reach training perfection), and shortcut or
-simplicity bias (a systematic preference for the easier cue, reported as color ≻ scale ≻ shape ≻
-orientation in vision-like data regardless of architecture and algorithm).
+**Failure mode under test.** The failure mode is misspecification. The model answers a different
+question than the task states. The source names three underlying mechanisms:
 
-This benchmark is distinct from `BM-01`: a model can transfer across styles and domains while still
-deciding from a cue that a changed correlation would break.
+- spurious correlation (development-only co-occurrence)
+- underspecification (several cues each reach training perfection)
+- shortcut or simplicity bias (a systematic preference for the easier cue, reported as color ≻ scale
+  ≻ shape ≻ orientation in vision-like data regardless of architecture and algorithm)
+
+`BM-02` is distinct from `BM-01`. A model can transfer across styles and domains and still decide
+from a cue that a changed correlation would break.
 
 ## 2. Evaluation hypothesis
 
 *Model M's decisions depend on the forbidden cue to a degree that costs accuracy on the
-off-diagonal evaluation cells, and a mitigation reduces that dependence without destroying average
-performance.* Every claim needs a bias-labeled, disentangled evaluation set: on a diagonal training
-set alone the deployment cue is not identifiable, so the hypothesis is untestable and any reported
-"robustness" implies an undocumented ingredient.
+off-diagonal evaluation cells. A mitigation reduces that dependence without destroying average
+performance.* Every claim needs a bias-labeled, disentangled evaluation set. On a diagonal training
+set alone, the deployment cue is not identifiable. The hypothesis is then untestable, and any
+reported "robustness" implies an undocumented ingredient.
 
 ## 3. Required data and split assumptions
 
 - Two declared factors: the task cue and the bias cue, with per-sample labels for both.
-- Four cells: diagonal (task and bias agree) and off-diagonal (they disagree), per cue value pair.
+- Four cells: diagonal (task and bias agree) and off-diagonal (task and bias disagree), per cue
+  value pair.
 - Training material: abundant diagonal samples plus a stated unbiased fraction **ρ** — state the
   direction of ρ explicitly, since the literature uses the symbol both ways.
 - Evaluation material: off-diagonal cells with nonzero support, and (Extended) a *biased* and an
   *unbiased* test set scored separately.
 - Validation per [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md):
   from the training cells, never from the off-diagonal cells being reported.
-- The deployment distribution is deliberately **not** restricted: it may carry a different bias than
-  development, and the benchmark must remain readable under that possibility.
+- The deployment distribution is deliberately **not** restricted. The deployment distribution may
+  carry a different bias than development, and the benchmark must remain readable under that
+  possibility.
 
 ## 4. Shift or stress construction
 
-**Core.** Correlation stress: hold the task fixed and flip the cue–label relation in the evaluation
-set (swap the bias value while keeping the task cue intact), or remove the bias cue entirely.
-Construct it by editing exactly one factor and verifying the others are unchanged.
+**Core.** Use correlation stress. Hold the task fixed and flip the cue–label relation in the
+evaluation set (swap the bias value while keeping the task cue intact), or remove the bias cue
+entirely. Construct the stress by editing exactly one factor, and verify that the other factors are
+unchanged.
 
 **Extended.**
-- *Cue-by-cue relabeling*: re-label the same off-diagonal set once per candidate cue and score the
-  frozen predictions under each labeling; the learned cue shows high accuracy, the others near chance.
+- *Cue-by-cue relabeling*: re-label the same off-diagonal set once per candidate cue. Score the
+  frozen predictions under each labeling. The learned cue shows high accuracy, and the other cues
+  show accuracy near chance.
 - *Task-cue ablation*: mask or remove the task-relevant cue (segmentation + inpainting,
   silhouette-only, texture-only, or text-span deletion). A material drop shows sensitivity to the
-  edit. The absence of a drop does **not** establish that the cue was unused: the cue can survive the
-  edit in reduced form, be redundant with another factor, or the ablated inputs can simply be far
-  enough out of distribution that accuracy no longer measures the same thing.
+  edit. The absence of a drop does **not** establish that the cue was unused. Three alternatives
+  remain open. The cue can survive the edit in reduced form. The cue can be redundant with another
+  factor. The ablated inputs can simply be far enough out of distribution that accuracy no longer
+  measures the same thing.
 - *Bias-cue ablation*: the symmetric construction, where a material drop evidences dependence on the
-  factor that was edited. It identifies *which* cue only when the competing cues were edited under the
-  same intervention standard and the drop survives the artifact and shift checks above.
+  factor that was edited. The construction names *which* cue carries the dependence only under two
+  conditions. First, the same standard must govern the edits and the comparisons of the competing
+  cues. Second, the drop must survive the artifact and shift checks above.
 - *Myopia probe*: train a deliberately handicapped model (few epochs, small receptive field, single
-  modality) and check that it learns the same cue you call the bias.
+  modality), and check that the handicapped model learns the same cue you call the bias.
 - *ρ ladder*: repeat at several unbiased fractions, including the regime where the method's
-  assumption is said to hold, and record where it breaks.
-- *Role swap*: exchange which factor is task and which is bias, and re-run — several published
-  constructions fail here, which is an assumption failure rather than a baseline weakness.
+  assumption is said to hold, and record where the assumption breaks.
+- *Role swap*: exchange which factor is the task and which is the bias, and re-run. Several published
+  constructions fail here. The failure is an assumption failure rather than a baseline weakness.
 
 ## 5. Required baselines
 
@@ -92,12 +101,15 @@ Construct it by editing exactly one factor and verifying the others are unchange
 
 ## 8. Aggregation and uncertainty reporting
 
-Report per cell, then a worst-cell, then (separately) an average. Two aggregation traps are
-specific to this design: an average over diagonal and off-diagonal cells conceals the failure that
-defines the benchmark, and a small off-diagonal cell produces a wide estimate — so give the
-bootstrap or seed spread for every cell reported, and mark cells whose support is below the level
-needed to interpret them. Do not pool results across different ρ values or different bias
-definitions.
+The report gives a per-cell figure first, then a worst-cell figure, and then an average as a
+separate line. Two aggregation traps are specific to this design:
+
+- an average over diagonal and off-diagonal cells conceals the failure that defines the benchmark
+- a small off-diagonal cell produces a wide estimate
+
+Give the bootstrap or seed spread for every cell reported. Mark the cells whose support is below the
+level needed to interpret those cells. Do not pool results across different ρ values or different
+bias definitions.
 
 ## 9. Failure interpretation
 
@@ -120,51 +132,66 @@ model is an additional training run).
 
 ## 11. Validity limits
 
-- The benchmark can only test cues you named and labeled; an unmodeled third factor can carry the
+- The benchmark can only test cues you named and labeled. An unmodeled third factor can carry the
   dependence unnoticed.
-- Off-diagonal support is a hard precondition: without it the result is a statement about
-  correlation, not about evidence.
-- Editing operators are not neutral; a filling value can itself be informative, so an apparent
+- Off-diagonal support is a hard precondition. Without off-diagonal support, the result is a
+  statement about correlation, not about evidence.
+- Editing operators are not neutral. A filling value can itself be informative. So an apparent
   dependence change may be an artifact of the occlusion.
-- Human-judgement-based edits import the editor's expectations; treat them as hypotheses.
-- A clean result does not establish causal use of a cue — it establishes dependence under the tested
-  counterfactuals.
-- A stronger causal reading ("cue C is what the model relies on", "C is not used") needs an
-  identification argument: the edit must isolate C, the competing cues must have been edited and
-  compared under the same standard, and non-use additionally requires that C could not have been
-  recovered from the edited inputs. A designed construction can supply this; an uncontrolled edit
-  series cannot, and the report should say which of the two it ran.
+- Human-judgement-based edits import the editor's expectations. Treat the imported expectations as
+  hypotheses.
+- A clean result does not establish causal use of a cue. The result establishes dependence under the
+  tested counterfactuals.
+- A stronger causal reading needs an identification argument. The two readings are "cue C is what
+  the model relies on" and "C is not used". The argument has three parts. The edit must isolate
+  C. The same standard must govern the edits and the comparisons of the competing cues. For a claim
+  of non-use, the edited inputs must not allow recovery of C. A designed construction can supply
+  the argument. An uncontrolled edit series cannot supply the argument, and the report should say
+  which of the two the project ran.
 - Compositional caveats: treating semantically independent input parts as independent can make
-  spurious correlation impossible by construction, which is a property of the design, not of the
-  model.
+  spurious correlation impossible by construction. That impossibility is a property of the design,
+  not of the model.
 
 ## 12. Related SOPs
 
-[`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md) governs any
-attribution instrument consulted while interpreting these cells. The design needs
-[`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-setting.md) §5 step 4 (cue
-whitelist, ρ) and [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md)
-§5 step 4 (off-diagonal cells); executed by
-[`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md); mitigation results
-read by [`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md); reporting
-through [`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md).
+- [`SOP-07`](../../SOP/Trustworthy-ML-2023/SOP-07-evaluate-explanation-methods.md) governs any
+  attribution instrument consulted while interpreting these cells.
+- The design needs [`SOP-01`](../../SOP/Trustworthy-ML-2023/SOP-01-specify-deployment-setting.md)
+  §5 step 4 (cue whitelist, ρ) and
+  [`SOP-02`](../../SOP/Trustworthy-ML-2023/SOP-02-build-evaluation-splits-under-leakage-discipline.md)
+  §5 step 4 (off-diagonal cells).
+- [`SOP-03`](../../SOP/Trustworthy-ML-2023/SOP-03-diagnose-learned-evidence.md) executes the
+  benchmark.
+- [`SOP-06`](../../SOP/Trustworthy-ML-2023/SOP-06-choose-mitigation-or-abstain.md) reads the
+  mitigation results.
+- [`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md) carries
+  the reporting.
 
 ## 13. Source traceability
 
-Spurious correlation, underspecification/misspecification and their high-capacity precondition:
-§2.7.1, Definitions 2.27-2.28 (pp. 45-46). Shortcut/simplicity bias, its cue ordering and the
-complexity rationale: §2.9, Definition 2.29 (pp. 49-50); example catalogue of bias/task cue pairs:
-§2.9.1 (pp. 50-53); ID-versus-OOD valence: §2.9.2 (pp. 53-54). Non-identifiability of the
-deployment cue on a diagonal set and the hidden-ingredient argument: §2.8.2 (p. 47). Subgroup
-requirement and unrestricted deployment distribution: §2.8 (p. 46). ρ as part of the setting,
-attribute labels, and the domain-adaptation escape route: §2.8.3 (p. 48); ρ-direction inconsistency
-observed at §2.13.2 Table 2.5 (p. 74). Cue-by-cue accuracy: §2.8.4 (p. 49). Counterfactual
-evaluation with both alteration directions, their ingredients and desiderata: §2.10 (pp. 55-56).
-Scenario-1 up-weighting and atypicality counting: §2.12 (pp. 57-59). Worst-group objective, grouping
-choice and the average/worst trade-off: §2.12.1, Definition 2.30 (pp. 59-61). Adversarial alignment
-with bias-as-domain encodings: §2.12.2 (pp. 62-65). Biased/myopic model definitions and "be
-different" supervision: §2.13, Definitions 2.31-2.33 (pp. 65-66, 74-75). Role-swap failure of the
-contrast method: §2.13.1 (pp. 67-70). Biased-versus-unbiased dual test sets and the ρ sweep:
-§2.13.2 (pp. 70-75). Compositional independence remark: §2.8 (p. 46). Missingness/occlusion
-artifacts: §3.7.8 (pp. 187-188). Tiering and the pre-declared materiality threshold are repository
-conventions built on the source's note that papers differ in how they judge a "significant" drop.
+- Spurious correlation, underspecification/misspecification and their high-capacity precondition:
+  §2.7.1, Definitions 2.27-2.28 (pp. 45-46).
+- Shortcut/simplicity bias, its cue ordering and the complexity rationale: §2.9, Definition 2.29
+  (pp. 49-50).
+- Example catalogue of bias/task cue pairs: §2.9.1 (pp. 50-53).
+- ID-versus-OOD valence: §2.9.2 (pp. 53-54).
+- Non-identifiability of the deployment cue on a diagonal set and the hidden-ingredient argument:
+  §2.8.2 (p. 47).
+- Subgroup requirement and unrestricted deployment distribution: §2.8 (p. 46).
+- ρ as part of the setting, attribute labels, and the domain-adaptation escape route: §2.8.3 (p. 48).
+- ρ-direction inconsistency observed at §2.13.2 Table 2.5 (p. 74).
+- Cue-by-cue accuracy: §2.8.4 (p. 49).
+- Counterfactual evaluation with both alteration directions, their ingredients and desiderata:
+  §2.10 (pp. 55-56).
+- Scenario-1 up-weighting and atypicality counting: §2.12 (pp. 57-59).
+- Worst-group objective, grouping choice and the average/worst trade-off: §2.12.1, Definition 2.30
+  (pp. 59-61).
+- Adversarial alignment with bias-as-domain encodings: §2.12.2 (pp. 62-65).
+- Biased/myopic model definitions and "be different" supervision: §2.13, Definitions 2.31-2.33
+  (pp. 65-66, 74-75).
+- Role-swap failure of the contrast method: §2.13.1 (pp. 67-70).
+- Biased-versus-unbiased dual test sets and the ρ sweep: §2.13.2 (pp. 70-75).
+- Compositional independence remark: §2.8 (p. 46).
+- Missingness/occlusion artifacts: §3.7.8 (pp. 187-188).
+- Tiering and the pre-declared materiality threshold are repository conventions. The conventions rest
+  on the source's note that papers differ in how a "significant" drop is judged.

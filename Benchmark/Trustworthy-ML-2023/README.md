@@ -1,17 +1,27 @@
 # Benchmark group — Trustworthy ML evaluation suite
 
-Reusable benchmark specifications for the claims a trustworthy-ML system makes about itself: that it
-generalizes across a change, relies on the right evidence, states usable confidence, notices its own
-errors, survives a bounded worst case, explains itself honestly, declines safely — and that the
-comparison proving any of this is itself trustworthy.
+Reusable benchmark specifications cover the claims a trustworthy-ML system makes about itself. Each
+claim is that the system does one of the following:
 
-BM-01 through BM-08 were derived by reconstructing the 2023 book's methodology rather than by transcribing its chapters; BM-09 and selected later extensions come from the official post-book course lineage. See [`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md)
+- generalizes across a change
+- relies on the right evidence
+- states usable confidence
+- notices its own errors
+- survives a bounded worst case
+- explains itself honestly
+- declines safely
+
+The suite also tests the comparison that proves any of those claims. That comparison must itself be
+trustworthy.
+
+BM-01 through BM-08 come from a reconstruction of the 2023 book's methodology, not from a
+transcription of its chapters. BM-09 and selected later extensions come from the official post-book
+course lineage. See [`concept_reconstruction.md`](../../Validation/Trustworthy-ML-2023/concept_reconstruction.md)
 and the audited source universe in
-[`source_coverage.md`](../../Validation/Trustworthy-ML-2023/source_coverage.md). Source attribution and
-the licensing position of this package are recorded in
-[`SOURCE.md`](../../Validation/Trustworthy-ML-2023/SOURCE.md); like the SOP group, this is a
-provenance-bearing staging unit whose rules are meant to be extended, revised or merged by later
-sources.
+[`source_coverage.md`](../../Validation/Trustworthy-ML-2023/source_coverage.md).
+[`SOURCE.md`](../../Validation/Trustworthy-ML-2023/SOURCE.md) records the source attribution and the
+licensing position of the package. The package is a provenance-bearing staging unit, like the SOP
+group. Later sources may extend, revise or merge the rules of that unit.
 
 ## The nine components
 
@@ -29,35 +39,42 @@ sources.
 
 ## Standing integrity rules for this suite
 
-These apply to every component and are the reason the suite exists as a group:
+The rules below apply to every component. The rules are the reason the suite exists as a group:
 
-1. A final test set stays independent for a claim only if nothing about the reported system was
-   selected from that set's results — no model, threshold, calibration parameter, checkpoint or attack
-   choice. Once a selection has been made, the set is development evidence for that claim, and
-   re-running the chosen system over it does not restore independence: get a new untouched test, use a
-   pre-existing secondary one, or downgrade the claim and disclose.
-2. IID validation, shifted validation, and final-test conditions are named separately; a shifted
-   validation set changes the setting and therefore the comparison class. Adaptation settings that
-   legitimately use target-domain information are in scope — they must simply be declared as what they
-   are and scored against methods granted the same access.
-3. Every metric states where it is invalid: proper scores mix accuracy and calibration and have an
-   unknown floor; `ece` is driven to zero by a constant set equal to the measured correctness rate of
-   the scored set — an oracle, not a baseline a deployed model can hold — and depends on the bin
-   count; `aupr` is bound to the prevalence of whichever class the task declares positive, so the
-   success- and error-positive variants have different random values; `auroc` means nothing until its
-   positive class and score orientation are named; `remove_classify_auc` measures the occlusion
-   operator too; a distance score confuses novelty with ambiguity.
-4. Model capability and confidence quality are scored separately — an accurate model can be blind and
-   an uncertain model can rank well.
-5. A robustness or fairness *intervention* is never evaluated by the benchmark it was tuned to
-   satisfy; re-run the untouched protocol.
+1. A final test set supports a claim only while the test set stays independent. Independence holds
+   only when no choice about the reported system came from that set's results. The choices cover the
+   model, the threshold, the calibration parameter, the checkpoint and the attack. Once the project
+   selects from the set, the set is development evidence for that claim. Re-running the chosen system
+   over the set does not restore independence. Follow one of these three routes:
+   - Get a new untouched test.
+   - Use a pre-existing secondary test.
+   - Downgrade the claim and disclose.
+2. Name the IID validation, the shifted validation and the final-test conditions separately. A
+   shifted validation set changes the setting and therefore the comparison class. Adaptation
+   settings that legitimately use target-domain information are in scope. Declare such a setting as
+   what the setting is. Score that setting against methods granted the same access.
+3. Report where each metric is invalid. The register gives the reason per metric:
+   - Proper scores mix accuracy and calibration, and have an unknown floor.
+   - A constant set equal to the measured correctness rate of the scored set drives `ece` to zero.
+     That constant is an oracle, not a baseline a deployed model can hold. The value of `ece` also
+     depends on the bin count.
+   - `aupr` tracks the prevalence of whichever class the task declares positive. So the
+     success-positive variant and the error-positive variant have different random values.
+   - `auroc` means nothing until the report names its positive class and score orientation.
+   - `remove_classify_auc` measures the occlusion operator too.
+   - A distance score confuses novelty with ambiguity.
+4. Score model capability and confidence quality separately. An accurate model can be blind, and an
+   uncertain model can rank well.
+5. Do not evaluate a robustness or fairness *intervention* by the benchmark that the intervention's
+   own tuning targeted. Re-run the untouched protocol instead.
 6. Report average **and** failure-oriented views (worst cell, worst bin, worst subgroup, risk at
-   coverage) whenever they differ in direction.
-7. Report cost — compute, memory, labels, human review — next to the gain.
+   coverage) whenever the two differ in direction.
+7. Report cost (compute, memory, labels, human review) next to the gain.
 8. Mark oracle or stronger-information rows (for example oracle selection or train-on-target)
-   explicitly as upper bounds or stronger-setting references where appropriate. A certified robust
-   accuracy is not an upper-bound row: under a valid certificate it is a provable lower bound on the
-   true robust accuracy for the stated threat model.
+   explicitly as upper bounds or as stronger-setting references, where appropriate. A certified
+   robust accuracy is not an upper-bound row. Under a valid certificate, a certified robust accuracy
+   is a provable lower bound. The bound holds for the true robust accuracy of the stated threat
+   model.
 
 ## How to pick components
 
@@ -73,36 +90,43 @@ comparing methods or inheriting a leaderboard   -> BM-08 (always)
 the model must not reveal what it knows of a specific item or context -> BM-09
 ```
 
-BM-08 is mandatory whenever a comparison is used to choose a method; the other eight are selected by
-the claim under test.
+BM-08 is mandatory whenever the project uses a comparison to choose a method. The claim under test
+selects the other eight components.
 
 ## Metric names
 
 All components use the metric register in
-[`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md) §4. Names
-are not redefined locally; if a component needs a new one, it is added to that register first.
+[`SOP-08`](../../SOP/Trustworthy-ML-2023/SOP-08-report-evidence-and-validity-boundaries.md) §4.
+Components do not redefine names locally. When a component needs a new name, the project adds that
+name to the register first.
 
 ## Where each component comes from
 
 BM-01 through BM-08 reconstruct the book's evaluation methodology and retain their book traceability.
-Selected post-book deltas added to those existing benchmarks are traced centrally in the official-update
-audit rather than copied into each source section. BM-09 is different: it is wholly new from the Spring
-2026 privacy and data-protection session, so its own traceability section cites that course session
-instead of a book section and page. The audit trail for all update decisions, including candidates that
-were examined and rejected, is
+Selected post-book deltas add to those existing benchmarks. The official-update audit records each
+delta centrally, rather than copying the delta into each source section. BM-09 is different. It is
+wholly new from the Spring 2026 privacy and data-protection session. The traceability section of
+`BM-09` therefore cites that course session, instead of a book section and page. The audit trail for
+all update decisions, including candidates that the project examined and rejected, is
 [`../../Validation/Trustworthy-ML-Official-Updates-2024-2026/decision_log.md`](../../Validation/Trustworthy-ML-Official-Updates-2024-2026/decision_log.md).
 
 ## What this suite does not cover
 
-Two areas the source discusses were left out of the operational suite, each recorded with its reason
-in the coverage audit: the representation-learning showcase whose own evaluation the source labels
-qualitative and unguaranteed, and the navigation, legal, historical and research-agenda material that
-carries no reusable evaluation procedure.
+The source discusses two areas that the operational suite leaves out. The coverage audit records the
+reason for each. The first area is the representation-learning showcase, whose own evaluation the
+source labels qualitative and unguaranteed. The second area is the navigation, legal, historical and
+research-agenda material, which carries no reusable evaluation procedure.
 
-Learning settings that consume target-domain information are **not** out of scope. Domain adaptation
-(§2.4.4), test-time training (§2.4.6), domain- and task-incremental continual learning (§2.4.7,
-§2.4.11) and the K-shot / meta-learning variants (§2.4.9-§2.4.10) are first-class entries in the
-source's own setting catalogue, and the coverage audit records them as `incorporate` or `supporting`.
-This suite evaluates them on the same terms as any other setting: the project declares which setting
-it is running, and is compared against methods granted the same access. What the integrity rules
-forbid is the mismatch between resources used and setting named — not the use of target information.
+Learning settings that consume target-domain information are **not** out of scope. The source's own
+catalogue of learning settings treats the following as first-class entries:
+
+- domain adaptation (§2.4.4)
+- test-time training (§2.4.6)
+- domain- and task-incremental continual learning (§2.4.7, §2.4.11)
+- the K-shot / meta-learning variants (§2.4.9-§2.4.10)
+
+The coverage audit records those settings as `incorporate` or `supporting`. This suite evaluates
+those settings on the same terms as any other setting. The project declares which setting the run
+uses. The suite then compares that run against methods granted the same access. What the integrity
+rules forbid is the mismatch between resources used and setting named, not the use of target
+information.
