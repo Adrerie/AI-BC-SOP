@@ -5,74 +5,87 @@ Chinese edition — see [`SOURCE.md`](../../Validation/Deep-Learning-2016/SOURCE
 
 ## 1. Purpose and scope
 
-Make an architecture choice reviewable. For every structural bias adopted, record four things — what it
-**assumes** about the data-generating process, what it **buys**, what **breaks** when the assumption is
-false, and what to **measure** to detect the violation — and then run the paired comparison that tests it.
+Make an architecture choice reviewable. Record four things for every structural bias that you adopt:
 
-This is not an architecture tutorial and not a chapter summary. The book itself licenses the framing:
-convolution and pooling are **infinitely strong priors**, so data cannot override them, and "卷积和池化
-可能导致欠拟合" — convolution and pooling may cause underfitting (§9.4, p. 366). It also licenses the
-restricted comparison class: a convolutional model "只能以基准中的其他卷积模型作为比较的对象", because a
-non-convolutional model can still learn after all pixels are permuted (§9.4, p. 366). And it refuses to
-hand out architecture recipes: a new best structure was being published every few months or even weeks, so
-at the time of writing it was hard to say which was best, and the ideal architecture "必须通过实验，观测
-在验证集上的误差来找到" — must be found experimentally by observing validation error (§9 intro, p. 350;
-§6.4, p. 223).
+- what the bias **assumes** about the data-generating process
+- what the bias **buys**
+- what **breaks** when the assumption is false
+- what you **measure** to detect the violation
+
+Then run the paired comparison that tests the assumption.
+
+This SOP is not an architecture tutorial. This SOP is not a chapter summary. The book itself licenses the
+framing. Convolution and pooling are **infinitely strong priors**, so data cannot override those priors.
+The book's wording is "卷积和池化可能导致欠拟合" — convolution and pooling may cause underfitting (§9.4, p. 366).
+
+The book also licenses the restricted comparison class. A convolutional model
+"只能以基准中的其他卷积模型作为比较的对象", because a non-convolutional model can still learn after a
+permutation of all the pixels (§9.4, p. 366).
+
+The book also refuses to hand out architecture recipes. A new best structure appeared every few months or
+even weeks. At the time of writing, no one could say which structure was best. The ideal architecture
+"必须通过实验，观测在验证集上的误差来找到" — you must find that architecture experimentally, by
+observing the validation error (§9 intro, p. 350; §6.4, p. 223).
 
 Out of scope: output units and cost (`SOP-DL-01`), capacity sizing (`SOP-DL-02`), regularization
 (`SOP-DL-03`), optimization repair (`SOP-DL-04`).
 
 ## 2. Inputs and assumptions
 
-- The task specification from `SOP-DL-01`, including whether the whole input is available before an output
-  is required.
-- Stated knowledge of the data's structure: is there a topology (image grid, sequence order)? Do the same
-  statistics hold at every position? Which transformations leave the label unchanged? Is the target a
-  composition of simpler functions?
-- The ability to run **matched-capacity controls**, without which depth and sharing claims cannot be
-  separated from parameter-count effects (§6.4, pp. 226–227).
+- The task specification from `SOP-DL-01`, including whether the whole input is available before an
+  output is required.
+- Stated knowledge of the data's structure. Ask whether there is a topology, such as an image grid or a
+  sequence order. Ask whether the same statistics hold at every position. Ask which transformations
+  leave the label unchanged. Ask whether the target is a composition of simpler functions.
+- The ability to run **matched-capacity controls**. Without those controls, you cannot separate the
+  depth claims and the sharing claims from parameter-count effects (§6.4, pp. 226–227).
 - A validation metric and the search protocol of `SOP-DL-05`.
-- The benchmark's **symmetry class**: permutation-invariant, or one in which the designer has embedded
-  spatial knowledge (§9.4, pp. 366–367). Comparisons across the two classes are not meaningful.
+- The benchmark's **symmetry class**: permutation-invariant, or one in which the designer embeds spatial
+  knowledge (§9.4, pp. 366–367). Comparisons across those two classes are not meaningful.
 
 ## 3. Procedure
 
 ### 3.1 Let data structure select the model class, then declare it as a 2016 default
 
-1. The book's baseline routing (§11.2, pp. 439–440): fixed-size vector input under supervision ⇒ fully
-   connected feedforward network; input with a known topology (images) ⇒ convolutional network; sequence
-   input or output ⇒ gated recurrent network. This routing is a book-era default and is recorded as such.
+1. Read the model class off the structure of the data. The book's baseline routing gives three arrows
+   (§11.2, pp. 439–440):
+   - fixed-size vector input under supervision ⇒ fully connected feedforward network
+   - input with a known topology, such as images ⇒ convolutional network
+   - sequence input or output ⇒ gated recurrent network
 
-> **Modern update (2017–2026) — two of the three routing arrows are now conditional.** The 2016 routing is
-> retained above as the era default it is. Two structural changes apply to it, and neither adds a model
-> family to this SOP:
+   That routing is a book-era default, and this file records that routing as such.
+
+> **Modern update (2017–2026) — two of the three routing arrows are now conditional.** The 2016 routing
+> is retained above as a book-era default. Two structural changes apply to that routing. Neither
+> change adds a model family to this SOP.
 >
-> - **Sequence input or output no longer implies recurrence.** A self-attention layer connects all positions
->   with a constant number of sequentially executed operations, dispensing with recurrence and convolutions
->   entirely; self-attention layers are faster than recurrent layers when the sequence length is smaller than
->   the representation dimensionality; and shorter paths between any combination of positions make
->   long-range dependencies easier to learn. The register gains an entry for this prior (§3.2 below), and the
->   *cost* side of that entry is a quadratic dependence on sequence length, which bounds usable length in a
->   different way than the recurrent gradient path did.
-> - **Known topology no longer implies convolution unconditionally.** Convolutional layers are equivariant to
->   spatial translation and take the 2D structure of the image into account at every layer; in an
->   attention-based network that equivariance "must be learned" instead of being built in. The modern account
->   is explicit that the strong convolutional inductive bias "can only be superseded by employing extremely
->   large amounts of training data", and the primary vision source for this states the same condition from
->   the other side: pre-trained on large data and transferred to mid-sized or small benchmarks the
->   low-bias architecture attains excellent results with substantially fewer computational resources, while
->   trained only on ImageNet-scale data it self-reports accuracies **below** comparable convolutional
->   networks.
+> **Sequence input or output no longer implies recurrence.** A self-attention layer connects all
+> positions with a constant number of sequentially executed operations. That layer dispenses with
+> recurrence and convolutions entirely. Self-attention layers are faster than recurrent layers when the
+> sequence length is smaller than the representation dimensionality. Shorter paths between any
+> combination of positions make long-range dependencies easier to learn. The register gains an entry for
+> that prior (§3.2 below). The *cost* side of that entry is a quadratic dependence on sequence length.
+> That cost bounds the usable length in a different way than the recurrent gradient path did.
 >
-> The routing question therefore gains a precondition to check before either arrow is followed: **is there
-> a large-scale pretraining source available for this input type?** If yes, a low-bias architecture is a
-> live option and its cost is compute. If no, the 2016 arrows hold and their bias is what buys the
-> data-efficiency.
+> **Known topology no longer implies convolution unconditionally.** Convolutional layers are equivariant
+> to spatial translation. Those layers take the 2D structure of the image into account at every layer. In
+> an attention-based network, that equivariance "must be learned" instead of being built in. The modern
+> account is explicit about the strong convolutional inductive bias. That bias "can only be superseded by
+> employing extremely large amounts of training data". The primary vision source states the same
+> condition from the other side. Consider the low-bias architecture pre-trained on large data, then
+> transferred to mid-sized or small benchmarks. That architecture attains excellent results with
+> substantially fewer computational resources. Trained only on ImageNet-scale data, that architecture
+> self-reports accuracies **below** comparable convolutional networks.
 >
-> No architecture is specified, endorsed or ranked here, and no transformer or vision-transformer entry is
-> created — the plan governing this lineage forbids an architecture encyclopaedia, and the 2016 package's
-> rule that a model family is not a benchmark is carried forward. What enters is the *prior* and the
-> *condition* under which it can be given up.
+> The routing question therefore gains a precondition. Check that precondition before you follow either
+> arrow. The question reads: **is there a large-scale pretraining source available for this input
+> type?** If the answer is yes, a low-bias architecture is a live option, and its cost is compute. If the
+> answer is no, the 2016 arrows hold, and their bias is what buys the data-efficiency.
+>
+> No architecture is specified, endorsed or ranked here. No transformer or vision-transformer entry is
+> created. The plan governing this lineage forbids an architecture encyclopaedia. This SOP carries
+> forward the 2016 package's rule that a model family is not a benchmark. What enters is the *prior*, and
+> the *condition* under which a designer can give up that prior.
 >
 > *Delta: [`delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md) §2.1, §2.3, §2.6.
 > Sources: `ATTN` (abstract, §4); `VIT` (abstract, introduction, conclusion); `UDL` §12.1–12.2 fol.
@@ -84,220 +97,253 @@ For each bias under consideration, complete the four columns. The entries below 
 mappings.
 
 **Sparse interaction** (§9.2, p. 355)
-- Assumes: outputs depend on a local neighbourhood, kernel size k ≪ m.
-- Buys: parameters m × n → k × n; per-example time O(m × n) → O(k × n); statistical efficiency. Deeper
-  units still touch most of the input indirectly, so complex interactions are built from sparse primitives
-  (Fig. 9.4).
-- Breaks: when the task requires merging information from distant positions in the input — then the
+- Assumes: the outputs depend on a local neighbourhood, and the kernel size k ≪ m.
+- Buys: the parameter count falls from m × n to k × n. The time for one example falls from O(m × n) to
+  O(k × n). The model gains statistical efficiency. Deeper units still touch most of the input
+  indirectly. So the network builds complex interactions from sparse primitives (Fig. 9.4).
+- Breaks: the task requires the merger of information from distant positions in the input. Then the
   convolutional prior "may simply be incorrect" (§9.4, p. 366).
-- Measure: training-error floor against a dense control at matched capacity, on an ablation that requires a
-  distant-position conjunction.
+- Measure: the floor of the training error, against a dense control at matched capacity. Run that
+  comparison on an ablation which needs a conjunction of distant positions.
 
 **Parameter sharing** (§9.2, pp. 358–360)
 - Assumes: the same statistics hold at every position.
-- Buys: storage reduced to k parameters (often orders of magnitude below m) and statistical efficiency —
-  explicitly **not** a runtime saving, since the forward pass remains O(k × n). The book's worked arithmetic
-  (a 2-tap edge detector on a 320 × 280 image: 267,960 flops versus more than 16 billion for a dense layer)
-  is undercut by its own caveat that if only non-zero entries are stored, matrix multiplication and
-  convolution require the same number of floating-point operations (§9.2, p. 360).
-- Breaks: where positions carry different semantics — the book's own example is centred face crops, where
-  upper units should look for eyebrows and lower units for a chin (§9.2, p. 360).
-- Measure: the triad the book defines at equal adjacency — locally connected ("unshared convolution",
-  §9.5, p. 371) versus tiled convolution (storage grows by a constant equal to the number of kernels,
-  p. 374) versus convolution; and per-position bias versus per-channel bias, which slightly reduces
-  statistical efficiency but lets the model correct for statistical differences across image positions
-  (§9.5, p. 378) — read as edge-versus-centre accuracy under zero padding.
+- Buys: storage falls to k parameters, often orders of magnitude below m. The model gains statistical
+  efficiency. Parameter sharing is explicitly **not** a runtime saving, because the forward pass remains
+  O(k × n). The book gives worked arithmetic. A 2-tap edge detector on a 320 × 280 image costs 267,960
+  flops. A
+  dense layer needs more than 16 billion flops for the same image. The book undercuts that figure with
+  its own caveat. If only non-zero entries are stored, matrix multiplication and convolution need the
+  same number of floating-point operations (§9.2, p. 360).
+- Breaks: the positions carry different semantics. The book's own example is centred face crops. In
+  those crops, the upper units should look for eyebrows, and the lower units should look for a chin
+  (§9.2, p. 360).
+- Measure: the triad that the book defines at equal adjacency. Run locally connected convolution, which
+  the book calls "unshared convolution" (§9.5, p. 371). Run tiled convolution, whose storage grows by a
+  constant equal to the number of kernels (p. 374). Run shared convolution. Then compare per-position
+  bias with per-channel bias. That second choice slightly reduces statistical efficiency. That second
+  choice still lets the model correct for statistical differences across image positions (§9.5, p. 378).
+  Read that comparison as edge-versus-centre accuracy under zero padding.
 
 **Equivariance** (§9.2, p. 360)
-- Assumes: f(g(x)) = g(f(x)) for translation g.
-- Buys: a *where* representation — convolution produces a two-dimensional map indicating where a feature
-  appears in the input, and a delayed event yields the same representation later.
+- Assumes: f(g(x)) = g(f(x)) for a translation g.
+- Buys: a *where* representation. Convolution produces a two-dimensional map. That map indicates where a
+  feature appears in the input. A delayed event yields the same representation later.
 - Breaks: "卷积对其他的一些变换并不是天然等变的" — convolution is not naturally equivariant to other
-  transformations such as scaling or rotation, which require other mechanisms (§9.2, p. 360). Note also that
-  equivariance is not invariance: retaining position is exactly what pooling later discards.
-- Measure: shift the input by δ and verify the output shifts by δ. For groups other than translation,
-  equivariance must be *learned* by replicating detectors over the group and pooling across channels
-  (Fig. 9.9, p. 363, uses three filters for a rotated '5').
+  transformations, such as scaling or rotation. Those transformations require other mechanisms (§9.2,
+  p. 360). Equivariance is also not invariance. The retained position is exactly what pooling later
+  discards.
+- Measure: shift the input by δ. Then verify that the output shifts by the same δ. For a group other
+  than translation, the model must *learn* the equivariance. The model learns by replicating detectors
+  over the group, and by pooling across channels (Fig. 9.9, p. 363, uses three filters for a rotated
+  '5').
 
 **Pooling invariance** (§9.3, pp. 362–364)
 - Assumes: presence matters more than precise location.
-- Buys: approximate invariance to small translations; roughly k× fewer units into the next layer, which is a
-  compute saving and, when the next layer is fully connected, a statistical and storage saving; fixed-size
-  statistics from variable-size inputs.
-- Breaks — stated as a caveat, not an endorsement: "保存特征的具体位置却很重要" (§9.3, p. 362; the example is
-  a corner defined by two edges). Pooling all features "将会增大训练误差" when precise spatial information is
-  required (§9.4, p. 366). Pooling also complicates architectures that need a top-down or inverse pass, such
-  as Boltzmann machines and autoencoders (§9.3, p. 364).
-- Measure: **training** error with and without pooling, plus localization accuracy; consider mixed channels —
-  pooling only some of them (Szegedy et al., 2014a, as cited; §9.4, p. 366).
+- Buys: approximate invariance to small translations. Pooling leaves roughly k× fewer units for the next
+  layer, which is a compute saving. When the next layer is fully connected, that reduction is also a
+  statistical saving and a storage saving. Pooling gives fixed-size statistics from variable-size
+  inputs.
+- Breaks — stated as a caveat, and not an endorsement: "保存特征的具体位置却很重要" (§9.3, p. 362; the
+  example is a corner defined by two edges). The book states that pooling all features
+  "将会增大训练误差" when precise spatial information is required (§9.4, p. 366). Pooling complicates
+  architectures that need a top-down pass, or an inverse pass. Boltzmann machines and autoencoders are
+  such architectures (§9.3, p. 364).
+- Measure: the **training** error with and without pooling. Record the localization accuracy as well.
+  Consider mixed channels, where the network pools only some of the channels (Szegedy et al., 2014a,
+  as cited; §9.4, p. 366).
 
 **Convolution and pooling as infinite priors** (§9.4, pp. 365–367)
-- Assumes: zero probability mass on all weights outside a small contiguous receptive field, and weights
-  equal to their neighbours' up to shift; pooling is an infinite prior of per-unit small-translation
-  invariance.
+- Assumes: zero probability mass on all weights outside a small, contiguous receptive field. Each weight
+  also equals the weight of its neighbour, up to a shift. Pooling adds an infinite prior of invariance to
+  a small translation, for every unit.
 - Buys: large statistical efficiency when the assumption holds.
-- Breaks: infinite strength means the data cannot override the prior, so these priors can cause
+- Breaks: an infinite prior has a strength that data cannot override. So these priors can cause
   **underfitting** (§9.4, p. 366).
-- Measure / validity limit: only against other convolutional models in the same benchmark (§9.4, p. 366).
-  Declare whether the benchmark is permutation-invariant or embeds spatial knowledge. Implementing a
-  convolutional network as a fully connected network under this prior is described as an enormous waste of
-  computation; the framing is interpretive only.
+- Measure / validity limit: compare only against other convolutional models in the same benchmark
+  (§9.4, p. 366). Declare whether the benchmark is permutation-invariant, or whether the benchmark embeds
+  spatial knowledge. Under this prior, a convolutional network that runs as a fully connected network
+  counts as an enormous waste of computation. That framing is interpretive only.
 
 **Depth versus width** (§6.4, pp. 223, 225–227)
-- Assumes: one hidden layer already suffices to fit the training set, so depth is a *statistical* choice —
-  a prior that the target is a composition of simpler functions, or a multi-step program whose intermediates
-  may be counters or pointers rather than variation factors.
-- Buys: deeper networks usually need fewer units and fewer parameters per layer, and often generalize to the
-  test set more easily.
-- Breaks: deeper networks are usually harder to optimize (§6.4, p. 223); the expressivity-separation results
-  carry the caveat that we cannot guarantee the function class we want to learn has the required property
-  (§6.4, p. 225).
-- Measure: validation error versus depth at **matched parameter count**. The book's explicit control
-  (Fig. 6.7, pp. 226–227, on address-photo digit transcription) is that adding parameters inside
-  convolutional layers without adding depth has almost no effect, while shallow models overfit near 20
-  million parameters and deep models still perform well past 60 million.
+- Assumes: one hidden layer already suffices to fit the training set. So depth is a *statistical* choice.
+  The choice is a prior that the target is a composition of simpler functions. That prior also allows a
+  multi-step program, whose intermediate values may be counters or pointers, rather than variation
+  factors.
+- Buys: a deeper network usually needs fewer units per layer, and fewer parameters per layer. A deeper
+  network often generalizes to the test set more easily.
+- Breaks: deeper networks are usually harder to optimize (§6.4, p. 223). The expressivity-separation
+  results carry one caveat. We cannot guarantee that the function class we want to learn has the required
+  property (§6.4, p. 225).
+- Measure: the validation error against depth, at **matched parameter count**. The book gives an explicit
+  control (Fig. 6.7, pp. 226–227, on address-photo digit transcription). Adding parameters inside
+  convolutional layers, without adding depth, has almost no effect on that task. Shallow models overfit
+  near 20 million parameters. Deep models still perform well past 60 million.
 
 **Hidden-unit choice** (§6.3, pp. 216–222)
-- Assumes: near-linear behaviour optimizes better — ReLU's first derivative is 1 where active and its second
-  derivative is 0 almost everywhere, so its gradient direction is more useful than that of activations
-  introducing second-order effects (§6.3, p. 217).
-- Buys: ReLU as an excellent default, with bias initialized around 0.1 so units start active and pass
-  derivative; maxout, which learns the activation itself, approximates any convex function, can give the next
-  layer k× fewer weights, and whose redundancy resists catastrophic forgetting; identity hidden layers,
-  factoring W = V U for (n + p)q parameters instead of np at the cost of a low-rank constraint.
-- Breaks: ReLU cannot learn from examples that zero its activation; maxout has k weight vectors per unit and
-  so usually needs more regularization unless the training set is large and k small; sigmoid and tanh
-  saturate over most of their domain and are discouraged as feedforward hidden units, yet are **required** in
-  recurrent networks, probabilistic models and some autoencoders where piecewise-linear activations are
-  inadmissible; RBF units saturate to zero and are hard to optimize; softplus is smooth and non-saturating
-  yet empirically worse than ReLU and is generally discouraged.
-- Measure: empirically, because "还没有许多明确的指导性理论原则" — there are not many clear theoretical
-  guiding principles, and the winner cannot be predicted in advance; the loop is intuition → build →
-  validate (§6.3, p. 216). Isolated non-differentiability is acceptable, because training never reaches a
-  gradient-zero minimum and implementations return a one-sided derivative (§6.3, pp. 216–217).
+- Assumes: near-linear behaviour optimizes better. The first derivative of ReLU is 1 where the unit is
+  active, and the second derivative is 0 almost everywhere. The ReLU gradient direction is more useful
+  than the direction of an activation that brings in second-order effects (§6.3, p. 217).
+- Buys: ReLU is an excellent default. Initialize the ReLU bias around 0.1, so that units start active and
+  pass derivative. Maxout learns the activation itself. Maxout approximates any convex function, and can
+  give the next layer k× fewer weights. The redundancy of maxout resists catastrophic forgetting. An
+  identity hidden layer factors W = V U. That factorization needs (n + p)q parameters instead of np, at
+  the cost of a low-rank constraint.
+- Breaks: ReLU cannot learn from an example that zeros its activation. Maxout has k weight vectors per
+  unit, so maxout usually needs more regularization. That need falls away when the training set is large
+  and k is small. Sigmoid and tanh saturate over most of their domain, so the book discourages sigmoid
+  and tanh as feedforward hidden units. Those same units are **required** in recurrent networks, in probabilistic
+  models and in some autoencoders. In those models, piecewise-linear activations are inadmissible. RBF
+  units saturate to zero, and are hard to optimize. Softplus is smooth and does not saturate. Even so,
+  softplus is empirically worse than ReLU, and is generally discouraged.
+- Measure: measure empirically. The book states "还没有许多明确的指导性理论原则" — there are not many clear
+  theoretical guiding principles. No one can predict the winner in advance. The loop runs intuition →
+  build → validate (§6.3, p. 216). An isolated non-differentiability is acceptable. Training never reaches
+  a minimum where the gradient is zero, and implementations return a one-sided derivative (§6.3,
+  pp. 216–217).
 
 **Recurrence and unfolding** (§10.1, pp. 393–396; §10.2.3, pp. 406–407)
-- Assumes: stationarity — p(next | current) does not depend on t.
-- Buys: fixed model size regardless of sequence length, and one shared transition function at every step,
-  which generalizes to unseen lengths and needs far fewer training samples than a model without parameter
-  sharing; a tabular joint would need k^τ parameters, whereas the RNN's count is tunable independently of
-  length.
+- Assumes: stationarity. The value of p(next | current) does not depend on t.
+- Buys: a fixed model size, whatever the sequence length. The model uses one shared transition function at
+  every step. That sharing generalizes to unseen lengths. The sharing also needs far fewer training
+  samples than a model without parameter sharing. A tabular joint would need k^τ parameters. The parameter
+  count of the RNN is tunable independently of the length.
 - Breaks: "循环网络为减少的参数数目付出的代价是优化参数可能变得困难" — the price of fewer parameters is that
-  optimizing them may become difficult (§10.2.3, p. 407); and the hidden state is necessarily a lossy summary
-  of the past (§10.1, p. 394).
-- Measure: hold out at longer τ than trained; per-position error; comparison against a variant conditioned on
-  t. The book's remedy for non-stationarity is to feed t as an extra input, at the cost of having to
-  extrapolate to unseen t (§10.2.3, p. 407).
+  optimizing those parameters may become difficult (§10.2.3, p. 407). The hidden state is necessarily a
+  lossy summary of the past (§10.1, p. 394).
+- Measure: hold out at a longer τ than the τ used in training. Record the error at each position. Compare
+  the model against a variant that conditions on the time index. The book's remedy for non-stationarity is
+  to feed t as an extra input. That remedy costs the need to extrapolate to values of t never seen in
+  training (§10.2.3, p. 407).
 
 **Which part of a recurrent network to make deep** (§10.5, pp. 415–417)
-- Allocate capacity across all three blocks (input→hidden, hidden→hidden, hidden→output), but prefer
-  **shallow state-to-state transforms**, because depth there lengthens the shortest path between t and t + 1
-  — a one-hidden-layer MLP doubles it. If depth there is needed, add hidden-to-hidden skip connections. The
-  book describes the evidence as strongly suggestive rather than proven.
-- Measure: validation error per allocation, and the shortest-path length between consecutive time steps.
+- Allocate capacity across all three blocks: input→hidden, hidden→hidden, and hidden→output. Prefer
+  **shallow state-to-state transforms**. Depth in the state path lengthens the shortest path between t and
+  t + 1. One hidden layer in that path doubles the length. If you need depth there, add hidden-to-hidden
+  skip connections. The book describes the evidence as strongly suggestive, and not proven.
+- Measure: the validation error per allocation, and the length of the shortest path between consecutive
+  time steps.
 
 **Gating** (§10.10, pp. 425–429)
-- Assumes: paths through time must have derivatives that neither vanish nor explode, and the correct time
-  constant is input-dependent.
-- Buys: the self-loop, described as LSTM's core contribution — a path on which the gradient persists; making
-  that weight context-dependent means the time constant is itself a model output, so the accumulation scale
-  changes per sequence even with fixed parameters; it generalizes leaky units from a constant to per-step
-  weights and adds a learned reset of state after use.
+- Assumes: a path through time must have a derivative that neither vanishes nor explodes. The correct time
+  constant also depends on the input.
+- Buys: the self-loop, which the book describes as LSTM's core contribution. That loop is a path on which
+  the gradient persists. Make the self-loop weight context-dependent, and the time constant becomes itself
+  a model output. The scale of accumulation then changes per sequence, even with fixed parameters. Gating
+  generalizes leaky units from a constant weight to per-step weights. Gating also adds a learned reset of
+  the state after use.
 - Breaks / ablation: variants of LSTM and GRU have difficulty clearly beating both original architectures
-  simultaneously across tasks; the critical factor turns out to be the **forget gate**, and a +1 bias on it
-  makes LSTM as robust as the best variants explored (§10.10.2, p. 429).
-- Measure: maximum learnable dependency span, demonstrated first on artificial long-dependency datasets and
-  then on real tasks (§10.10.1, p. 428).
+  across tasks at the same time. The critical factor turns out to be the **forget gate**. A +1 bias on
+  that gate makes LSTM as robust as the best variants explored (§10.10.2, p. 429).
+- Measure: the largest dependency span that the model can learn. The book demonstrates this first on
+  artificial long-dependency datasets, and then on real tasks (§10.10.1, p. 428).
 
 **Encoder–decoder bottleneck** (§10.4, pp. 413–415)
-- Assumes: a fixed-size context vector C can summarize the input.
-- Buys: decoupling of input and output lengths, with encoder and decoder hidden sizes not required to match.
-- Breaks: "维度太小而难以适当地概括一个长序列" — C's dimensionality is too small to adequately summarize a
-  long sequence, observed in machine translation (§10.4, p. 415).
-- Measure: task quality against input length. The stated fix is a variable-length C with attention tying C's
-  elements to output elements (§10.4, p. 415).
+- Assumes: a context vector C of fixed size can summarize the input.
+- Buys: the input length and the output length come apart. The encoder and the decoder need not match in
+  hidden size.
+- Breaks: "维度太小而难以适当地概括一个长序列" — the dimensionality of C is too small to summarize a long
+  sequence adequately. The book observed the bottleneck in machine translation (§10.4, p. 415).
+- Measure: the task quality against the input length. The stated fix is a C of variable length. That fix
+  uses attention, which ties the elements of C to the output elements (§10.4, p. 415).
 
 **Bidirectionality** (§10.3, pp. 410–413)
-- Assumes: the entire sequence is observable before outputs are needed — backward connections are legitimate
-  only in that case.
-- Buys: outputs depending on past and future while remaining most sensitive to x(t), without a fixed window,
-  unlike feedforward or convolutional networks and look-ahead-buffer RNNs. The motivating case is
-  coarticulation, where a phoneme's correct interpretation depends on several future phonemes or words.
-- Breaks: invalid for online or causal generation — the networks earlier in the chapter are all described as
-  having a causal structure; and RNNs applied to images cost more than convolutional networks, though they
-  permit long-range lateral interaction within a feature map (§10.3, p. 413).
-- Measure: whether deployment permits full-sequence observation; error versus look-ahead budget against a
-  causal baseline.
+- Assumes: you can observe the entire sequence before the outputs are needed. Backward connections are
+  legitimate only in that case.
+- Buys: the outputs depend on the past and on the future, and stay most sensitive to x(t). No fixed window
+  is needed, unlike a feedforward network, a convolutional network, or a look-ahead-buffer RNN. The
+  motivating case is coarticulation. In coarticulation, the correct reading of a phoneme depends on
+  several future phonemes or words.
+- Breaks: the network is invalid for online generation, or for causal generation. The book describes the
+  networks earlier in the chapter as all having a causal structure. An RNN applied to images also costs
+  more than a convolutional network. That RNN does permit long-range lateral interaction inside a feature
+  map (§10.3, p. 413).
+- Measure: check whether deployment permits the observation of the whole sequence. Then compare the error
+  against a causal baseline, at each look-ahead budget.
 
 **Recursive (tree) structure** (§10.6, pp. 417–419)
-- A chain of length τ has depth τ, while a balanced binary tree has depth O(log τ). Measure the learnable
-  span against a chain at equal τ. The book states that how best to construct the tree is explicitly
-  unresolved.
+- A chain of length τ has depth τ. A balanced binary tree has depth O(log τ). Measure the span that the
+  model can learn, against a chain at the same τ. The book leaves the best way to construct the tree
+  explicitly unresolved.
 
 **Explicit memory** (§10.12, pp. 432–435)
-- Measure task success against a plain RNN and an LSTM on the same task; failure implies addressing, not
-  capacity, is the bottleneck. Integer addressing is hard to optimize, soft (softmax) addressing keeps the
-  model differentiable, and stochastic hard addressing is harder to train.
+- Measure the task success against a plain RNN, and against an LSTM on the same task. A failure implies
+  that addressing, and not capacity, is the bottleneck. Integer addressing is hard to optimize. Soft
+  (softmax) addressing keeps the model differentiable. Stochastic hard addressing is harder to train.
 
 > **Modern update (2017–2026) — one added register row.** The entries above are the 2016 book's own
-> mappings and are unchanged. The modern anchor states the motivating conditions for content-based
-> connection in exactly this register's four-column shape, so one row is added in that shape and nothing
-> else in the register is rewritten.
+> mappings, and those entries are unchanged. The modern anchor states the motivating conditions for
+> content-based connection in exactly this register's four-column shape. One row is therefore added in
+> that shape. The rest of the register keeps the book's own wording.
 >
-> **Content-based all-to-all connection (attention)** — *modern row, not a 2016-book entry*
-> - Assumes: very many input variables; **similar statistics at every position**; a variable sequence length
->   that cannot simply be resized to a fixed input; and connections between distant positions whose relevance
->   is **content-dependent** rather than fixed by the architecture.
-> - Buys: a path between any two positions with a constant number of sequentially executed operations, which
->   is what makes long-range dependencies easier to learn; self-attention layers are faster than recurrent
->   layers when the sequence length is smaller than the representation dimensionality; and the model is more
->   parallelizable, requiring significantly less time to train.
-> - Breaks: cost grows **quadratically** with sequence length, which bounds the usable length — a different
->   bound on the same axis the recurrent entries above treat, not the absence of one. Sparsifying the
->   connection pattern is the named category of response; no specific scheme is endorsed here. And the prior
->   is *low*-bias in the spatial case: translation equivariance that convolution has at every layer must be
->   learned, which is why it can only be superseded by employing extremely large amounts of training data.
-> - Measure: the same two instruments the recurrent entries already define — the **maximum learnable
->   dependency span**, and per-position error — now read against the quadratic cost at the length actually
->   used. Add the equivariance test the **Equivariance** row above already specifies (shift the input by δ,
->   verify the output shifts by δ) as a *learned*-versus-*given* contrast: run it on a model that must learn
->   the equivariance and on one that has it built in, at matched data, and report which regime the data
->   budget puts you in.
+> **Content-based all-to-all connection (attention)** — *modern row, not a 2016-book entry*.
 >
-> The depth-versus-width row above is **not** amended. The modern evidence on depth is genuinely contested —
-> wider-shallower residual networks, a 12-layer parallel-channel network, and the finding that predominantly
-> shorter paths of 5–17 layers drive performance in residual networks all run against a simple depth story,
-> while distillation experiments run for it (student performance increased with depth at constant parameter
-> budget), and the modern anchor's own verdict is that "the balance of evidence suggests that depth is
-> critical; even the shallowest networks with good image classification performance require >10 layers.
-> However, there is no definitive explanation for why." The 2016 package already declined to make
-> depth-versus-width a benchmark, and that decision stands; the counter-evidence is recorded in
-> `delta_map.md` §2.5 so that a depth result is interpreted against it rather than as a settled hierarchy.
+> Assumes: the task presents very many input variables. The task shows **similar statistics at every
+> position**. The sequence length varies, and one cannot simply resize that length to a fixed input. The
+> connections between distant positions carry a relevance that is **content-dependent**, and not fixed by
+> the architecture.
+>
+> Buys: a path between any two positions, in a constant number of sequentially executed operations. That
+> path is what makes long-range dependencies easier to learn. Self-attention layers are faster than
+> recurrent layers when the sequence length is smaller than the representation dimensionality. The model
+> is also more parallelizable, and that needs significantly less time to train.
+>
+> Breaks: the cost grows **quadratically** with the sequence length, and that growth bounds the usable
+> length. The new limit sits on the same axis that the recurrent entries above treat. That limit is a
+> different bound, and not the absence of a bound. The named category of response is to make the
+> connection pattern sparser. No specific sparsifying scheme is endorsed here. The prior is also
+> *low*-bias in the spatial case. Convolution has translation equivariance at every layer, and an
+> attention model must learn that equivariance instead. That is why only extremely large amounts of
+> training data can supersede the low-bias prior.
+>
+> Measure: use the same two instruments that the recurrent entries already define. Those instruments are
+> the **maximum learnable dependency span**, and the error at each position. Read both against the
+> quadratic cost, at the length actually used. Add the equivariance test that the **Equivariance** row
+> above already specifies. That test shifts the input by δ, then verifies that the output shifts by δ.
+> Run that test as a *learned*-versus-*given* contrast. Run the test on a model that must learn the
+> equivariance. Run the test on a model that has the equivariance built in, at matched data. Then report
+> which of those regimes the data budget puts you in.
+>
+> The depth-versus-width row above is **not** amended. The modern evidence on depth is genuinely
+> contested. Consider the evidence that runs against a simple depth story. That evidence includes wider
+> and shallower residual networks. That evidence includes a 12-layer parallel-channel network. That
+> evidence also includes the finding that predominantly shorter paths of 5–17 layers drive performance in
+> residual networks. Other evidence runs for that story. The distillation experiments report that student
+> performance increased with depth, at a constant parameter budget. The modern anchor gives its own
+> verdict: "the balance of evidence suggests that depth is critical. Even the shallowest networks with
+> good image classification performance require >10 layers. However, there is no definitive explanation
+> for why." The 2016 package already declined to make depth-versus-width a benchmark, and that decision
+> stands. `delta_map.md` §2.5 records the counter-evidence. A reader then interprets a depth result
+> against that evidence, and not as a settled hierarchy.
 >
 > *Delta: `delta_map.md` §2.2, §2.4, §2.5. Sources: `ATTN` (abstract, §4); `UDL` §12.1–12.2 fol. 207–209,
 > §12.9 fol. 227–228, §12.10 fol. 229–230, §20.6 fol. 418–419, ch. 11 summary fol. 186.*
 
 ### 3.3 Test before trusting
 
-2. For every bias adopted, run the paired comparison the book defines and report **which assumption** it
-   tested: dense versus sparse at matched capacity; locally connected versus tiled versus shared at equal
-   adjacency; pooled versus unpooled (and partially pooled); shallow versus deep at matched parameter count;
-   chain versus tree at equal τ; causal versus bidirectional under the same look-ahead budget; fixed-size C
-   versus length-varying C across input lengths.
+2. Run the paired comparison that the book defines for every bias that you adopt. Report **which
+   assumption** that comparison tested. Use these pairs:
+   - dense versus sparse, at matched capacity
+   - locally connected versus tiled versus shared, at equal adjacency
+   - pooled versus unpooled, and partially pooled
+   - shallow versus deep, at matched parameter count
+   - chain versus tree, at equal τ
+   - causal versus bidirectional, under the same look-ahead budget
+   - fixed-size C versus length-varying C, across input lengths
 3. **Screen architectures cheaply before paying for full training** (§9.9, p. 383): random
    convolution-and-pooling layers are already frequency-selective and translation-invariant, so evaluating
    several candidate convolutional architectures by training only the last layer, picking the best, and then
    training fully is a legitimate screening procedure. Carry the book's caveat: the benefit of unsupervised
    feature pretraining remains unclear — regularization, or merely enabling larger architectures.
-4. **Sweep zero padding** rather than assuming it (§9.5, p. 371): the optimum for test accuracy usually lies
-   between valid and same convolution.
+4. **Sweep the zero padding** rather than assuming a padding value (§9.5, p. 371). The optimum for test
+   accuracy usually lies between valid and same convolution.
 5. **Declare the benchmark's symmetry class** before reporting any comparison (§9.4, pp. 366–367).
 6. **Do not expect rankings to be stable** (§9 intro, p. 350). Record the date of any architecture claim.
 
 ## 4. Important failure modes
 
-- **Adopting a prior whose assumption fails** and reading the resulting underfitting as insufficient
-  capacity — the infinite-prior case cannot be fixed by more data (§9.4, p. 366).
+- **Adopting a prior whose assumption fails**, and reading the resulting underfitting as insufficient
+  capacity. More data cannot fix the infinite-prior case (§9.4, p. 366).
 - **Comparing across symmetry classes**: a convolutional model against non-convolutional models on a
   permutation-invariant benchmark (§9.4, pp. 366–367).
 - **Pooling every channel** when precise spatial information is required (§9.3, p. 362; §9.4, p. 366).
@@ -310,36 +356,42 @@ mappings.
   consecutive time steps (§10.5, pp. 415–417).
 - **Using a bidirectional network where deployment is causal** (§10.3, pp. 410–411).
 - **Keeping a fixed-size context vector** as sequence length grows (§10.4, p. 415).
-- **Choosing an activation on theoretical grounds**; the book states there are no clear guiding principles
-  and the winner cannot be predicted in advance (§6.3, p. 216).
-- **Reporting a new activation as an advance** without heeding the publication-bias warning: many unpublished
-  activations match the popular ones, and the authors' own MNIST run reached below 1% error with an
-  unconventional activation (§6.3, pp. 220–221).
-- **Using saturating units where piecewise-linear ones are admissible**, or piecewise-linear units where they
-  are not — recurrent networks, probabilistic models and some autoencoders require the former (§6.3, p. 220).
-- **Optimizing parameters in a shared-weight recurrent model as if the reduced parameter count were free**;
-  the book names the difficulty explicitly (§10.2.3, p. 407).
+- **Choosing an activation on theoretical grounds.** The book states that no clear guiding principles
+  exist. No one can predict the winner in advance (§6.3, p. 216).
+- **Reporting a new activation as an advance**, without heeding the publication-bias warning. Many
+  unpublished activations match the popular ones. The authors' own MNIST run reached below 1% error with
+  an unconventional activation (§6.3, pp. 220–221).
+- **Using saturating units where piecewise-linear ones are admissible**, or piecewise-linear units where
+  saturating ones are not. Recurrent networks, probabilistic models and some autoencoders require the
+  former (§6.3, p. 220).
+- **Optimizing parameters in a shared-weight recurrent model as if the reduced parameter count were
+  free.** The book names that difficulty explicitly (§10.2.3, p. 407).
 
 ## 5. Outputs and reporting
 
-- The **bias register**: one row per adopted bias with assumes / buys / breaks / measure, each column
-  sourced.
-- The paired comparisons actually run, with their matched-capacity controls and the assumption each tested.
-- The benchmark symmetry-class declaration.
-- The depth-versus-width sweep at matched parameter count, with the validation-error criterion.
-- The screening procedure used (last-layer-only ranking, if applied) and its caveat.
-- A date stamp on every architecture claim, since rankings move faster than the source can record.
-- Anything left to `SOP-DL-05` because it is a hyperparameter rather than a structural choice (padding
-  amount, number of maxout pieces, hidden sizes per block).
+- Keep the **bias register**: one row per adopted bias, with the columns assumes / buys / breaks /
+  measure. Source each column.
+- Record the paired comparisons that you actually ran, with their matched-capacity controls, and the
+  assumption that each comparison tested.
+- Record the declaration of the benchmark's symmetry class.
+- Record the depth-versus-width sweep at matched parameter count, with the validation-error criterion.
+- Record the screening procedure that you used, and the caveat of that procedure. The screening option is
+  the last-layer-only ranking, when you use that ranking.
+- Date-stamp every architecture claim, because rankings move faster than the source can record.
+- Record anything that you leave to `SOP-DL-05`, because the item is a hyperparameter rather than a
+  structural choice. Those items are the padding amount, the number of maxout pieces, and the hidden
+  sizes per block.
 
-Modern-update additions to the report (`delta_map.md` §2.2, §2.3):
+The modern update adds the items below to the report (`delta_map.md` §2.2, §2.3):
 
-- The **pretraining-scale precondition** checked at §3.1 step 1: whether a large-scale pretraining source
-  exists for this input type, and therefore whether a low-bias architecture was a live option at all.
-- In the register, the modern row is marked as such, so that a reader can tell the 2016 book's own mappings
-  from the added one.
-- For any equivariance claim, whether the equivariance was **built in or learned**, and the data budget
-  under which the comparison was run — the two are not comparable without it.
+- Report the **pretraining-scale precondition** that you checked at §3.1 step 1. State whether a
+  large-scale pretraining source exists for that input type. State, in turn, whether a low-bias
+  architecture was a live option at all.
+- In the register, mark the modern row as such. That mark lets a reader tell the 2016 book's own mappings
+  from the added row.
+- For any equivariance claim, state whether the architecture had the equivariance **built in or learned**.
+  State the data budget under which you ran the comparison. Without that budget, the two comparisons are
+  not comparable.
 
 ## 6. Source traceability
 
@@ -366,38 +418,60 @@ Modern-update additions to the report (`delta_map.md` §2.2, §2.3):
 | Zero padding optimum between valid and same | §9.5, p. 371 |
 | Architecture rankings unstable; no architecture-selection advice given | §9 intro, p. 350 |
 
-**Modern-update provenance.** Every row above is a 2016-book locator and none was altered. Two
-modern-update blocks were added: the conditional routing note at §3.1 step 1, and one added register row
-(*Content-based all-to-all connection*) at the end of §3.2, plus the matching §5 reporting lines. They are
-sourced outside the 2016 book and recorded in
+**Modern-update provenance.** Every row above is a 2016-book locator, and no row was altered. Two
+modern-update blocks were added. The first is the conditional routing note at §3.1 step 1. The second is
+one added register row, *Content-based all-to-all connection*, at the end of §3.2, together with the
+matching §5 reporting lines. Those blocks are sourced outside the 2016 book. Both are recorded in
 [`Validation/Deep-Learning-Modern-2017-2026/delta_map.md`](../../Validation/Deep-Learning-Modern-2017-2026/delta_map.md)
-§2.1–§2.5, with source keys defined in
-[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1: `ATTN` (abstract, §4);
-`VIT` (abstract, introduction, conclusion); `UDL` §12.1–12.2 fol. 207–209, §12.9 fol. 227–228, §12.10
-fol. 229–230, §20.6 fol. 418–419, ch. 11 summary fol. 186. The added register row is labelled *modern row,
-not a 2016-book entry* in place so it cannot be mistaken for the book's own mapping.
+§2.1–§2.5.
 
-**Historical boundary.** Treated as book-era and labelled wherever used: the §11.2 model-class routing and
-unit menu; the verdict that gated RNNs were the most effective sequence models in practice at the time of
-writing, with LSTM then GRU (§10.10, pp. 425, 428); explicit memory and neural Turing machines as the
-frontier for tasks RNNs and LSTMs cannot learn (§10.12, p. 434); unsupervised or patch-wise feature learning
-being popular roughly 2007–2013 while "today most convolutional networks are trained in a purely supervised
-way" (§9.9, p. 383); the named component menus (Leaky ReLU, PReLU, maxout, softplus, hard tanh, RBF, mixture
-density networks; locally connected, tiled, grouped and strided convolution; valid/same/full padding; ESNs
-and reservoir computing; leaky units and clockwork-style update frequencies; peephole connections; memory
-networks and neural Turing machines); the MNIST sub-1% result with an unconventional activation; the
-address-photo digit transcription study behind Fig. 6.7; the ImageNet result credited with starting current
-commercial interest (§9.11, p. 390); the AT&T check-reading and Microsoft OCR deployments (§9.11, p. 390);
-framework-specific practices such as symbol-to-number differentiation in Torch and Caffe versus
-symbol-to-symbol in Theano and TensorFlow (§6.5.5, p. 238). Two general lessons survive the era and are
-retained: the book's verdict that core ideas were unchanged since the 1980s, with the gains attributed mainly
-to larger datasets and networks, and only two algorithmic changes credited — cross-entropy replacing MSE,
-which greatly improved models with sigmoid and softmax outputs, and piecewise-linear units replacing sigmoid
-(§6.6, pp. 249–251); and the observation that designing a model that is easy to optimize is usually easier
-than designing a more powerful optimizer (§10.11, pp. 429–430).
+The source keys are defined in
+[`sources.md`](../../Validation/Deep-Learning-Modern-2017-2026/sources.md) §2.1. The keys are:
 
-No post-2016 architecture is described in the 2016 procedure. The modern update adds **one prior and one
-precondition**, not an architecture: the content-based all-to-all connection prior in the §3.2 register, and
-the pretraining-scale precondition on §3.1's routing. Both are marked in place, and neither comes with a
-model specification, a variant catalogue or a ranking — the governing plan for this lineage forbids an
-architecture encyclopaedia, and the 2016 rule that a model family is not a benchmark is carried forward.
+- `ATTN` (abstract, §4)
+- `VIT` (abstract, introduction, conclusion)
+- `UDL` §12.1–12.2 fol. 207–209, §12.9 fol. 227–228, §12.10 fol. 229–230, §20.6 fol. 418–419, ch. 11
+  summary fol. 186
+
+The added register row carries the label *modern row, not a 2016-book entry* in place. That label stops a
+reader from confusing the added row with the book's own mapping.
+
+**Historical boundary.** Treat the entries below as book-era. Add that label wherever an entry appears:
+
+- the §11.2 model-class routing, and the unit menu that goes with that routing
+- the verdict that gated RNNs were the most effective sequence models in practice at the time of writing,
+  with LSTM then GRU (§10.10, pp. 425, 428)
+- explicit memory and neural Turing machines as the frontier for the tasks that RNNs and LSTMs cannot
+  learn (§10.12, p. 434)
+- unsupervised or patch-wise feature learning, popular roughly 2007–2013, while "today most convolutional
+  networks are trained in a purely supervised way" (§9.9, p. 383)
+- the named activation menu: Leaky ReLU, PReLU, maxout, softplus, hard tanh, RBF, and mixture density
+  networks
+- the named convolution menu: locally connected, tiled, grouped and strided convolution, and the
+  valid/same/full padding choices
+- the named recurrent menus: ESNs and reservoir computing, leaky units and clockwork-style update
+  frequencies, and peephole connections
+- memory networks and neural Turing machines
+- the MNIST sub-1% result with an unconventional activation
+- the study of address-photo digit transcription behind Fig. 6.7
+- the ImageNet result credited with starting current commercial interest (§9.11, p. 390)
+- the AT&T check-reading and Microsoft OCR deployments (§9.11, p. 390)
+- framework-specific practices, such as symbol-to-number differentiation in Torch and Caffe, against
+  symbol-to-symbol in Theano and TensorFlow (§6.5.5, p. 238)
+
+Two general lessons survive the era, and this file keeps both. The first lesson is the book's verdict that
+the core ideas did not change since the 1980s. The book attributes the gains mainly to larger datasets and
+larger networks. The book credits only two algorithmic changes.
+
+One algorithmic change is cross-entropy in place of MSE. That change greatly improved models with sigmoid
+and softmax outputs. The other change is piecewise-linear units in place of sigmoid (§6.6, pp. 249–251).
+The second lesson is the observation that designing a model that is easy to optimize is usually easier than
+designing a more powerful optimizer (§10.11, pp. 429–430).
+
+No architecture after 2016 is described in the 2016 procedure. The modern update adds **one prior and one
+precondition**, and not an architecture. The prior is the content-based all-to-all connection, in the §3.2
+register. The precondition is the pretraining-scale condition on the routing of §3.1.
+
+Both additions are marked in place. Neither comes with a model specification, a variant catalogue or a
+ranking. The plan governing this lineage forbids an architecture encyclopaedia. This SOP carries forward
+the 2016 rule that a model family is not a benchmark.
