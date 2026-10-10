@@ -55,9 +55,9 @@ Book-derived material cites the source by section and page; post-book additions 
 - **Lacan studies — preliminary SOP/BC (draft)** — three research procedures and their matched checks, distilled
   independently from the phase-1 notes rather than from any earlier draft: [SOP group](SOP/Lacan-Studies-Preliminary/README.md),
   [Benchmark group](Benchmark/Lacan-Studies-Preliminary/README.md), [plan](plans/Lacan-Studies-Preliminary/README.md).
-  They cover assigning a pursuit to need, demand or desire; assigning a signifying formation to metaphor or metonymy;
-  and narrowing a claim to what the attribution layer and the carrier's missing devices actually license. Each was
-  trial-run and the SOPs revised where a case failed, so the package is marked draft rather than validated. Nothing
+  They examine candidate need/demand/desire interpretations, metaphor/metonymy mechanisms, and limits on evidence claims.
+  Initial trial runs occurred, but later review corrected several rules and retired their old PASS judgments; affected
+  cases require focused re-testing. This package remains draft and is not validated. Nothing
   here is a clinical procedure, and no judgement is presented as verified against Lacan's own texts.
 
 A package is a **provenance-bearing staging unit**, not a permanent shelf. It exists so that a rule can
