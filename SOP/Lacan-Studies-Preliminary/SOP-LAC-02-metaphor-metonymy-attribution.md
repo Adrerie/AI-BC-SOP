@@ -1,4 +1,4 @@
-# SOP-LAC-02 — 判定一个能指构成物属于隐喻还是转喻
+# SOP-LAC-02 — 识别隐喻与转喻的文本线索及解释限度
 
 **Stage:** 机制归属与诠释对象的确定 · **Source package:** 沈志中《永夜微光》、张一兵《不可能的存在之真》（两本二手研究）—
 版本与定位限制见 [`SOURCE.md`](../../Validation/Lacan-Studies-Phase1/SOURCE.md)，概念对照见
