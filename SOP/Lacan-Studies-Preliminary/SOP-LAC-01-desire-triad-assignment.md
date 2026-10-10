@@ -1,4 +1,4 @@
-# SOP-LAC-01 — 判定一段叙述里的"追求"落在需求、要求还是欲望上
+# SOP-LAC-01 — 辨析文本中的需求、要求与欲望层次
 
 **Stage:** 文本与理论分析中的层次归属 · **Source package:** 沈志中《永夜微光》、张一兵《不可能的存在之真》（两本二手研究）—
 版本与定位限制见 [`SOURCE.md`](../../Validation/Lacan-Studies-Phase1/SOURCE.md)，概念对照见
