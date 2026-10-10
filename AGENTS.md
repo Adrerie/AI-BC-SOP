@@ -31,3 +31,8 @@ Work on the requested topic branch. Keep `main` unchanged, make focused commits 
 - Before making a strong philosophical criticism, distinguish a real contradiction from a tension that admits an alternative interpretation. A local formal model failure is not proof that an entire formalization program failed.
 - Descriptions of transference or other clinical claims remain attributed textual interpretations, not universal clinical instructions. Source coverage is not clinical validity.
 - For review repairs, prefer small edits to existing analyses and one short repair plan. No extra infrastructure or repetitive acceptance rituals.
+
+## Lacan preliminary SOP/BC
+- Files under `SOP/Lacan-Studies-Preliminary/` and `Benchmark/Lacan-Studies-Preliminary/` are **prototypes** based only on two secondary studies. They do not revise the completed phase-1 record.
+- SOPs must contain a reproducible reading or comparison decision path; BCs must test a concrete error with input, expected distinction, failure condition and a stated evidence limit. Do not promise clinical outcomes or formal correctness from a text-faithfulness check.
+- Prefer a few useful cases over comprehensive test suites, point scores, validators or new infrastructure. Any statement about Lacan's own works still requires separate primary-source verification.
