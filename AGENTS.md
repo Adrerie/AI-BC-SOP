@@ -32,7 +32,12 @@ Work on the requested topic branch. Keep `main` unchanged, make focused commits 
 - Descriptions of transference or other clinical claims remain attributed textual interpretations, not universal clinical instructions. Source coverage is not clinical validity.
 - For review repairs, prefer small edits to existing analyses and one short repair plan. No extra infrastructure or repetitive acceptance rituals.
 
-## Lacan preliminary SOP/BC
-- Files under `SOP/Lacan-Studies-Preliminary/` and `Benchmark/Lacan-Studies-Preliminary/` are **prototypes** based only on two secondary studies. They do not revise the completed phase-1 record.
-- SOPs must contain a reproducible reading or comparison decision path; BCs must test a concrete error with input, expected distinction, failure condition and a stated evidence limit. Do not promise clinical outcomes or formal correctness from a text-faithfulness check.
-- Prefer a few useful cases over comprehensive test suites, point scores, validators or new infrastructure. Any statement about Lacan's own works still requires separate primary-source verification.
+## Lacan preliminary SOP/BC (Codex authoring branch)
+When working in `SOP/Lacan-Studies-Preliminary/`, `Benchmark/Lacan-Studies-Preliminary/` or `plans/Lacan-Studies-Preliminary/`:
+- Follow `plans/Lacan-Studies-Preliminary/README.md`. The withdrawn assistant-written prototype files are not source material or a required design.
+- Build a **small number of substantive, theory-derived** research procedures and matched checks from `Validation/Lacan-Studies-Phase1/`. Merely checking citation hygiene or paraphrasing concept definitions is not sufficient for a substantive Lacanian SOP/BC.
+- Each SOP needs a concrete intellectual task, input, motivated decision steps, output and limits. Each BC needs a specific falsifiable text-analysis failure, supplied comparison examples, what should distinguish them and what the result cannot establish. Do not invent thresholds or declare tests passed without running them.
+- Source notes are **two secondary studies**: preserve each author's interpretation and point to its PDF page or EPUB file/paragraph; do not claim independent confirmation of Lacan or use missing formulas/endnotes as proof.
+- Do not turn interpretive operations into clinical diagnosis, universal rules of desire or advice for treating real people. Keep alternatives when the text permits competing readings.
+- Favor concise analytical paragraphs over checklist padding, repetitive warnings, invented categories or one-line AI-style paragraphs. Do not add extra validation files, rigid schemas, scoring rubrics, scripts or agent orchestration.
+- Complete work in a single interactive Codex session, without `exec` or subagents. Do not modify `main` or merge this draft branch without a new instruction.
