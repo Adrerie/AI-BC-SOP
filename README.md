@@ -37,13 +37,13 @@ record, and its provenance stay together. Currently:
 Book-derived material cites the source by section and page; post-book additions cite their own course or paper locators. The source documents themselves are not included here.
 
 - **Lacan studies — phase 1 (reading and concept reconstruction only)** — two scholarly books on Lacan,
-  read end to end rather than sampled: 沈志中《永夜微光：拉康与未竟之精神分析革命》 and
+  with chapter-level notes and an executor-reported complete reading (not independently verified): 沈志中《永夜微光：拉康与未竟之精神分析革命》 and
   张一兵《不可能的存在之真：拉康哲学映像（修订本）》. This phase deliberately produces **no SOPs and no
   benchmarks**: [source record](Validation/Lacan-Studies-Phase1/SOURCE.md),
   [chapter coverage map](Validation/Lacan-Studies-Phase1/reading_map.md),
   [book notes](Validation/Lacan-Studies-Phase1/book_notes/) (one file per book),
   [cross-book concept reconstruction](Validation/Lacan-Studies-Phase1/concept_reconstruction.md),
-  [plan](plans/Lacan-Studies-Phase1/README.md). Both are in-copyright commercial monographs with no open
+  [plan](plans/Lacan-Studies-Phase1/README.md), [focused repair](plans/Lacan-Studies-Phase1/REVISION-01.md). Both are in-copyright commercial monographs with no open
   licence, so the files and all bulk extracted text stay outside Git and quotations are short and attributed.
   Two disciplines are enforced throughout: every "Lacan says X" is labelled as what the *study author*
   reads or attributes, never as verified against Lacan's own texts; and locators are edition-specific —
