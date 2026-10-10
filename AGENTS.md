@@ -21,3 +21,13 @@ When working under `plans/Lacan-Studies-Phase1/` or `Validation/Lacan-Studies-Ph
 
 ## Git scope
 Work on the requested topic branch. Keep `main` unchanged, make focused commits and do not merge without a separate request.
+
+## Review and execution limits
+- Keep work in one interactive Codex session. Do not use `codex exec`, other exec-style task invocations, or subagents.
+- Claim “fully read”, “verified” or “100% covered” only to the extent supported by the actual reading record. A coverage table or agent summary alone is not independent evidence of full reading.
+- Record real tool/use deviations and source gaps truthfully. Never rewrite an execution history to make it appear compliant.
+- Check original publication date separately from manuscript/foreword dates; identify official editions separately from community retypeset copies.
+- Cite EPUB references as file or section plus paragraph, never as page numbers. Recheck endnotes actually present before marking a range unavailable.
+- Before making a strong philosophical criticism, distinguish a real contradiction from a tension that admits an alternative interpretation. A local formal model failure is not proof that an entire formalization program failed.
+- Descriptions of transference or other clinical claims remain attributed textual interpretations, not universal clinical instructions. Source coverage is not clinical validity.
+- For review repairs, prefer small edits to existing analyses and one short repair plan. No extra infrastructure or repetitive acceptance rituals.
