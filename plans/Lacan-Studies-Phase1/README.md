@@ -54,3 +54,10 @@ The plan and repository instructions already live at `plans/Lacan-Studies-Phase1
 No third book, no Lacan original-text verification campaign, no fixed SOP/BC counts, no rating rubric or question bank, no vector database, knowledge graph, agent swarm, validators, hashes, acceptance-cycle machinery or chapter-per-file bureaucracy. Those belong to later phases only if a concrete need appears.
 
 **Completion standard:** complete reading coverage of both verified sources, arguments supported by usable locators, a coherent cross-book concept reconstruction, and transparent unresolved claims. If a book is unavailable, the phase remains incomplete.
+
+## Status (2026-10-10)
+
+Delivered under `Validation/Lacan-Studies-Phase1/`: `SOURCE.md`, `reading_map.md`, `book_notes/yongye_weiguang.md`, `book_notes/bu_keneng_de_cunzai_zhizhen.md`, `concept_reconstruction.md`. Both target books were found locally and read in full; no third source was added and no SOP/Benchmark was created.
+
+Three limits are load-bearing for anything built on this phase, and none of them is a reading gap:
+(1) the available 《永夜微光》 copy is a community re-typeset PDF with no printed page numbers and with many formulas, figure plates and one clinical list lost, so its locators are PDF pages and several formal devices are unverifiable; (2) the 张一兵 EPUB has no page numbers and its endnote apparatus survives only as [1]–[71] of [1]–[1023], so every citation after the opening sections is unresolvable in this copy; (3) neither book is Lacan, and no claim labelled as his here has been checked against his own texts. Verification against paper editions or primary texts is deliberately left for a later phase.
