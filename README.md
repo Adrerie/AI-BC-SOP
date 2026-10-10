@@ -52,6 +52,14 @@ Book-derived material cites the source by section and page; post-book additions 
   is truncated (notes [1]–[71] of [1]–[1023]), so citations use paragraph numbers and unrecoverable
   references are marked as such rather than quietly repaired.
 
+- **Lacan studies — preliminary SOP/BC (draft)** — three research procedures and their matched checks, distilled
+  independently from the phase-1 notes rather than from any earlier draft: [SOP group](SOP/Lacan-Studies-Preliminary/README.md),
+  [Benchmark group](Benchmark/Lacan-Studies-Preliminary/README.md), [plan](plans/Lacan-Studies-Preliminary/README.md).
+  They cover assigning a pursuit to need, demand or desire; assigning a signifying formation to metaphor or metonymy;
+  and narrowing a claim to what the attribution layer and the carrier's missing devices actually license. Each was
+  trial-run and the SOPs revised where a case failed, so the package is marked draft rather than validated. Nothing
+  here is a clinical procedure, and no judgement is presented as verified against Lacan's own texts.
+
 A package is a **provenance-bearing staging unit**, not a permanent shelf. It exists so that a rule can
 be traced to the reading that produced it while that rule is still mostly one book's way of seeing the
 problem. The intended end state of a good rule is *not* to stay inside the package that introduced it:

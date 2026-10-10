@@ -29,6 +29,11 @@ SOPs are grouped by the source they were reconstructed from, one directory per p
   carry clearly marked *Modern update (2017–2026)* blocks annotating the 2016 procedure where later work
   changes a reusable step; the 2016 text and its citations are unchanged. Source record and per-delta
   judgements: [`Validation/Deep-Learning-Modern-2017-2026/`](../Validation/Deep-Learning-Modern-2017-2026/delta_map.md).
+- [`Lacan-Studies-Preliminary/`](Lacan-Studies-Preliminary/README.md) — **draft**, 3 SOPs derived from two secondary
+  studies of Lacan: assigning a pursuit to need/demand/desire, assigning a formation to metaphor/metonymy, and
+  narrowing a claim to what the attribution layer and the carrier's missing devices license. Each is trial-run with
+  its matched check and the failures are written back into the procedure. Not a clinical package; nothing here is
+  verified against Lacan's own texts.
 
 A package's update layer annotates in place rather than replacing: an existing SOP is extended when the
 research function is the same, a capability owned by another package is cross-linked rather than duplicated,
