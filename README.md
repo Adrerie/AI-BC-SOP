@@ -36,6 +36,22 @@ record, and its provenance stay together. Currently:
 
 Book-derived material cites the source by section and page; post-book additions cite their own course or paper locators. The source documents themselves are not included here.
 
+- **Lacan studies — phase 1 (reading and concept reconstruction only)** — two scholarly books on Lacan,
+  with chapter-level notes and an executor-reported complete reading (not independently verified): 沈志中《永夜微光：拉康与未竟之精神分析革命》 and
+  张一兵《不可能的存在之真：拉康哲学映像（修订本）》. This phase deliberately produces **no SOPs and no
+  benchmarks**: [source record](Validation/Lacan-Studies-Phase1/SOURCE.md),
+  [chapter coverage map](Validation/Lacan-Studies-Phase1/reading_map.md),
+  [book notes](Validation/Lacan-Studies-Phase1/book_notes/) (one file per book),
+  [cross-book concept reconstruction](Validation/Lacan-Studies-Phase1/concept_reconstruction.md),
+  [plan](plans/Lacan-Studies-Phase1/README.md), [focused repair](plans/Lacan-Studies-Phase1/REVISION-01.md). Both are in-copyright commercial monographs with no open
+  licence, so the files and all bulk extracted text stay outside Git and quotations are short and attributed.
+  Two disciplines are enforced throughout: every "Lacan says X" is labelled as what the *study author*
+  reads or attributes, never as verified against Lacan's own texts; and locators are edition-specific —
+  the 《永夜微光》 copy is a community-re-typeset PDF whose body text carries no printed page numbers
+  (citations use its PDF page indices), while the 张一兵 EPUB has no page numbers and its endnote apparatus
+  is truncated (notes [1]–[71] of [1]–[1023]), so citations use paragraph numbers and unrecoverable
+  references are marked as such rather than quietly repaired.
+
 A package is a **provenance-bearing staging unit**, not a permanent shelf. It exists so that a rule can
 be traced to the reading that produced it while that rule is still mostly one book's way of seeing the
 problem. The intended end state of a good rule is *not* to stay inside the package that introduced it:
@@ -134,3 +150,13 @@ repository's own original material and are the part the MIT grant covers. The bo
 extracted text are kept out of Git. Neither the quotations nor this repository's material should be read as
 a derivative of, or a substitute for, that book. The second named anchor could not be accessed at all, and
 `sources.md` §1.2 records that no delta anywhere in the layer is sourced to it.
+
+The Lacan studies package is different again, and the difference matters for what may be reused. Its two
+sources are in-copyright commercial monographs (《永夜微光》; 《不可能的存在之真（修订本）》, 上海人民出版社,
+ISBN 978-7-208-16100-9) with **no licence granting redistribution or adaptation**. Nothing from either book
+is placed in this repository: no source file, no chapter text, no bulk extraction. What is here is original
+analysis — what each author argues, how they read Lacan, where they disagree, and which of their claims
+cannot be traced back to a verifiable page in the copy actually available — with quotations kept to brief
+attributed passages and locators that point into our own private working copies rather than into public text.
+The MIT licence below therefore covers these notes alone; it conveys no rights in the books, and these notes
+are not a substitute for reading them.
